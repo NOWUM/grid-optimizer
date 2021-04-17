@@ -28,6 +28,15 @@ jobs:
 #       - name: Install node modules
 #         working-directory: ./src-vue
 #         run: npm install
+      - name: Gradle Cache
+        uses: actions/cache@v2.1.5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Build with Gradle
         run: gradle build
       - name: Check bundle
