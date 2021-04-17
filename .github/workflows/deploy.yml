@@ -90,7 +90,8 @@ jobs:
         uses: altinukshini/deployment-status@releases/v1
         with:
           token: "${{ github.token }}"
-          target_url: https://grid-optimizer.herokuapp.com
+          target_url: https://grid-optimizer.herokuapp.com}}
+          environment_url: https://grid-optimizer.herokuapp.com
           state: "success"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
 
@@ -99,6 +100,7 @@ jobs:
         uses: altinukshini/deployment-status@releases/v1
         with:
           token: "${{ github.token }}"
-          target_url: https://grid-optimizer.herokuapp.com
+          target_url: https://grid-optimizer.herokuapp.com}}
+          environment_url: https://grid-optimizer.herokuapp.com
           state: "failure"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
