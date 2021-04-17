@@ -52,8 +52,10 @@ val fatJar = task("fatJar", type = Jar::class) {
         attributes["Main-Class"] = "io.ktor.server.netty.EngineMain"
     }
 
-    // Copy all needed dependencies for kotlin server
-    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
+    // Copy all needed dependencies for kotlin
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
+        exclude("META-INF/**")
+    }
 
     // Copy frontend
     from(file("src-frontend")) {
