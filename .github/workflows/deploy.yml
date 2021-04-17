@@ -82,6 +82,7 @@ jobs:
           healthcheck: "https://grid-optimizer.herokuapp.com/api/version"
           delay: 15
           rollbackonhealthcheckfailed: true
+          stack: "container"
 
         # Update status
       - name: Update deployment status (success)
