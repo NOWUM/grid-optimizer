@@ -11,7 +11,7 @@ plugins {
 group = "de.fhac.ewi"
 
 application {
-    mainClassName = "io.ktor.server.netty.EngineMain"
+    mainClass.set("io.ktor.server.netty.EngineMain")
 }
 
 repositories {
@@ -41,14 +41,27 @@ kotlin.sourceSets["test"].kotlin.srcDirs("test")
 
 sourceSets["main"].resources.srcDirs("resources")
 sourceSets["test"].resources.srcDirs("testresources")
+
 val fatJar = task("fatJar", type = Jar::class) {
+    // Only copy files once. 2nd attempt will be ignored without warning (Gradle 6.x) or exception (Gradle 7.x)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     manifest {
         attributes["Implementation-Title"] = "Grid Optimizer - Fat"
         attributes["Implementation-Version"] = project.version
         attributes["Main-Class"] = "io.ktor.server.netty.EngineMain"
     }
-    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
-    from(sourceSets["main"].resources)
+
+    // Copy all needed dependencies for kotlin
+    from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }) {
+        exclude("META-INF/**")
+    }
+
+    // Copy frontend
+    from(file("src-frontend")) {
+        include("dist/**")
+    }
+
     with(tasks.jar.get() as CopySpec)
     archiveFileName.set("server.jar")
 }
@@ -59,12 +72,6 @@ val yarnBuild = task<Exec>("yarnBuild") {
         commandLine("cmd.exe", "/C", "yarn.cmd run build")
     else // assume *nix.
         commandLine("yarn", "run", "build") // NB untested
-}
-
-val copyDistFolder = tasks.register<Copy>("copyDistFolder") {
-    delete("resources/dist")
-    from(file("src-frontend/dist"))
-    into(file("resources/dist"))
 }
 
 var env = "production"
@@ -79,11 +86,11 @@ tasks.processResources {
                 expand(
                     "KTOR_ENV" to "dev",
                     "KTOR_PORT" to "8080",
-                    // For hot reloading
+                    // for hot reloading (enabled)
                     "KTOR_MODULE" to "build",
                     "KTOR_AUTORELOAD" to "true",
                     "KTOR_DEVMODE" to "true",
-                    // for /version route
+                    // information about this build for /version route
                     "PROJECT_VERSION" to version,
                     "BUILD_TIMESTAMP" to buildTimestamp
                 )
@@ -92,11 +99,11 @@ tasks.processResources {
                 expand(
                     "KTOR_ENV" to "production",
                     "KTOR_PORT" to "80",
-                    // For hot reloading
+                    // for hot reloading (disabled)
                     "KTOR_MODULE" to "",
                     "KTOR_AUTORELOAD" to "false",
                     "KTOR_DEVMODE" to "false",
-                    // for /version route
+                    // information about this build for /version route
                     "PROJECT_VERSION" to version,
                     "BUILD_TIMESTAMP" to buildTimestamp
                 )
@@ -124,9 +131,6 @@ tasks {
         }
     }
     "fatJar" {
-        dependsOn(copyDistFolder)
-    }
-    "copyDistFolder" {
         // TODO dependsOn(yarnBuild)
     }
 
