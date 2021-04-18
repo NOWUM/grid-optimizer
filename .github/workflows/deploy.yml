@@ -25,9 +25,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.15.1
-#       - name: Install node modules
-#         working-directory: ./src-vue
-#         run: npm install
+      - name: Install node modules
+        working-directory: ./src-vue
+        run: yarn install
       - name: Gradle Cache
         uses: actions/cache@v2.1.5
         with:
