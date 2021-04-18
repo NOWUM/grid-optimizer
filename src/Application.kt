@@ -55,7 +55,7 @@ fun Application.module(testing: Boolean = false) {
         when {
             isDev -> get("/") {
                 // redirect to frontend dev server
-                call.respondRedirect("http://localhost:8081")
+                call.respondRedirect("http://localhost:3000")
             }
             isProd -> static("/") {
                 // serve frontend with Ktor
