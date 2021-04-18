@@ -50,7 +50,7 @@ jobs:
       - uses: actions/checkout@v2
         
         # Update status   
-      - uses: altinukshini/deployment-action@releases/v1
+      - uses: altinukshini/deployment-action@v1.2.6
         name: Create GitHub deployment
         id: deployment
         with:
@@ -85,7 +85,7 @@ jobs:
         # Update status
       - name: Update deployment status (success)
         if: success()
-        uses: altinukshini/deployment-status@releases/v1
+        uses: altinukshini/deployment-status@v1.0.1
         with:
           token: "${{ github.token }}"
           pr: true
@@ -97,7 +97,7 @@ jobs:
 
       - name: Update deployment status (failure)
         if: failure()
-        uses: altinukshini/deployment-status@releases/v1
+        uses: altinukshini/deployment-status@v1.0.1
         with:
           token: "${{ github.token }}"
           pr: true
