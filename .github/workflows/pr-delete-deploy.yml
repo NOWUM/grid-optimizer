@@ -1,6 +1,6 @@
 # This workflow removes the deployment of pull request from Heroku https://grid-optimizer-pr-xxx.herokuapp.com/
 
-name: Delete Deploy @ Heroku 
+name: Delete PR Deploy @ Heroku 
 
 # Controls when the action will run. 
 on:
