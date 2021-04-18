@@ -1,7 +1,6 @@
 import {confirmAlert} from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import {Button, Grid, TextField} from "@material-ui/core";
-import {Label} from "@material-ui/icons";
 import React from "react";
 //import "./confirmation-overlay.css"
 
