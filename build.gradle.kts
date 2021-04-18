@@ -59,7 +59,7 @@ val fatJar = task("fatJar", type = Jar::class) {
 
     // Copy frontend
     from(file("src-frontend")) {
-        include("dist/**")
+        include("build/**")
     }
 
     with(tasks.jar.get() as CopySpec)
@@ -131,7 +131,7 @@ tasks {
         }
     }
     "fatJar" {
-        // TODO dependsOn(yarnBuild)
+        dependsOn(yarnBuild)
     }
 
     compileKotlin {

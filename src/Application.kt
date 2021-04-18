@@ -59,8 +59,8 @@ fun Application.module(testing: Boolean = false) {
             }
             isProd -> static("/") {
                 // serve frontend with Ktor
-                resources("dist")
-                resource("/", "dist/index.html")
+                resources("build")
+                resource("/", "build/index.html")
             }
         }
 
