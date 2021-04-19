@@ -28,7 +28,7 @@ Glad you are here. We might have a perfect [Issue](https://github.com/fhac-ewi/g
 3. Run `./gradlew build` to build this project. The React frontend needs Yarn (I guess) to build.
 4. Now everything should be working for development. 
    1. API Server: Run `gradlew run` to run the api in development mode on http://localhost:8080
-   2. Frontend: Run `yarn start` in subfolder `src-frontend` (?) to run the frontend on http://localhost:8081
+   2. Frontend: Run `yarn start` in subfolder `src-frontend` to run the frontend on http://localhost:3000
    3. Hot Reload: Run `gradlew installDist` to enable hot reload for the api server. The Frontend should already be fine. 
 5. Submit your work as pull request!
 
