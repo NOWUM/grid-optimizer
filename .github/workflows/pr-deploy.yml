@@ -49,16 +49,29 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         
-        # Update status   
-      - uses: altinukshini/deployment-action@v1.2.6
-        name: Create GitHub deployment
-        id: deployment
+        # Create Github Deployment status
+      - name: get pull request ref
+        id: get_pull_request_ref
+        uses: octokit/request-action@v2.x
         with:
-          token: "${{ github.token }}"
-          pr: true
+          route: GET /repos/:repository/pulls/:pr_id
+          repository: ${{ github.repository }}
           pr_id: ${{ github.event.pull_request.number }}
-          target_url: https://grid-optimizer-pr-${{ github.event.pull_request.number }}.herokuapp.com/
+        env:
+          GITHUB_TOKEN: "${{ github.token }}"
+          
+      - name: Create GitHub deployment status
+        id: create_deployment
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/:repository/deployments
+          repository: ${{ github.repository }}
+          ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
           environment: "PR #${{ github.event.pull_request.number }} Review"
+          auto_merge: false
+        env:
+          GITHUB_TOKEN: "${{ github.token }}"
+        
         
         # Get latest Artifact
       - name: Download Artifact
@@ -93,7 +106,7 @@ jobs:
           target_url: https://grid-optimizer-pr-${{ github.event.pull_request.number }}.herokuapp.com/
           environment_url: https://grid-optimizer-pr-${{ github.event.pull_request.number }}.herokuapp.com/
           state: "success"
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
 
       - name: Update deployment status (failure)
         if: failure()
@@ -105,4 +118,4 @@ jobs:
           target_url: https://grid-optimizer-pr-${{ github.event.pull_request.number }}.herokuapp.com/
           environment_url: https://grid-optimizer-pr-${{ github.event.pull_request.number }}.herokuapp.com/
           state: "failure"
-          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+          deployment_id: ${{ fromJson(steps.create_deployment.outputs.data).id }}
