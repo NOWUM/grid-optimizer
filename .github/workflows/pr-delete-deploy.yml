@@ -26,5 +26,5 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           justlogin: true
       - name: Destroy App @ Heroku
-        run: "heroku apps:destroy --app=grid-optimizer-pr-${{ github.event.pull_request.number }} --confirm=confirm" 
+        run: "heroku apps:destroy --app=grid-optimizer-pr-${{ github.event.pull_request.number }} --confirm=grid-optimizer-pr-${{ github.event.pull_request.number }}" 
    
