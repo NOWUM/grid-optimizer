@@ -1,6 +1,13 @@
 package de.fhac.ewi
 
+import de.fhac.ewi.model.InputNode
+import de.fhac.ewi.model.IntermediateNode
+import de.fhac.ewi.model.Node
+import de.fhac.ewi.model.OutputNode
+import de.fhac.ewi.routes.grid
 import de.fhac.ewi.routes.version
+import de.fhac.ewi.services.GridService
+import de.fhac.ewi.util.RuntimeTypeAdapterFactory
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.gson.*
@@ -11,6 +18,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
 import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.get
 import org.slf4j.event.Level
 import java.text.DateFormat
 
@@ -32,6 +40,12 @@ fun Application.module(testing: Boolean = false) {
         gson {
             setDateFormat(DateFormat.LONG)
             setPrettyPrinting()
+            registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.of(Node::class)
+                    .registerSubtype(InputNode::class)
+                    .registerSubtype(IntermediateNode::class)
+                    .registerSubtype(OutputNode::class)
+            ).create()
         }
     }
 
@@ -48,6 +62,7 @@ fun Application.module(testing: Boolean = false) {
     install(Koin) {
         modules(org.koin.dsl.module {
             // Add services for injection usage
+            single { GridService() }
         })
     }
 
@@ -66,6 +81,7 @@ fun Application.module(testing: Boolean = false) {
 
         route("api") {
             // add api endpoints here
+            grid(get())
             version(apiConfig)
         }
     }
