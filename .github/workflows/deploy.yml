@@ -26,6 +26,11 @@ jobs:
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 14.15.1
+      - name: node_modules cache
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install node modules
         working-directory: ./src-frontend
         run: yarn install
