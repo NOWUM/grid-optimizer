@@ -15,7 +15,7 @@ jobs:
       - name: Remove Environment
         uses: strumwolf/delete-deployment-environment@v2
         with:
-          token: "${{ github.token }}"
+          token: "${{ secrets.GITHUB_TOKEN }}"
           environment: "PR #${{ github.event.pull_request.number }} Review"
       - name: Login @ Heroku
         uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
