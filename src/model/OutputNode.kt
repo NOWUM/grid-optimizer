@@ -6,5 +6,9 @@ class OutputNode(
     val area: Double,
     val loadProfile: LoadProfile
 ) : Node(id) {
-    val usage = hotWater + area * loadProfile.ordinal // TODO ?
+
+    val usage: Double by lazy { hotWater + area * loadProfile.ordinal }
+
+    override fun connectChild(pipe: Pipe) =
+        throw IllegalArgumentException("Output can't have child nodes. (invalid $pipe)")
 }
