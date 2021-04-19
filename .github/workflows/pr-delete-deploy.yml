@@ -14,6 +14,7 @@ jobs:
     steps:
       - name: Remove Environment
         uses: strumwolf/delete-deployment-environment@v2
+        continue-on-error: true
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           environment: "PR #${{ github.event.pull_request.number }} Review"
