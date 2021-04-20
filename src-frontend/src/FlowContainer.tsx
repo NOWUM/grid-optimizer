@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ReactFlow, {
     addEdge,
     ArrowHeadType,
     Background,
     BackgroundVariant,
-    Edge,
+    Edge, Elements,
     removeElements
 } from 'react-flow-renderer';
 // you need these styles for React Flow to work properly
@@ -13,10 +13,14 @@ import 'react-flow-renderer/dist/style.css';
 // additionally you can load the default theme
 import 'react-flow-renderer/dist/theme-default.css';
 import {EdgePopover} from "./Overlays/EdgePopover";
-import {showEditEdgeDialog} from "./Overlays/EdgeContextOverlay";
-import nextId from "react-id-generator/lib/nextId";
+import {showEditPipeDialog} from "./Overlays/EdgeContextOverlay";
+import {BaseNode, Pipe} from "./models";
 
-const edgeConfiguration = {animated: true, type: 'step', arrowHeadType: ArrowHeadType.ArrowClosed, style: { stroke: '#CD2626', strokeWidth: "3px", arrowHeadStroke: '#FFD700' }}
+
+const style = getComputedStyle(document.body)
+const corpColor = style.getPropertyValue('--corp-main-color')
+
+const edgeConfiguration = {animated: true, type: 'step', arrowHeadType: ArrowHeadType.ArrowClosed, style: { stroke: `rgb(${corpColor})`, strokeWidth: "3px" }}
 
 const initialElements = [
     {id: '1', data: {label: 'Sarah ist doof'}, position: {x: 250, y: 5}},
@@ -25,9 +29,7 @@ const initialElements = [
 
     {id: '3', data: {label: <div>Node 3</div>}, position: {x: 500, y: 100}},
     {
-        id: 'e1-2', source: '1', target: '2', animated: true, label: 'Länge: 3 Meter',
-        type: 'step',
-        arrowHeadType: ArrowHeadType.ArrowClosed, style: { stroke: '#CD2626', strokeWidth: "3px", arrowHeadStroke: '#FFD700' }
+        id: 'e1-2', source: '1', target: '2', label: 'Länge: 3 Meter', ...edgeConfiguration
     }
 ];
 interface PopupProps {
@@ -35,17 +37,20 @@ interface PopupProps {
     edge: Edge
 }
 
-export const FlowContainer = () => {
-    const [elements, setElements] = useState(initialElements);
+export const FlowContainer = ({data}: {data: (BaseNode | Pipe)[]}) => {
+    const [elements, setElements] = useState<Elements<any>>(initialElements);
     const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
 
-
+    useEffect(() => {
+        console.log(data)
+        setElements(data)
+    })
 
     // @ts-ignore
     const onConnect = (params) => {
         console.log(params);
         params.animated = true;
-        showEditEdgeDialog("Füge ein neues Rohr hinzu", () => {
+        showEditPipeDialog("Füge ein neues Rohr hinzu", () => {
             params= {...params, ...edgeConfiguration}
 
             //@ts-ignore
@@ -83,9 +88,10 @@ export const FlowContainer = () => {
         onElementsRemove([popupTarget?.edge])
     }
 
-    return <ReactFlow
+    // @ts-ignore
+    return <ReactFlow elements={elements}
         onConnect={(params) => onConnect(params)}
-        elements={elements}
+
         onEdgeContextMenu={onElementClick}
         deleteKeyCode={46}
         onClick={() => closePopupTarget()}

@@ -2,21 +2,22 @@ import {confirmAlert} from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import {Button, CardHeader, FormLabel, Grid, TextField, Typography} from "@material-ui/core";
 import React from "react";
-import classes from "*.module.css";
 
-export enum EdgeActionType {
+
+
+export enum PipeActionType {
     EDIT,
     SPLIT
 }
 
 
-export const showEdgeDialog = (message: string,
+export const showPipeDialog = (message: string,
                                onConfirm: (id: string, length1: number, length2: number) => void,
                                onAbort: () => void,
-                               type: EdgeActionType, id: string) => {
+                               type: PipeActionType, id: string) => {
 
     confirmAlert({
-        customUI: ({onClose}) => <EdgeSplitForm message={message} onConfirm={(id: string, length1: number, length2: number) => {
+        customUI: ({onClose}) => <PipeSplitForm message={message} onConfirm={(id: string, length1: number, length2: number) => {
             onConfirm(id, length1, length2)
             onClose()
         }} onAbort={() => {
@@ -28,11 +29,11 @@ export const showEdgeDialog = (message: string,
 }
 
 
-const EdgeSplitForm = ({message, onConfirm, onAbort, type, id}: {
+const PipeSplitForm = ({message, onConfirm, onAbort, type, id}: {
     message: string
     onConfirm: (id: string, length1: number, length2: number) => void,
     onAbort: () => void,
-    type: EdgeActionType,
+    type: PipeActionType,
     id: string
 }) => {
     return <Grid
@@ -42,8 +43,8 @@ const EdgeSplitForm = ({message, onConfirm, onAbort, type, id}: {
         alignItems="center"
     >
         <Grid container
-              direction="row" item xs={8} spacing={3}>
-            <Grid item xs={6}>
+              direction="row" item xs={7} spacing={3}>
+            <Grid item xs={12}>
                 <Typography className={"header-form"} color="textSecondary" gutterBottom>
                     {message}
                 </Typography>
@@ -51,26 +52,26 @@ const EdgeSplitForm = ({message, onConfirm, onAbort, type, id}: {
         </Grid>
 
         <Grid container
-              direction="row" item xs={8} spacing={3}>
-            <Grid item xs={6}>
+              direction="row" item xs={7} spacing={3}>
+            <Grid item xs={12}>
                 <FormLabel> Leitungs-ID: {id} </FormLabel>
             </Grid>
         </Grid>
         <Grid container
-              direction="row" item xs={8} spacing={3}>
-            <Grid item xs={6}>
+              direction="row" item xs={7} spacing={3}>
+            <Grid item xs={12}>
                 <TextField id="standard-basic" label="Leitungslänge 1 [m]" type="number" placeholder="127.30"/>
             </Grid>
         </Grid>
-        {type === EdgeActionType.SPLIT ?
+        {type === PipeActionType.SPLIT ?
             <Grid container
-                  direction="row" item xs={8} spacing={3}>
-                <Grid item xs={6}>
+                  direction="row" item xs={7} spacing={3}>
+                <Grid item xs={12}>
                     <TextField id="standard-basic" label="Leitungslänge 2 [m]" type="number" placeholder="127.30"/>
                 </Grid>
             </Grid> : <></>
         }
-        <Grid container direction="row" item xs={8} spacing={3}>
+        <Grid container direction="row" item xs={7} spacing={1}>
             <Grid item xs={4}>
                 <Button onClick={() => {
                     onConfirm("1", 1, 1)
@@ -78,7 +79,7 @@ const EdgeSplitForm = ({message, onConfirm, onAbort, type, id}: {
                     Bestätigen
                 </Button>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
                 <Button onClick={() => {
                     onAbort()
                 }}>
@@ -90,20 +91,20 @@ const EdgeSplitForm = ({message, onConfirm, onAbort, type, id}: {
     </Grid>
 }
 
-export const showEditEdgeDialog = (message: string,
+export const showEditPipeDialog = (message: string,
                                    onConfirm: (id: string, length1: number) => void,
                                    onAbort: () => void,
                                    id: string) => {
 
-    showEdgeDialog(message, onConfirm, onAbort, EdgeActionType.EDIT, id)
+    showPipeDialog(message, onConfirm, onAbort, PipeActionType.EDIT, id)
 }
 
-export const showSplitEdgeDialog = (message: string,
+export const showSplitPipeDialog = (message: string,
                                     onConfirm: (id: string, length1: number, length2: number) => void,
                                     onAbort: () => void,
                                     id: string) => {
 
-    showEdgeDialog(message, onConfirm, onAbort, EdgeActionType.SPLIT, id)
+    showPipeDialog(message, onConfirm, onAbort, PipeActionType.SPLIT, id)
 }
 
 

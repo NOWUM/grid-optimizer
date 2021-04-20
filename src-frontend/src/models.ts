@@ -1,10 +1,16 @@
+import ReactFlow, {
+    Edge,
+    Node
+} from 'react-flow-renderer';
+
+
 export interface HotWaterGrid {
-    nodes: Node[],
+    nodes: BaseNode[],
     pipes: Pipe[]
 }
 
-export interface BaseNode{
-    id: string
+export interface BaseNode extends Node{
+    id: string,
 }
 
 export interface InputNode extends BaseNode{}
@@ -23,9 +29,6 @@ export enum LoadProfile{
     SLP
 }
 
-export interface Pipe{
-    id: string,
-    source: string,
-    target: string,
+export interface Pipe extends Edge{
     length: number
 }
