@@ -65,7 +65,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: gradlew -Pversion="${{ steps.get_version.outputs.VERSION }}" build
+        run: ./gradlew -Pversion="${{ steps.get_version.outputs.VERSION }}" build
         env:
           CI: ""
           
