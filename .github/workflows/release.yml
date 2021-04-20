@@ -60,12 +60,14 @@ jobs:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Build with Gradle
-        run: gradle -Pversion="${{ steps.get_version.outputs.VERSION }}" build
+        run: ./gradlew -Pversion="${{ steps.get_version.outputs.VERSION }}" build
         env:
-          USERNAME: ${{ github.actor }}
-          TOKEN: ${{ secrets.PACKAGE_TOKEN }}
+          CI: ""
           
       - name: Check bundle
         run: ls ./bundle -l
