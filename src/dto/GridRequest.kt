@@ -1,8 +1,8 @@
 package de.fhac.ewi.dto
 
-import de.fhac.ewi.model.Node
-
 data class GridRequest(
-    val nodes: List<Node>,
+    val inputNodes: List<InputNodeRequest>,
+    val intermediateNodes: List<IntermediateNodeRequest>,
+    val outputNodes: List<OutputNodeRequest>,
     val pipes: List<PipeRequest>
 )
