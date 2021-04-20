@@ -12,8 +12,11 @@ import 'react-flow-renderer/dist/style.css';
 
 // additionally you can load the default theme
 import 'react-flow-renderer/dist/theme-default.css';
-import {showSplitEdgeDialog} from "./Overlays/EdgeContextOverlay";
 import {EdgePopover} from "./Overlays/EdgePopover";
+import {showEditEdgeDialog} from "./Overlays/EdgeContextOverlay";
+import nextId from "react-id-generator/lib/nextId";
+
+const edgeConfiguration = {animated: true, type: 'step', arrowHeadType: ArrowHeadType.ArrowClosed, style: { stroke: '#CD2626', strokeWidth: "3px", arrowHeadStroke: '#FFD700' }}
 
 const initialElements = [
     {id: '1', data: {label: 'Sarah ist doof'}, position: {x: 250, y: 5}},
@@ -27,20 +30,29 @@ const initialElements = [
         arrowHeadType: ArrowHeadType.ArrowClosed, style: { stroke: '#CD2626', strokeWidth: "3px", arrowHeadStroke: '#FFD700' }
     }
 ];
-
+interface PopupProps {
+    target: any,
+    edge: Edge
+}
 
 export const FlowContainer = () => {
     const [elements, setElements] = useState(initialElements);
-    const [popupTarget, setPopupTarget] = useState(null)
+    const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
+
+
 
     // @ts-ignore
     const onConnect = (params) => {
         console.log(params);
         params.animated = true;
-        showSplitEdgeDialog("", () => {
-        }, () => console.log("Nothing to do here"))
-        // @ts-ignore
-        setElements((els) => addEdge(params, els))
+        showEditEdgeDialog("Füge ein neues Rohr hinzu", () => {
+            params= {...params, ...edgeConfiguration}
+
+            //@ts-ignore
+            setElements((els) => addEdge(params, els))
+        }, () => console.log("Nothing to do here"), params.id)
+
+
     };
 
     // @ts-ignore
@@ -49,9 +61,10 @@ export const FlowContainer = () => {
     const onElementClick = (event: any, edge: Edge) => {
         // showEdgeDialog("Gib bitte ein paar Rohrdaten an", () => console.log("confirm"), () => console.log())
         event.preventDefault()
-        console.log(event.currentTarget)
-        setPopupTarget(event.currentTarget)
-        console.log(edge)
+        if(event.currentTarget) {
+            // @ts-ignore
+            setPopupTarget({target: event.currentTarget!, edge})
+        }
     }
 
     const closePopupTarget = () => {
@@ -59,22 +72,35 @@ export const FlowContainer = () => {
     }
 
     const handleSplitEdge = () => {
+        console.log(popupTarget)
+    }
 
+    const handleEditEdge = () => {
+        console.log(popupTarget)
+    }
+
+    const handleRemoveEdge = () => {
+        onElementsRemove([popupTarget?.edge])
     }
 
     return <ReactFlow
         onConnect={(params) => onConnect(params)}
         elements={elements}
-        onElementsRemove={onElementsRemove}
         onEdgeContextMenu={onElementClick}
         deleteKeyCode={46}
-        onClick={closePopupTarget}>
+        onClick={() => closePopupTarget()}
+    >
         <Background
             variant={BackgroundVariant.Dots}
             gap={24}
             size={1}
         />
-        <EdgePopover target={popupTarget} onSplitEdge={() => handleSplitEdge()}/>
+        <EdgePopover
+            target={popupTarget?.target}
+            onSplitEdge={() => handleSplitEdge()}
+            onEditEdge={() => handleEditEdge()}
+            onRemoveEdge={() => handleRemoveEdge()}
+            targetId={popupTarget?.edge.id!}/>
     </ReactFlow>;
 
 }

@@ -1,6 +1,15 @@
+:root {
+  --corp-main-color: 253 126 20; /*#fd7e14;*/
+  --corp-secondary-color: 210, 255, 77;
+}
+
 .App {
   text-align: center;
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .App-logo {
@@ -36,4 +45,26 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.react-flow-container {
+  width: 80%;
+  height: 80%;
+  padding: 3px;
+  background: #f0f0f0;
+  border: solid 1px silver;
+  border-radius: 3px;
+  display: flex; justify-content: center;
+}
+.react-flow {
+  background: #fff;
+}
+
+.MuiPopover-root{
+  z-index: 10 !important;
+}
+
+.header-form {
+  font-size: 1.5rem !important;
+  color: rgba(var(--corp-main-color)) !important;
 }

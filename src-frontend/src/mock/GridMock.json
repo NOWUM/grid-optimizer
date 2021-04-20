@@ -1,0 +1,26 @@
+{
+  "nodes": [
+    {
+      "id": "node-1"
+    },
+    {
+      "id": "node-2"
+    },
+    {
+      "id": "node-3"
+    }
+  ],
+  "pipes": [
+    {
+      "id": "pipe-1",
+      "source": "node-1",
+      "target": "node-2",
+      "length": 16.2
+    }, {
+      "id": "pipe-2",
+      "source": "node-1",
+      "target": "node-3",
+      "length": 18.7
+    }
+  ]
+}
