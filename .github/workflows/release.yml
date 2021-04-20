@@ -37,7 +37,7 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-        - name: Install node modules
+      - name: Install node modules
         working-directory: ./src-frontend
         run: yarn install
         
