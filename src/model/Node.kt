@@ -8,7 +8,7 @@ abstract class Node(val id: String) {
         get() = connectedPipes.filter { it.source == this }.map { it.target }
 
     val connectedParentNodes: List<Node>
-        get() = connectedPipes.filter { it.source == this }.map { it.target }
+        get() = connectedPipes.filter { it.target == this }.map { it.source }
 
     fun isParentOf(target: Node): Boolean =
         target in connectedChildNodes || connectedChildNodes.any { it.isParentOf(target) }
