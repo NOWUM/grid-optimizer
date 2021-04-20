@@ -40,4 +40,4 @@ jobs:
       # Testing
       #
       - name: Test with Gradle
-        run: gradle test
+        run: gradlew test

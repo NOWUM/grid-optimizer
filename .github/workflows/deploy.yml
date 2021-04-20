@@ -44,7 +44,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: Build with Gradle
-        run: gradle build
+        run: gradlew build
+        env:
+          CI: ""
       - name: Check bundle
         run: ls ./bundle -l
       - name: Upload Artifact
