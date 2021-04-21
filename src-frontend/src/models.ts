@@ -3,9 +3,12 @@ import ReactFlow, {
     Node
 } from 'react-flow-renderer';
 
-
-export interface HotWaterGrid {
-    nodes: BaseNode[],
+export interface NodeElements {
+    inputNodes: InputNode[],
+    intermediateNodes: IntermediateNode[],
+    outputNodes: OutputNode[],
+}
+export interface HotWaterGrid extends NodeElements{
     pipes: Pipe[]
 }
 
@@ -31,4 +34,10 @@ export enum LoadProfile{
 
 export interface Pipe extends Edge{
     length: number
+}
+
+export enum NodeType {
+    INPUT_NODE="INPUT_NODE",
+    INTERMEDIATE_NODE="INTERMEDIATE_NODE",
+    OUTPUT_NODE="OUTPUT_NODE"
 }

@@ -4,13 +4,15 @@ import {FlowContainer} from "./FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
 import {uploadDropboxInit} from "./utils/utility";
 import {HotWaterGrid} from "./models";
+import {FileDownload} from "./Filemanagement/FileDownload";
+import Notifications from "./Overlays/Notifications";
 
 
 
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
-    const [grid, setGrid] = useState<HotWaterGrid>({nodes:[], pipes: []})
+    const [grid, setGrid] = useState<HotWaterGrid>({inputNodes: [], outputNodes: [], intermediateNodes: [], pipes: []})
 
     useEffect(() => {
         uploadDropboxInit(renderUpload, setRenderUpload)
@@ -27,9 +29,10 @@ function App() {
                 }}/>: <></>
             }
             <div className="react-flow-container">
-                <FlowContainer data={[...grid.nodes, ...grid.pipes]}/>
+                <FlowContainer data={grid}/>
             </div>
-
+            <FileDownload grid={grid} />
+            <Notifications />
         </div>
     );
 }

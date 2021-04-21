@@ -4,7 +4,8 @@ import ReactFlow, {
     ArrowHeadType,
     Background,
     BackgroundVariant,
-    Edge, Elements,
+    Edge,
+    Elements,
     removeElements
 } from 'react-flow-renderer';
 // you need these styles for React Flow to work properly
@@ -14,37 +15,52 @@ import 'react-flow-renderer/dist/style.css';
 import 'react-flow-renderer/dist/theme-default.css';
 import {EdgePopover} from "./Overlays/EdgePopover";
 import {showEditPipeDialog} from "./Overlays/EdgeContextOverlay";
-import {BaseNode, Pipe} from "./models";
+import {BaseNode, HotWaterGrid, NodeElements, NodeType, Pipe} from "./models";
+import {InputNode} from './CustomNodes/InputNode';
+import {IntermediateNode} from "./CustomNodes/IntermediateNode";
+import {OutputNode} from "./CustomNodes/OutputNode";
 
 
 const style = getComputedStyle(document.body)
 const corpColor = style.getPropertyValue('--corp-main-color')
 
-const edgeConfiguration = {animated: true, type: 'step', arrowHeadType: ArrowHeadType.ArrowClosed, style: { stroke: `rgb(${corpColor})`, strokeWidth: "3px" }}
+const edgeConfiguration = {
+    animated: true,
+    type: 'step',
+    arrowHeadType: ArrowHeadType.ArrowClosed,
+    style: {stroke: `rgb(${corpColor})`, strokeWidth: "3px"}
+}
 
-const initialElements = [
-    {id: '1', data: {label: 'Sarah ist doof'}, position: {x: 250, y: 5}},
-    // you can also pass a React component as a label
-    {id: '2', data: {label: <div>Melanie auch</div>}, position: {x: 100, y: 100}},
 
-    {id: '3', data: {label: <div>Node 3</div>}, position: {x: 500, y: 100}},
-    {
-        id: 'e1-2', source: '1', target: '2', label: 'Länge: 3 Meter', ...edgeConfiguration
-    }
-];
+const nodeTypes = {
+    INPUT_NODE: InputNode,
+    INTERMEDIATE_NODE: IntermediateNode,
+    OUTPUT_NODE: OutputNode
+};
+
+
 interface PopupProps {
     target: any,
     edge: Edge
 }
 
-export const FlowContainer = ({data}: {data: (BaseNode | Pipe)[]}) => {
-    const [elements, setElements] = useState<Elements<any>>(initialElements);
+
+export const FlowContainer = ({data}: { data: HotWaterGrid }) => {
+
+    const getNodeElements = (hwg: HotWaterGrid): NodeElements => {
+        return {inputNodes: data.inputNodes, intermediateNodes: data.intermediateNodes, outputNodes: data.outputNodes}
+    }
+
+    const [nodeElements, setNodeElements] = useState<NodeElements>(getNodeElements(data));
+    const [pipes, setPipes] = useState<Elements<Pipe>>(data.pipes)
     const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
 
     useEffect(() => {
         console.log(data)
-        setElements(data)
+        setNodeElements(getNodeElements(data))
+        setPipes(data.pipes)
     })
+
 
     // @ts-ignore
     const onConnect = (params) => {
@@ -88,10 +104,28 @@ export const FlowContainer = ({data}: {data: (BaseNode | Pipe)[]}) => {
         onElementsRemove([popupTarget?.edge])
     }
 
-    // @ts-ignore
-    return <ReactFlow elements={elements}
-        onConnect={(params) => onConnect(params)}
+    const addTypeToNodes = (nodes: BaseNode[], type: NodeType) => {
+        return nodes.map((el) => {
+            return {...el, type}
+        })
+    }
 
+    const getElements = (): Elements => {
+        const inputNodes = addTypeToNodes(nodeElements.inputNodes, NodeType.INPUT_NODE)
+        const intermediateNodes = addTypeToNodes(nodeElements.intermediateNodes, NodeType.INTERMEDIATE_NODE)
+        const outputNodes = addTypeToNodes(nodeElements.outputNodes, NodeType.OUTPUT_NODE)
+
+        return [...inputNodes, ...intermediateNodes, ...outputNodes, ...pipes]
+    }
+
+    const getEmptyArrayIfUndefined = (el: (any[] | undefined)) => {
+        return el ? el: []
+    }
+
+    // @ts-ignore
+    return <ReactFlow elements={getElements()}
+        onConnect={(params) => onConnect(params)}
+        nodeTypes={nodeTypes}
         onEdgeContextMenu={onElementClick}
         deleteKeyCode={46}
         onClick={() => closePopupTarget()}
