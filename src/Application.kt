@@ -64,6 +64,10 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(StatusPages) {
+        exception<IllegalArgumentException> { cause ->
+            call.respond(HttpStatusCode.BadRequest, "${cause.message}")
+        }
+
         // Catch Exceptions and provide better responses then 500
         exception<Exception> { cause ->
             call.respond(HttpStatusCode.InternalServerError, "Oops! An internal error occurred: ${cause.message}")
