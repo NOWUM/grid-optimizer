@@ -49,6 +49,20 @@ fun Application.module(testing: Boolean = false) {
         }
     }
 
+    if (isDev) {
+        install(CORS) {
+            // Allow everything for development
+            method(HttpMethod.Options)
+            allowXHttpMethodOverride()
+            allowHeaders { true }
+            exposeHeader(HttpHeaders.AccessControlAllowOrigin)
+            anyHost()
+            allowCredentials = true
+            allowSameOrigin = true
+            allowNonSimpleContentTypes = true
+        }
+    }
+
     install(StatusPages) {
         // Catch Exceptions and provide better responses then 500
         exception<Exception> { cause ->
