@@ -86,4 +86,61 @@ class GridTest {
         grid.addOutputNode("1", 10.0, 1.0)
         grid.addOutputNode("2", 10.0, 1.0)
     }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnCircularPipes() {
+        val grid = Grid()
+        grid.addIntermediateNode("1")
+        grid.addIntermediateNode("2")
+        grid.addPipe("P1", "1", "2", 10.0)
+        grid.addPipe("P2", "2", "1", 10.0)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnTwoPipesWithSameId() {
+        val grid = Grid()
+        grid.addIntermediateNode("1")
+        grid.addIntermediateNode("2")
+        grid.addIntermediateNode("3")
+        grid.addPipe("P1", "1", "2", 10.0)
+        grid.addPipe("P1", "2", "3", 10.0)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnTwoPipesWithSameConnections() {
+        val grid = Grid()
+        grid.addIntermediateNode("1")
+        grid.addIntermediateNode("2")
+        grid.addPipe("P1", "1", "2", 10.0)
+        grid.addPipe("P2", "1", "2", 10.0)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnPipeConnectingNodeWithItself() {
+        val grid = Grid()
+        grid.addIntermediateNode("1")
+        grid.addPipe("P1", "1", "1", 10.0)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnComplexCircularPipes() {
+        val grid = Grid()
+        grid.addIntermediateNode("1")
+        grid.addIntermediateNode("2")
+        grid.addIntermediateNode("3")
+        grid.addPipe("P1", "1", "2", 10.0)
+        grid.addPipe("P2", "2", "3", 10.0)
+        grid.addPipe("P3", "3", "1", 10.0)
+    }
+
+    @Test
+    fun acceptValidGrid() {
+        val grid = Grid()
+        grid.addInputNode("1")
+        grid.addIntermediateNode("2")
+        grid.addOutputNode("3", 10.0, 1.0)
+        grid.addPipe("P1", "1", "2", 10.0)
+        grid.addPipe("P2", "2", "3", 10.0)
+        grid.validate()
+    }
 }
