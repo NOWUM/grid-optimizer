@@ -37,7 +37,7 @@ export const FileDownload = ({grid}: {grid: HotWaterGrid}) => {
         element.click();
     };
 
-    return <div className={"file-download-container"}>
+    return <div className={"file-download-container"} id={"#download"}>
         <div onClick={() => {handleClick(); }}>
             <CloudDownload style={{fontSize: "3vw"}} />
         </div>

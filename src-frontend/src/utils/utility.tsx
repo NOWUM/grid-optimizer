@@ -3,8 +3,6 @@ import {Dispatch} from "react";
 import {Browser, getBrowser} from "./BrowserChecker";
 
 export const uploadDropboxInit = (renderUpload: boolean, setRenderUpload: Dispatch<boolean>) => {
-    console.log("WINDOW");
-    console.log(window);
     window.addEventListener("dragover", (e) => {
         e = e;
         e.preventDefault();

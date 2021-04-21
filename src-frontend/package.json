@@ -13,6 +13,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.0",
+    "@types/reactour": "^1.18.1",
     "event-emitter": "^0.3.5",
     "react": "^17.0.2",
     "react-confirm-alert": "^2.7.0",
@@ -21,6 +22,7 @@
     "react-flow-renderer": "^9.5.0",
     "react-id-generator": "^3.0.1",
     "react-scripts": "4.0.3",
+    "reactour": "^1.18.3",
     "styled-components": "^5.2.3",
     "typescript": "^4.1.2",
     "web-vitals": "^1.0.1"

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import ReactFlow, {
     addEdge,
     ArrowHeadType,
@@ -44,23 +44,17 @@ interface PopupProps {
     edge: Edge
 }
 
+interface FlowContainerProperties {
+    pipes: Elements<Pipe>,
+    setPipes: Dispatch<SetStateAction<Elements<Pipe>>>,
+    nodeElements: NodeElements,
+    setNodeElements: Dispatch<SetStateAction<NodeElements>>
+}
 
-export const FlowContainer = ({data}: { data: HotWaterGrid }) => {
 
-    const getNodeElements = (hwg: HotWaterGrid): NodeElements => {
-        return {inputNodes: data.inputNodes, intermediateNodes: data.intermediateNodes, outputNodes: data.outputNodes}
-    }
+export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: FlowContainerProperties) => {
 
-    const [nodeElements, setNodeElements] = useState<NodeElements>(getNodeElements(data));
-    const [pipes, setPipes] = useState<Elements<Pipe>>(data.pipes)
     const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
-
-    useEffect(() => {
-        console.log(data)
-        setNodeElements(getNodeElements(data))
-        setPipes(data.pipes)
-    })
-
 
     // @ts-ignore
     const onConnect = (params) => {
@@ -70,7 +64,7 @@ export const FlowContainer = ({data}: { data: HotWaterGrid }) => {
             params= {...params, ...edgeConfiguration}
 
             //@ts-ignore
-            setElements((els) => addEdge(params, els))
+            setPipes((els) => addEdge(params, els))
         }, () => console.log("Nothing to do here"), params.id)
 
 
@@ -114,12 +108,9 @@ export const FlowContainer = ({data}: { data: HotWaterGrid }) => {
         const inputNodes = addTypeToNodes(nodeElements.inputNodes, NodeType.INPUT_NODE)
         const intermediateNodes = addTypeToNodes(nodeElements.intermediateNodes, NodeType.INTERMEDIATE_NODE)
         const outputNodes = addTypeToNodes(nodeElements.outputNodes, NodeType.OUTPUT_NODE)
+        const defaultPipes = pipes.map((el) => {return {...el, ...edgeConfiguration}})
 
-        return [...inputNodes, ...intermediateNodes, ...outputNodes, ...pipes]
-    }
-
-    const getEmptyArrayIfUndefined = (el: (any[] | undefined)) => {
-        return el ? el: []
+        return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
 
     // @ts-ignore

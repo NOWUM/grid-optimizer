@@ -81,7 +81,7 @@ export default class Notifications extends React.Component<Properties, IState> {
     render() {
         return (
             <React.Fragment>
-                <Container className={"custom-toast"} top={this.state.top}> {this.state.msg} </Container>
+                <Container className={"custom-toast"} top={this.state.top} > {this.state.msg} </Container>
             </React.Fragment>
         )
     }
