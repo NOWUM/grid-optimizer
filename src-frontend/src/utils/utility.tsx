@@ -4,7 +4,6 @@ import {Browser, getBrowser} from "./BrowserChecker";
 
 export const uploadDropboxInit = (renderUpload: boolean, setRenderUpload: Dispatch<boolean>) => {
     window.addEventListener("dragover", (e) => {
-        e = e;
         e.preventDefault();
         setRenderUpload(true);
     }, false);
@@ -21,7 +20,6 @@ export const uploadDropboxInit = (renderUpload: boolean, setRenderUpload: Dispat
             e.clientX === window.innerWidth || e.clientY === window.innerHeight;
     };
     window.addEventListener("drop", (e) => {
-        e = e;
         e.preventDefault();
         setRenderUpload(false);
     }, false);
