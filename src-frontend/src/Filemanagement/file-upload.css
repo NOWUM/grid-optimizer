@@ -1,0 +1,28 @@
+.upload-container {
+    width: 90vw;
+    height: 90vh;
+    justify-content: flex-start;
+    align-items: center;
+    position: absolute;
+    cursor: pointer;
+    font-size: 22px;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    color: #777777;
+    opacity: 0.99;
+    margin: 5vh 5vw;
+    border-radius: 20px;
+    border: dashed #777777;
+    background: lightgray;
+    z-index: 9999; }
+
+.upload-info {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; }
+
+.dropzone-view {
+    width: 100%;
+    height: 100%; }
