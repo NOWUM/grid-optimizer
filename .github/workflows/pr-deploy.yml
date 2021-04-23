@@ -91,6 +91,7 @@ jobs:
           delay: 15
           rollbackonhealthcheckfailed: true
           stack: "container"
+          region: "eu"
 
         # Update status
       - name: Update GitHub deployment status
