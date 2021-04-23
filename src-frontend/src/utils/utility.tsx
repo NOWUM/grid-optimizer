@@ -1,6 +1,7 @@
 import {Dispatch} from "react";
 
 import {Browser, getBrowser} from "./BrowserChecker";
+import {HotWaterGrid, NodeElements, Pipe} from "../models";
 
 export const uploadDropboxInit = (renderUpload: boolean, setRenderUpload: Dispatch<boolean>) => {
     window.addEventListener("dragover", (e) => {
@@ -27,4 +28,9 @@ export const uploadDropboxInit = (renderUpload: boolean, setRenderUpload: Dispat
     window.addEventListener("onmouseleave", () => {
         console.log("MOUSE LEAVING");
     });
+}
+
+
+export const createGrid = (nodes: NodeElements, pipes: Pipe[]): HotWaterGrid => {
+    return {...nodes, pipes}
 }

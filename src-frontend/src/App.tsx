@@ -8,6 +8,8 @@ import {FileDownload} from "./Filemanagement/FileDownload";
 import Notifications from "./Overlays/Notifications";
 import {Elements} from "react-flow-renderer";
 import {UserTour} from "./UserTour/UserTour";
+import {VersionNumber} from "./VersionNumber";
+import "@material-ui/core/"
 
 
 function App() {
@@ -48,6 +50,8 @@ function App() {
                 <FlowContainer pipes={pipes} setPipes={setPipes}
                                nodeElements={nodeElements} setNodeElements={setNodeElements}
                 />
+
+                <VersionNumber />
             </div>
             {/* @ts-ignore*/}
             <FileDownload grid={{...nodeElements, pipes}} />

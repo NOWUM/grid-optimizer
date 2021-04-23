@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import ReactFlow, {
     addEdge,
     ArrowHeadType,
@@ -19,6 +19,8 @@ import {BaseNode, HotWaterGrid, NodeElements, NodeType, Pipe} from "./models";
 import {InputNode} from './CustomNodes/InputNode';
 import {IntermediateNode} from "./CustomNodes/IntermediateNode";
 import {OutputNode} from "./CustomNodes/OutputNode";
+import {createGrid} from "./utils/utility";
+import {notify} from "./Overlays/Notifications";
 
 
 const style = getComputedStyle(document.body)
@@ -51,6 +53,27 @@ interface FlowContainerProperties {
     setNodeElements: Dispatch<SetStateAction<NodeElements>>
 }
 
+enum ResultCode {
+    OK = 200,
+    INTERNAL_SERVER_ERROR = 500
+}
+
+const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
+    const configuration = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Origin": "*"
+        },
+        body: JSON.stringify(grid)
+    }
+    return fetch('/api/grid/verify', configuration)
+        .then(response => {
+            return response.status}).then( (status) => {return status===ResultCode.OK} )
+        .catch(e => {
+            console.log(e)
+            return false});
+}
 
 export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: FlowContainerProperties) => {
 
@@ -60,14 +83,20 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
     const onConnect = (params) => {
         console.log(params);
         params.animated = true;
-        showEditPipeDialog("Füge ein neues Rohr hinzu", () => {
-            params= {...params, ...edgeConfiguration}
 
-            //@ts-ignore
-            setPipes((els) => addEdge(params, els))
-        }, () => console.log("Nothing to do here"), params.id)
+        verifyBackend(createGrid(nodeElements, pipes as Pipe[])).then((verified: boolean) => {
+            if(verified) {
+                showEditPipeDialog("Füge ein neues Rohr hinzu", () => {
+                    params= {...params, ...edgeConfiguration}
 
-
+                    //@ts-ignore
+                    setPipes((els) => addEdge(params, els))
+                }, () => console.log("Nothing to do here"), params.id)
+            } else {
+                notify("Netz nicht valide")
+            }
+        }
+        )
     };
 
     // @ts-ignore

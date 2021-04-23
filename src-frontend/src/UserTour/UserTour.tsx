@@ -10,7 +10,7 @@ let haveStartedTest = false
 const mock = require("../mock/GridMock.json")
 
 export const UserTour = ({startTest, endTest}: { startTest: (mock: HotWaterGrid) => void, endTest: () => void }) => {
-    const [isTourOpen, setIsTourOpen] = useState(true);
+    const [isTourOpen, setIsTourOpen] = useState(false);
 
     const steps = [
         {
