@@ -4,11 +4,11 @@ import javax.script.ScriptEngineManager
 
 private val engine = ScriptEngineManager().getEngineByExtension("js")!!
 private val functions = mutableMapOf<String, ((Double) -> Double)>()
+private val TEMPLATE_PATTERN = "^(\\d+(\\.\\d+)?| |[-+/*]|\\(|\\)|x)+$".toRegex(RegexOption.IGNORE_CASE)
 
 fun parseDoubleFunction(template: String): ((Double) -> Double) {
-    if (functions.containsKey(template))
-        return functions[template]!!
-
+    if (!template.matches(TEMPLATE_PATTERN))
+        throw IllegalArgumentException("Template does not match pattern ${TEMPLATE_PATTERN.pattern}.")
 
     return functions.getOrPut(template) {
 

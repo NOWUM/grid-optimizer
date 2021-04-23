@@ -15,11 +15,17 @@ class EngineUtilTest {
     }
 
     @Test
-    fun testMediumDoubleFunction() {
-        val template = "x*x+3"
+    fun testSqrtDoubleFunction() {
+        val template = "x*x + 3"
         val func = parseDoubleFunction(template)
-        assertEquals(3.0, func(0.0))
+        assertEquals(4.0, func(-1.0))
         assertEquals(4.0, func(1.0))
         assertEquals(7.0, func(2.0))
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnIllegalCharacter() {
+        val template = "x+3 + y"
+        parseDoubleFunction(template)
     }
 }
