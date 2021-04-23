@@ -9,7 +9,7 @@ class GridService {
         val grid = Grid()
         request.inputNodes.forEach { grid.addInputNode(it.id) }
         request.intermediateNodes.forEach { grid.addIntermediateNode(it.id) }
-        request.outputNodes.forEach { grid.addOutputNode(it.id, 42.0, 0.5) }
+        request.outputNodes.forEach { grid.addOutputNode(it.id, it.thermalEnergyDemand, it.pressureLoss) }
         request.pipes.forEach { grid.addPipe(it.id, it.source, it.target, it.length) }
         return grid
     }
