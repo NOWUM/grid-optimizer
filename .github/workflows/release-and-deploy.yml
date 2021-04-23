@@ -1,4 +1,4 @@
-name: Release grid-optimizer
+name: Release @ GitHub and deploy @ Heroku
 
 # Controls when the action will run. 
 on:
@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
   
       #
-      # Download and install all needed 
+      # Setup Java
       #
       - name: Set up JDK 1.8
         uses: actions/setup-java@v2
@@ -23,15 +23,18 @@ jobs:
           distribution: 'zulu'
           java-version: 8
           
+      #
+      # Setup Node.js 
+      #
       - name: Set up Node.js 14.15.1
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 14.15.1
 
       #
-      # Caching for speedup
+      # Caching node_modules for speedup
       #
-      - name: node_modules cache
+      - name: Cache node_modules 
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
@@ -42,9 +45,9 @@ jobs:
         run: yarn install
         
       #
-      # Caching for speedup
+      # Caching gradle dependencies for speedup
       #
-      - name: Gradle Cache
+      - name: Cache gradle dependencies
         uses: actions/cache@v2.1.5
         with:
           path: |
@@ -55,7 +58,7 @@ jobs:
             ${{ runner.os }}-gradle-
         
       #
-      # Build release
+      # Build release with gradle
       #
       - name: Get the version
         id: get_version
@@ -64,7 +67,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Build with Gradle
+      - name: Build with gradle
         run: ./gradlew -Pversion="${{ steps.get_version.outputs.VERSION }}" build
         env:
           CI: ""
@@ -72,7 +75,7 @@ jobs:
       - name: Check bundle
         run: ls ./bundle -l
         
-      - name: Upload Artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: server-artifact
@@ -85,8 +88,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-        # Get latest Artifact
-      - name: Download Artifact
+        # Get latest artifact
+      - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: server-artifact
@@ -96,7 +99,7 @@ jobs:
         run: ls ./bundle -l
         
         # Build Changelog by PRs
-      - name: "Build Changelog"
+      - name: "Build changelog"
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v1
         with:
@@ -105,7 +108,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
         # Create and publish Release
-      - name: Create Release
+      - name: Create release @ GitHub
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -117,7 +120,7 @@ jobs:
           draft: false
           prerelease: false
           
-      - name: Upload Release Asset
+      - name: Upload release asset @ GitHub
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
@@ -127,3 +130,65 @@ jobs:
           asset_path: ./bundle/server.jar
           asset_name: server.jar
           asset_content_type: application/jar          
+          
+          
+         
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        
+        # Create and update status of deployment  
+      - uses: altinukshini/deployment-action@releases/v1
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: "${{ github.token }}"
+          target_url: https://grid-optimizer.herokuapp.com/
+          environment: "Production"
+        
+        # Get latest Artifact
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: server-artifact
+          path: ./bundle
+      - name: Check bundle
+        run: ls ./bundle -l
+      
+        # Deploy
+      - name: Dockerize and deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "grid-optimizer"
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          usedocker: true
+          healthcheck: "https://grid-optimizer.herokuapp.com/api/version"
+          delay: 15
+          rollbackonhealthcheckfailed: true
+          stack: "container"
+          region: "eu"
+
+        # Update status
+      - name: Update deployment status (success)
+        if: success()
+        uses: altinukshini/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: https://grid-optimizer.herokuapp.com}}
+          environment_url: https://grid-optimizer.herokuapp.com
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: altinukshini/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          target_url: https://grid-optimizer.herokuapp.com}}
+          environment_url: https://grid-optimizer.herokuapp.com
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+ 
