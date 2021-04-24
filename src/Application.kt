@@ -21,6 +21,7 @@ import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
 import java.text.DateFormat
+import javax.script.ScriptException
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -65,6 +66,10 @@ fun Application.module(testing: Boolean = false) {
 
     install(StatusPages) {
         exception<IllegalArgumentException> { cause ->
+            call.respond(HttpStatusCode.BadRequest, "${cause.message}")
+        }
+
+        exception<ScriptException> { cause ->
             call.respond(HttpStatusCode.BadRequest, "${cause.message}")
         }
 
