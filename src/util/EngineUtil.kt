@@ -2,20 +2,22 @@ package de.fhac.ewi.util
 
 import javax.script.ScriptEngineManager
 
-private val engine = ScriptEngineManager().getEngineByExtension("js")!!
-private val functions = mutableMapOf<String, ((Double) -> Double)>()
-private val TEMPLATE_PATTERN = "^(\\d+(\\.\\d+)?| |[-+/*]|\\(|\\)|x)+$".toRegex(RegexOption.IGNORE_CASE)
+typealias DoubleFunction = (Double) -> Double
 
-fun parseDoubleFunction(template: String): ((Double) -> Double) {
-    if (!template.matches(TEMPLATE_PATTERN))
+private val TEMPLATE_PATTERN = "^(\\d+(\\.\\d+)?| |[-+/*]|\\(|\\)|x)+$".toRegex(RegexOption.IGNORE_CASE)
+private val engine = ScriptEngineManager().getEngineByExtension("js")!!
+private val functions = mutableMapOf<String, DoubleFunction>()
+
+fun String.toDoubleFunction(): DoubleFunction {
+    if (!matches(TEMPLATE_PATTERN))
         throw IllegalArgumentException("Template does not match pattern ${TEMPLATE_PATTERN.pattern}.")
 
-    return functions.getOrPut(template) {
+    return functions.getOrPut(this) {
 
         val functionName = "doubleFun${functions.size}"
 
         // Inserts the function
-        engine.eval("function $functionName(x) { return $template; }");
+        engine.eval("function $functionName(x) { return $this; }");
 
         { x: Double -> engine.eval("$functionName($x);") as Double }
     }
