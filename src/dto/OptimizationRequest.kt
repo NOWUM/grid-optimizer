@@ -4,6 +4,5 @@ data class OptimizationRequest(
     val grid: GridRequest,
 
     // other Parameters
-    val insulationThickness: Double,
-    val pressureDropPerOutput: Double
+    val insulationThickness: Double
 )
