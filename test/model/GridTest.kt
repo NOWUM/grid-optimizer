@@ -65,27 +65,27 @@ class GridTest {
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnOutputNodeWithEmptyId() {
         val grid = Grid()
-        grid.addOutputNode("", 0.0, 0.0)
+        grid.addOutputNode("", HeatDemandCurve.ZERO, 0.0)
     }
 
     @Test
     fun addOutputNode() {
         val grid = Grid()
-        grid.addOutputNode("1", 10.0, 1.0)
+        grid.addOutputNode("1", HeatDemandCurve.ONES, 1.0)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnTwoOutputNodesWithSameId() {
         val grid = Grid()
-        grid.addOutputNode("1", 10.0, 1.0)
-        grid.addOutputNode("1", 10.0, 1.0)
+        grid.addOutputNode("1", HeatDemandCurve.ONES, 1.0)
+        grid.addOutputNode("1", HeatDemandCurve.ONES, 1.0)
     }
 
     @Test
     fun acceptTwoOutputNodesWithDifferentId() {
         val grid = Grid()
-        grid.addOutputNode("1", 10.0, 1.0)
-        grid.addOutputNode("2", 10.0, 1.0)
+        grid.addOutputNode("1", HeatDemandCurve.ONES, 1.0)
+        grid.addOutputNode("2", HeatDemandCurve.ONES, 1.0)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -139,7 +139,7 @@ class GridTest {
         val grid = Grid()
         grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
         grid.addIntermediateNode("2")
-        grid.addOutputNode("3", 10.0, 1.0)
+        grid.addOutputNode("3", HeatDemandCurve.ONES, 1.0)
         grid.addPipe("P1", "1", "2", 10.0)
         grid.addPipe("P2", "2", "3", 10.0)
         grid.validate()

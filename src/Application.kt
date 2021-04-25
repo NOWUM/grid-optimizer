@@ -1,10 +1,13 @@
 package de.fhac.ewi
 
 import de.fhac.ewi.routes.grid
+import de.fhac.ewi.routes.profiles
 import de.fhac.ewi.routes.temperature
 import de.fhac.ewi.routes.version
 import de.fhac.ewi.services.GridService
+import de.fhac.ewi.services.LoadProfileService
 import de.fhac.ewi.services.TemperatureTimeSeriesService
+import de.fhac.ewi.util.loadStandardLoadProfiles
 import de.fhac.ewi.util.loadTemperatureTimeSeries
 import io.ktor.application.*
 import io.ktor.features.*
@@ -77,8 +80,9 @@ fun Application.module(testing: Boolean = false) {
     install(Koin) {
         modules(org.koin.dsl.module {
             // Add services for injection usage
-            single { GridService() }
             single { TemperatureTimeSeriesService(loadTemperatureTimeSeries()) }
+            single { LoadProfileService(loadStandardLoadProfiles()) }
+            single { GridService(get()) }
         })
     }
 
@@ -99,6 +103,7 @@ fun Application.module(testing: Boolean = false) {
             // add api endpoints here
             grid(get())
             temperature(get())
+            profiles(get())
             version(apiConfig)
         }
     }

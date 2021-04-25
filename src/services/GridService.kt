@@ -4,7 +4,7 @@ import de.fhac.ewi.dto.GridRequest
 import de.fhac.ewi.model.Grid
 import de.fhac.ewi.util.toDoubleFunction
 
-class GridService {
+class GridService(val profileService: LoadProfileService) {
 
     fun createByGridRequest(request: GridRequest): Grid {
         val grid = Grid()
@@ -18,7 +18,8 @@ class GridService {
             grid.addIntermediateNode(it.id)
         }
         request.outputNodes.forEach {
-            grid.addOutputNode(it.id, it.thermalEnergyDemand, it.pressureLoss)
+            val curve = profileService.distribute(it.loadProfileName, it.thermalEnergyDemand)
+            grid.addOutputNode(it.id, curve, it.pressureLoss)
         }
         request.pipes.forEach {
             grid.addPipe(it.id, it.source, it.target, it.length)

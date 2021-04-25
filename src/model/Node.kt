@@ -20,8 +20,9 @@ abstract class Node(val id: String) {
     open val connectedPressureLoss: Double
         get() = connectedPipes.filter { it.source == this }.sumOf { it.target.connectedPressureLoss }
 
-    open val connectedThermalEnergyDemand: Double
-        get() = connectedPipes.filter { it.source == this }.sumOf { it.target.connectedThermalEnergyDemand }
+    open val connectedThermalEnergyDemand: HeatDemandCurve
+        get() = connectedPipes.filter { it.source == this }
+            .fold(HeatDemandCurve.ZERO) { r, p -> r + p.target.connectedThermalEnergyDemand }
 
     fun isParentOf(target: Node): Boolean =
         target in connectedChildNodes || connectedChildNodes.any { it.isParentOf(target) }
