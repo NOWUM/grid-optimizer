@@ -16,6 +16,7 @@ import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
 import java.text.DateFormat
+import javax.script.ScriptException
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -53,6 +54,14 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(StatusPages) {
+        exception<IllegalArgumentException> { cause ->
+            call.respond(HttpStatusCode.BadRequest, "${cause.message}")
+        }
+
+        exception<ScriptException> { cause ->
+            call.respond(HttpStatusCode.BadRequest, "${cause.message}")
+        }
+
         // Catch Exceptions and provide better responses then 500
         exception<Exception> { cause ->
             call.respond(HttpStatusCode.InternalServerError, "Oops! An internal error occurred: ${cause.message}")
