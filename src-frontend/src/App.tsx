@@ -3,13 +3,14 @@ import './App.css';
 import {FlowContainer} from "./FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
 import {uploadDropboxInit} from "./utils/utility";
-import {HotWaterGrid, NodeElements, Pipe} from "./models";
+import {BaseNode, HotWaterGrid, IntermediateNode, NodeElements, NodeType, OutputNode, Pipe} from "./models";
 import {FileDownload} from "./Filemanagement/FileDownload";
 import Notifications from "./Overlays/Notifications";
 import {Elements} from "react-flow-renderer";
 import {UserTour} from "./UserTour/UserTour";
 import {VersionNumber} from "./VersionNumber";
 import "@material-ui/core/"
+import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
 
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
     // const [grid, setGrid] = useState<HotWaterGrid>({inputNodes: [], outputNodes: [], intermediateNodes: [], pipes: []})
 
-    const [nodeElements, setNodeElements] = useState<NodeElements>({inputNodes: [], outputNodes: [], intermediateNodes: []});
+    const [nodeElements, setNodeElements] = useState<NodeElements>({inputNodes: [], intermediateNodes: [], outputNodes: []});
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
 
     useEffect(() => {
@@ -34,8 +35,22 @@ function App() {
     }
 
     const clearGrid = () => {
-        setNodeElements({intermediateNodes: [], outputNodes: [], inputNodes: []})
+        setNodeElements({ inputNodes: [], intermediateNodes: [], outputNodes: [],})
         setPipes([])
+    }
+
+    const handleNewNode = (newNode: BaseNode) => {
+        const newNodeElements = {...nodeElements};
+        switch (newNode.type) {
+            case NodeType.INPUT_NODE: newNodeElements.inputNodes.push(newNode)
+                break;
+            case NodeType.INTERMEDIATE_NODE: newNodeElements.intermediateNodes.push(newNode as IntermediateNode)
+                break;
+            case NodeType.OUTPUT_NODE: newNodeElements.outputNodes.push(newNode as OutputNode)
+                break;
+            default: console.error("Unknown Type")
+        }
+        setNodeElements(newNodeElements)
     }
 
     return (
@@ -52,6 +67,8 @@ function App() {
                 />
 
                 <VersionNumber />
+
+                <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
             </div>
             {/* @ts-ignore*/}
             <FileDownload grid={{...nodeElements, pipes}} />

@@ -14,6 +14,7 @@ export interface HotWaterGrid extends NodeElements{
 
 export interface BaseNode extends Node{
     id: string,
+    type: NodeType
 }
 
 export interface InputNode extends BaseNode{}
