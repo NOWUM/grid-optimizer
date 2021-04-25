@@ -2,8 +2,8 @@ package de.fhac.ewi.model
 
 class OutputNode(
     id: String,
-    val thermalEnergyDemand: Double,
-    val pressureLoss: Double
+    val thermalEnergyDemand: Double, // kwh per year
+    val pressureLoss: Double // Bar
 ) : Node(id) {
 
     init {
