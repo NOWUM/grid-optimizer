@@ -9,7 +9,7 @@ export const FileDownload = ({grid, setRenderUpload}:
                                  {grid: HotWaterGrid, setRenderUpload: (val: boolean) => {}}) => {
 
     const isGridEmpty = () => {
-        return (grid.pipes && grid.inputNodes && grid.intermediateNodes && grid.outputNodes )
+        return (grid.pipes.length === 0 && grid.inputNodes.length === 0 && grid.intermediateNodes.length === 0 && grid.outputNodes.length === 0 )
     }
 
     const handleClick = () => {
