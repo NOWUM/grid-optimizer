@@ -1,13 +1,11 @@
 package de.fhac.ewi
 
-import de.fhac.ewi.model.InputNode
-import de.fhac.ewi.model.IntermediateNode
-import de.fhac.ewi.model.Node
-import de.fhac.ewi.model.OutputNode
 import de.fhac.ewi.routes.grid
+import de.fhac.ewi.routes.temperature
 import de.fhac.ewi.routes.version
 import de.fhac.ewi.services.GridService
-import de.fhac.ewi.util.RuntimeTypeAdapterFactory
+import de.fhac.ewi.services.TemperatureTimeSeriesService
+import de.fhac.ewi.util.loadTemperatureTimeSeries
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.gson.*
@@ -21,6 +19,7 @@ import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
 import java.text.DateFormat
+import javax.script.ScriptException
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -40,12 +39,6 @@ fun Application.module(testing: Boolean = false) {
         gson {
             setDateFormat(DateFormat.LONG)
             setPrettyPrinting()
-            registerTypeAdapterFactory(
-                RuntimeTypeAdapterFactory.of(Node::class)
-                    .registerSubtype(InputNode::class)
-                    .registerSubtype(IntermediateNode::class)
-                    .registerSubtype(OutputNode::class)
-            ).create()
         }
     }
 
@@ -64,6 +57,14 @@ fun Application.module(testing: Boolean = false) {
     }
 
     install(StatusPages) {
+        exception<IllegalArgumentException> { cause ->
+            call.respond(HttpStatusCode.BadRequest, "${cause.message}")
+        }
+
+        exception<ScriptException> { cause ->
+            call.respond(HttpStatusCode.BadRequest, "${cause.message}")
+        }
+
         // Catch Exceptions and provide better responses then 500
         exception<Exception> { cause ->
             call.respond(HttpStatusCode.InternalServerError, "Oops! An internal error occurred: ${cause.message}")
@@ -77,6 +78,7 @@ fun Application.module(testing: Boolean = false) {
         modules(org.koin.dsl.module {
             // Add services for injection usage
             single { GridService() }
+            single { TemperatureTimeSeriesService(loadTemperatureTimeSeries()) }
         })
     }
 
@@ -96,6 +98,7 @@ fun Application.module(testing: Boolean = false) {
         route("api") {
             // add api endpoints here
             grid(get())
+            temperature(get())
             version(apiConfig)
         }
     }

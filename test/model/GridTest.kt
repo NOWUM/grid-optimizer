@@ -1,5 +1,6 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.util.toDoubleFunction
 import org.junit.Test
 
 class GridTest {
@@ -12,27 +13,27 @@ class GridTest {
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnInputNodeWithEmptyId() {
         val grid = Grid()
-        grid.addInputNode("")
+        grid.addInputNode("", "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test
     fun addInputNode() {
         val grid = Grid()
-        grid.addInputNode("1")
+        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnTwoInputNodesWithSameId() {
         val grid = Grid()
-        grid.addInputNode("1")
-        grid.addInputNode("1")
+        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnTwoInputNodesWithDifferentId() {
         val grid = Grid()
-        grid.addInputNode("1")
-        grid.addInputNode("1")
+        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("2", "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -136,7 +137,7 @@ class GridTest {
     @Test
     fun acceptValidGrid() {
         val grid = Grid()
-        grid.addInputNode("1")
+        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
         grid.addIntermediateNode("2")
         grid.addOutputNode("3", 10.0, 1.0)
         grid.addPipe("P1", "1", "2", 10.0)

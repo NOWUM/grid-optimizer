@@ -1,15 +1,11 @@
-# This workflow deploys the main branch to Heroku https://grid-optimizer.herokuapp.com/
-
-name: Deploy Prod @ Heroku 
+name: Release @ GitHub and deploy @ Heroku
 
 # Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+    # Sequence of patterns matched against refs/tags
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -17,24 +13,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+  
+      #
+      # Setup Java
+      #
       - name: Set up JDK 1.8
         uses: actions/setup-java@v2
         with:
           distribution: 'zulu'
           java-version: 8
+          
+      #
+      # Setup Node.js 
+      #
       - name: Set up Node.js 14.15.1
         uses: actions/setup-node@v2.1.5
         with:
           node-version: 14.15.1
-      - name: node_modules cache
+
+      #
+      # Caching node_modules for speedup
+      #
+      - name: Cache node_modules 
         uses: actions/cache@v2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install node modules
         working-directory: ./src-frontend
         run: yarn install
-      - name: Gradle Cache
+        
+      #
+      # Caching gradle dependencies for speedup
+      #
+      - name: Cache gradle dependencies
         uses: actions/cache@v2.1.5
         with:
           path: |
@@ -43,27 +56,90 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+        
+      #
+      # Build release with gradle
+      #
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: Build with Gradle
-        run: ./gradlew build
+
+      - name: Build with gradle
+        run: ./gradlew -Pversion="${{ steps.get_version.outputs.VERSION }}" build
         env:
           CI: ""
+          
       - name: Check bundle
         run: ls ./bundle -l
-      - name: Upload Artifact
+        
+      - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: server-artifact
           path: ./bundle
-
+          
+          
+  release:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+        # Get latest artifact
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: server-artifact
+          path: ./bundle
+          
+      - name: Check bundle
+        run: ls ./bundle -l
+        
+        # Build Changelog by PRs
+      - name: "Build changelog"
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v1
+        with:
+          configuration: ".github/release-changelog-configuration.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+        # Create and publish Release
+      - name: Create release @ GitHub
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: ${{steps.build_changelog.outputs.changelog}}
+          draft: false
+          prerelease: false
+          
+      - name: Upload release asset @ GitHub
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./bundle/server.jar
+          asset_name: server.jar
+          asset_content_type: application/jar          
+          
+          
+         
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         
-        # Update status   
+        # Create and update status of deployment  
       - uses: altinukshini/deployment-action@releases/v1
         name: Create GitHub deployment
         id: deployment
@@ -73,7 +149,7 @@ jobs:
           environment: "Production"
         
         # Get latest Artifact
-      - name: Download Artifact
+      - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: server-artifact
@@ -82,7 +158,7 @@ jobs:
         run: ls ./bundle -l
       
         # Deploy
-      - name: Dockerize and Deploy to Heroku
+      - name: Dockerize and deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
@@ -93,6 +169,7 @@ jobs:
           delay: 15
           rollbackonhealthcheckfailed: true
           stack: "container"
+          region: "eu"
 
         # Update status
       - name: Update deployment status (success)
@@ -114,3 +191,4 @@ jobs:
           environment_url: https://grid-optimizer.herokuapp.com
           state: "failure"
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+ 
