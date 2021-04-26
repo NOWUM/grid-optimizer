@@ -11,8 +11,9 @@ import {UserTour} from "./UserTour/UserTour";
 import {AppBar, Tab} from "@material-ui/core";
 import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import {MetaDataContainer} from "./MetaData/MetaDataContainer";
+import {getPipe} from "./pipe";
 
-const pipe = require("./pipe.svg")
+const pipe = require("./pipe")
 
 
 function App() {
@@ -52,7 +53,7 @@ function App() {
             <TabContext value={tabVal}>
                 {// @ts-ignore
                 }<AppBar position="static">
-                <h1 style={{userSelect: "none"}}>Pipify</h1>
+                <h1 style={{userSelect: "none"}}>{getPipe()}Pipify</h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
 
                     <Tab label="Editor" value="1"/>

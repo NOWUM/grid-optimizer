@@ -107,3 +107,19 @@ body {
 .PrivateTabIndicator-colorSecondary-3 {
   background-color: rgb(var(--corp-secondary-color)) !important;
 }
+
+.MuiAppBar-root h1 {
+  margin: 20px;
+}
+
+.MuiTabs-flexContainer {
+  height: 100%;
+}
+
+h1 svg {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+  fill: silver;
+  vertical-align: middle;
+}
