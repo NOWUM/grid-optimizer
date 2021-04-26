@@ -1,6 +1,7 @@
 package de.fhac.ewi.model
 
 import de.fhac.ewi.exceptions.IllegalGridException
+import de.fhac.ewi.util.DoubleFunction
 
 class Grid {
 
@@ -14,11 +15,11 @@ class Grid {
         nodes += node
     }
 
-    fun addInputNode(id: String) {
+    fun addInputNode(id: String, flowTemperature: DoubleFunction, returnTemperature: DoubleFunction) {
         if (nodes.filterIsInstance<InputNode>().count() == 1)
             throw IllegalArgumentException("This grid has already an input node. Only one input node is supported at the moment.")
 
-        addNode(InputNode(id))
+        addNode(InputNode(id, flowTemperature, returnTemperature))
     }
 
     fun addOutputNode(id: String, thermalEnergyDemand: Double, pressureLoss: Double) {

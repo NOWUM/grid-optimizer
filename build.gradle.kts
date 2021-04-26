@@ -2,6 +2,7 @@ val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 val koin_version: String by project
+val csv_version: String by project
 
 plugins {
     application
@@ -31,6 +32,9 @@ dependencies {
 
     implementation("org.koin:koin-core:$koin_version")
     implementation("org.koin:koin-ktor:$koin_version")
+
+
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:$csv_version")
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("org.koin:koin-test:$koin_version")
