@@ -23,12 +23,6 @@ export const FileUpload = (props: UploadProps) => {
         const jsonResult = mapToJSON(reader);
         console.log(jsonResult)
         props.loadGrid(jsonResult)
-        //if (isConfig(jsonResult)) { TODO validation
-        //     props.loadConfig(jsonResult as LabelConfig);
-        // } else {
-        //     const internalFormat = mapDocumentToInternalStructure(jsonResult);
-        //     props.loadDocuments(internalFormat);
-        // }
     };
 
     const onDrop = useCallback((acceptedFiles) => {
