@@ -11,6 +11,7 @@ import {UserTour} from "./UserTour/UserTour";
 import {VersionNumber} from "./VersionNumber";
 import "@material-ui/core/"
 import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
+import {CloudUpload} from "@material-ui/icons";
 
 
 function App() {
@@ -57,7 +58,7 @@ function App() {
         <div className="App">
             {renderUpload ?
                 <FileUpload loadGrid={(hwg) => {
-                    console.log(hwg)
+                    setRenderUpload(false)
                     insertGrid(hwg)
                 }}/>: <></>
             }
@@ -70,8 +71,9 @@ function App() {
 
                 <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
             </div>
+
             {/* @ts-ignore*/}
-            <FileDownload grid={{...nodeElements, pipes}} />
+            <FileDownload grid={{...nodeElements, pipes}} setRenderUpload={(val: boolean) => setRenderUpload(val)}/>
             <Notifications />
             <UserTour endTest={clearGrid} startTest={insertGrid}/>
         </div>

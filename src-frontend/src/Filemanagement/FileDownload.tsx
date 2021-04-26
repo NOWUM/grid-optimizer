@@ -1,10 +1,12 @@
 import {HotWaterGrid} from "../models";
-import {CloudDownload} from "@material-ui/icons";
+import {CloudDownload, CloudUpload} from "@material-ui/icons";
 import "./file-download.css"
 import {notify} from "../Overlays/Notifications";
+import React from "react";
 
 
-export const FileDownload = ({grid}: {grid: HotWaterGrid}) => {
+export const FileDownload = ({grid, setRenderUpload}:
+                                 {grid: HotWaterGrid, setRenderUpload: (val: boolean) => {}}) => {
 
     const isGridEmpty = () => {
         return (grid.pipes && grid.inputNodes && grid.intermediateNodes && grid.outputNodes )
@@ -40,6 +42,8 @@ export const FileDownload = ({grid}: {grid: HotWaterGrid}) => {
     return <div className={"file-download-container"} id={"#download"}>
         <div onClick={() => {handleClick(); }}>
             <CloudDownload style={{fontSize: "3vw"}} />
+
+            <CloudUpload style={{fontSize: "3vw"}} onClick={() => setRenderUpload(true)} />
         </div>
     </div>;
 };
