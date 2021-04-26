@@ -3,7 +3,6 @@ package de.fhac.ewi.routes
 import de.fhac.ewi.module
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import org.junit.BeforeClass
 import org.junit.Test
 import kotlin.test.assertEquals
 

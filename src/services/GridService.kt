@@ -4,7 +4,7 @@ import de.fhac.ewi.dto.GridRequest
 import de.fhac.ewi.model.Grid
 import de.fhac.ewi.util.toDoubleFunction
 
-class GridService(val profileService: LoadProfileService) {
+class GridService(private val profileService: LoadProfileService) {
 
     fun createByGridRequest(request: GridRequest): Grid {
         val grid = Grid()
