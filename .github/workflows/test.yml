@@ -3,8 +3,10 @@ name: Test
 # Controls when the action will run. 
 on: 
   push:
+    branches:
+      - '**'
     tags-ignore:
-    - 'v*' # Do not trigger on releases
+      - 'v*' # Do not trigger on releases
   workflow_dispatch:
 
 # Runs all tests
