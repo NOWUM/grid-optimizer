@@ -8,14 +8,24 @@ import {FileDownload} from "./Filemanagement/FileDownload";
 import Notifications from "./Overlays/Notifications";
 import {Elements} from "react-flow-renderer";
 import {UserTour} from "./UserTour/UserTour";
+import {AppBar, Tab} from "@material-ui/core";
+import {TabContext, TabList, TabPanel} from "@material-ui/lab";
+import {MetaDataContainer} from "./MetaData/MetaDataContainer";
+import {getPipe} from "./pipe";
+
+const pipe = require("./pipe")
 
 
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
-    // const [grid, setGrid] = useState<HotWaterGrid>({inputNodes: [], outputNodes: [], intermediateNodes: [], pipes: []})
+    const [tabVal, setTabVal] = useState("1")
 
-    const [nodeElements, setNodeElements] = useState<NodeElements>({inputNodes: [], outputNodes: [], intermediateNodes: []});
+    const [nodeElements, setNodeElements] = useState<NodeElements>({
+        inputNodes: [],
+        outputNodes: [],
+        intermediateNodes: []
+    });
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
 
     useEffect(() => {
@@ -37,21 +47,38 @@ function App() {
     }
 
     return (
+
+
         <div className="App">
+            <TabContext value={tabVal}>
+                {// @ts-ignore
+                }<AppBar position="static">
+                <h1 style={{userSelect: "none"}}>{getPipe()}Pipify</h1>
+                <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
+
+                    <Tab label="Editor" value="1"/>
+
+                    <Tab label="Meta Daten" value="2"/>
+                </TabList>
+            </AppBar>
+                <TabPanel value="1">
+                    <div className="react-flow-container">
+                        <FlowContainer pipes={pipes} setPipes={setPipes}
+                                       nodeElements={nodeElements} setNodeElements={setNodeElements}
+                        />
+                    </div>
+                </TabPanel>
+                <TabPanel value="2"><MetaDataContainer/></TabPanel>
+            </TabContext>
             {renderUpload ?
                 <FileUpload loadGrid={(hwg) => {
                     console.log(hwg)
                     insertGrid(hwg)
-                }}/>: <></>
+                }}/> : <></>
             }
-            <div className="react-flow-container">
-                <FlowContainer pipes={pipes} setPipes={setPipes}
-                               nodeElements={nodeElements} setNodeElements={setNodeElements}
-                />
-            </div>
             {/* @ts-ignore*/}
-            <FileDownload grid={{...nodeElements, pipes}} />
-            <Notifications />
+            <FileDownload grid={{...nodeElements, pipes}}/>
+            <Notifications/>
             <UserTour endTest={clearGrid} startTest={insertGrid}/>
         </div>
     );
