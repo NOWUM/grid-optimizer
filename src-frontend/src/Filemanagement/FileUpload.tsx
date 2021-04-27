@@ -22,13 +22,13 @@ export const FileUpload = (props: UploadProps) => {
     const mapCSVToArray = (reader: FileReader) => {
         const binaryStr = reader.result;
         console.log(binaryStr)
-        const dataString = Array.from(new Uint8Array(binaryStr as ArrayBufferLike))
+        return Array.from(new Uint8Array(binaryStr as ArrayBufferLike))
             .map((c) => String.fromCharCode(c))   // convert char codes to strings
             .join('') // join values together;
             .split("\n") // seperates at line breaks
             .map((c)=> c.trim()) // trims leading and trailing whitespaces
             .filter( (c) => c.match("^-?[0-9]+\.[0-9]*$")); // Filter all non numbers
-        console.log(dataString)
+
     }
 
     const handleStateUpdate = (reader: FileReader, fileType: string) => {

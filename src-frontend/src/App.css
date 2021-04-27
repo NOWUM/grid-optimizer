@@ -54,6 +54,7 @@ body {
 .react-flow-container {
   /*width: 80%;*/
   height: 100%;
+  padding: 1%;
   background: #f0f0f0;
   border: solid 1px silver;
   border-radius: 3px;
@@ -61,8 +62,6 @@ body {
   justify-content: center;
 
   text-align: center;
-  display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: column;
 }
