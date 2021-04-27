@@ -1,5 +1,3 @@
 package de.fhac.ewi.model
 
-class IntermediateNode(id: String): Node(id) {
-
-}
+class IntermediateNode(id: String) : Node(id)

@@ -11,7 +11,7 @@ fun Route.temperature(service: TemperatureTimeSeriesService) {
             call.respond(service.getAllKeys())
         }
         get("/series/{key}") {
-            val key = call.parameters["key"]?: throw IllegalArgumentException("No key provided.")
+            val key = call.parameters["key"] ?: throw IllegalArgumentException("No key provided.")
             call.respond(service.getSeries(key))
         }
     }

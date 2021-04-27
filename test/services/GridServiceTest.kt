@@ -7,8 +7,8 @@ class GridServiceTest {
 
     @Test
     fun createGridByEmptyRequest() {
-        val service = GridService()
+        val service = GridService(LoadProfileService(emptyList()))
         val request = GridRequest(emptyList(), emptyList(), emptyList(), emptyList())
-        val grid = service.createByGridRequest(request)
+        service.createByGridRequest(request)
     }
 }
