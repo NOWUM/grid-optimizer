@@ -22,7 +22,7 @@ class Grid {
         addNode(InputNode(id, flowTemperature, returnTemperature))
     }
 
-    fun addOutputNode(id: String, thermalEnergyDemand: Double, pressureLoss: Double) {
+    fun addOutputNode(id: String, thermalEnergyDemand: HeatDemandCurve, pressureLoss: Double) {
         addNode(OutputNode(id, thermalEnergyDemand, pressureLoss))
     }
 

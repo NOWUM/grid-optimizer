@@ -8,7 +8,7 @@ class TemperatureTimeSeriesServiceTest {
 
     @Test
     fun checkKeys() {
-        val series = listOf(TemperatureTimeSeries("Foo", List(365){0.0}))
+        val series = listOf(TemperatureTimeSeries("Foo", List(365) { 0.0 }))
         val service = TemperatureTimeSeriesService(series)
         val keys = service.getAllKeys()
         assertEquals(1, keys.size)
@@ -18,7 +18,7 @@ class TemperatureTimeSeriesServiceTest {
 
     @Test
     fun getSeries() {
-        val series = listOf(TemperatureTimeSeries("Foo", List(365){0.0}))
+        val series = listOf(TemperatureTimeSeries("Foo", List(365) { 0.0 }))
         val service = TemperatureTimeSeriesService(series)
         val requested = service.getSeries("Foo")
         assertEquals(series.first(), requested)
