@@ -10,35 +10,55 @@ interface UploadProps {
 }
 
 export const FileUpload = (props: UploadProps) => {
-    const mapToJSON = (reader: any) => {
+    const mapToJSON = (reader: FileReader) => {
         const binaryStr = reader.result;
-        // @ts-ignore
-        const dataString = Array.from(new Uint8Array(binaryStr))
+
+        const dataString = Array.from(new Uint8Array(binaryStr as ArrayBufferLike))
             .map((c) => String.fromCharCode(c))   // convert char codes to strings
             .join('');     // join values together;
         return JSON.parse(dataString);
     };
 
-    const handleStateUpdate = (reader: any) => {
+    const mapCSVToArray = (reader: FileReader) => {
+        const binaryStr = reader.result;
+        console.log(binaryStr)
+        return Array.from(new Uint8Array(binaryStr as ArrayBufferLike))
+            .map((c) => String.fromCharCode(c))   // convert char codes to strings
+            .join('') // join values together;
+            .split("\n") // seperates at line breaks
+            .map((c)=> c.trim()) // trims leading and trailing whitespaces
+            .filter( (c) => c.match("^-?[0-9]+\.[0-9]*$")); // Filter all non numbers
+
+    }
+
+    const handleStateUpdate = (reader: FileReader, fileType: string) => {
+        console.log(fileType)
+        if(fileType === "text/csv") {
+            handleCSVUpload(reader)
+        } else if (fileType === "application/json") {
+            handleJSONUpload(reader)
+        }
+    };
+
+    const handleJSONUpload = (reader: FileReader) => {
         const jsonResult = mapToJSON(reader);
         console.log(jsonResult)
         props.loadGrid(jsonResult)
-        //if (isConfig(jsonResult)) { TODO validation
-        //     props.loadConfig(jsonResult as LabelConfig);
-        // } else {
-        //     const internalFormat = mapDocumentToInternalStructure(jsonResult);
-        //     props.loadDocuments(internalFormat);
-        // }
-    };
+    }
+
+    const handleCSVUpload = (reader: FileReader) => {
+        const csvStr = mapCSVToArray(reader)
+    }
 
     const onDrop = useCallback((acceptedFiles) => {
         acceptedFiles.forEach((file: File) => {
+            const fileType = file.type
             const reader = new FileReader();
 
             reader.onabort = () => console.log('file reading was aborted');
             reader.onerror = () => console.log('file reading has failed');
             reader.onload = () => {
-                handleStateUpdate(reader);
+                handleStateUpdate(reader, fileType);
             };
             reader.readAsArrayBuffer(file);
         });

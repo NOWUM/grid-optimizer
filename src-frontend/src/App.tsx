@@ -5,19 +5,19 @@ import {FileUpload} from "./Filemanagement/FileUpload";
 import {uploadDropboxInit} from "./utils/utility";
 import {BaseNode, HotWaterGrid, IntermediateNode, NodeElements, NodeType, OutputNode, Pipe} from "./models";
 import {FileDownload} from "./Filemanagement/FileDownload";
-import Notifications from "./Overlays/Notifications";
 import {Elements} from "react-flow-renderer";
 import {UserTour} from "./UserTour/UserTour";
+import {AppBar, Tab} from "@material-ui/core";
+import {TabContext, TabList, TabPanel} from "@material-ui/lab";
+import {MetaDataContainer} from "./MetaData/MetaDataContainer";
+import {getPipe} from "./pipe";
 import {VersionNumber} from "./VersionNumber";
-import "@material-ui/core/"
 import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
-import {CloudUpload} from "@material-ui/icons";
-
 
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
-    // const [grid, setGrid] = useState<HotWaterGrid>({inputNodes: [], outputNodes: [], intermediateNodes: [], pipes: []})
+    const [tabVal, setTabVal] = useState("1")
 
     const [nodeElements, setNodeElements] = useState<NodeElements>({inputNodes: [], intermediateNodes: [], outputNodes: []});
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
@@ -55,26 +55,42 @@ function App() {
     }
 
     return (
+
+
         <div className="App">
+            <TabContext value={tabVal}>
+                {// @ts-ignore
+                }<AppBar position="static">
+                <h1 style={{userSelect: "none"}}>{getPipe()}Pipify</h1>
+                <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
+
+                    <Tab label="Editor" value="1"/>
+
+                    <Tab label="Meta Daten" value="2"/>
+                </TabList>
+            </AppBar>
+                <TabPanel value="1">
+                    <div className="react-flow-container">
+                        <FlowContainer pipes={pipes} setPipes={setPipes}
+                                       nodeElements={nodeElements} setNodeElements={setNodeElements}
+                        />
+
+                        <VersionNumber />
+
+                        <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
+                    </div>
+                </TabPanel>
+                <TabPanel value="2"><MetaDataContainer/></TabPanel>
+            </TabContext>
             {renderUpload ?
                 <FileUpload loadGrid={(hwg) => {
                     setRenderUpload(false)
                     insertGrid(hwg)
-                }}/>: <></>
+                }}/> : <></>
             }
-            <div className="react-flow-container">
-                <FlowContainer pipes={pipes} setPipes={setPipes}
-                               nodeElements={nodeElements} setNodeElements={setNodeElements}
-                />
-
-                <VersionNumber />
-
-                <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
-            </div>
 
             {/* @ts-ignore*/}
             <FileDownload grid={{...nodeElements, pipes}} setRenderUpload={(val: boolean) => setRenderUpload(val)}/>
-            <Notifications />
             <UserTour endTest={clearGrid} startTest={insertGrid}/>
         </div>
     );

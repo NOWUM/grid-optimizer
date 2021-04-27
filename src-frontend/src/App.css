@@ -3,13 +3,17 @@
   --corp-secondary-color: 210, 255, 77;
 }
 
+body {
+  overflow: hidden;
+}
+
 .App {
   text-align: center;
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  overflow: hidden !important;
 }
 
 .App-logo {
@@ -48,13 +52,18 @@
 }
 
 .react-flow-container {
-  width: 80%;
-  height: 80%;
-  padding: 3px;
+  /*width: 80%;*/
+  height: 100%;
+  padding: 1%;
   background: #f0f0f0;
   border: solid 1px silver;
   border-radius: 3px;
-  display: flex; justify-content: center;
+  display: flex;
+  justify-content: center;
+
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
 }
 .react-flow {
   background: #fff;
@@ -67,4 +76,49 @@
 .header-form {
   font-size: 1.5rem !important;
   color: rgba(var(--corp-main-color)) !important;
+}
+
+.MuiTabPanel-root {
+  height: 80vh;
+  width: 100vw;
+}
+
+
+.MuiAppBar-root{
+
+  display: flex;
+  flex-direction: row !important;
+  justify-content: space-between;
+}
+
+.MuiAppBar-root h1 {
+  margin: 20px;
+}
+
+.MuiTabs-flexContainer {
+  height: 100%;
+}
+
+.MuiAppBar-colorPrimary{
+  background-color: rgb(var(--corp-main-color)) !important
+}
+
+.PrivateTabIndicator-colorSecondary-3 {
+  background-color: rgb(var(--corp-secondary-color)) !important;
+}
+
+.MuiAppBar-root h1 {
+  margin: 20px;
+}
+
+.MuiTabs-flexContainer {
+  height: 100%;
+}
+
+h1 svg {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+  fill: silver;
+  vertical-align: middle;
 }
