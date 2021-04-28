@@ -17,16 +17,18 @@ export interface BaseNode extends Node{
     type: NodeType
 }
 
-export interface InputNode extends BaseNode{}
+export interface InputNode extends BaseNode{
+    flowTemperatureTemplate: string, // mathematical expression like `x+5` with x as outside temperature
+    returnTemperatureTemplate: string // mathematical expression like `x+5` with x as outside temperature
+}
 
 export interface IntermediateNode extends BaseNode{
     connect_limit: 3
 }
 
 export interface OutputNode extends BaseNode{
-    hotWater: number,
-    area: number,
-    loadProfile: LoadProfile
+    thermalEnergyDemand: number, // kwh per year
+    pressureLoss: number // Bar
 }
 
 export enum LoadProfile{

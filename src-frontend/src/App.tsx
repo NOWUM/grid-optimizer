@@ -3,7 +3,7 @@ import './App.css';
 import {FlowContainer} from "./FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
 import {uploadDropboxInit} from "./utils/utility";
-import {BaseNode, HotWaterGrid, IntermediateNode, NodeElements, NodeType, OutputNode, Pipe} from "./models";
+import {BaseNode, HotWaterGrid, InputNode, IntermediateNode, NodeElements, NodeType, OutputNode, Pipe} from "./models";
 import {FileDownload} from "./Filemanagement/FileDownload";
 import {Elements} from "react-flow-renderer";
 import {UserTour} from "./UserTour/UserTour";
@@ -13,6 +13,7 @@ import {MetaDataContainer} from "./MetaData/MetaDataContainer";
 import {getPipe} from "./pipe";
 import {VersionNumber} from "./VersionNumber";
 import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
+import Notifications from "./Overlays/Notifications";
 
 function App() {
 
@@ -43,7 +44,7 @@ function App() {
     const handleNewNode = (newNode: BaseNode) => {
         const newNodeElements = {...nodeElements};
         switch (newNode.type) {
-            case NodeType.INPUT_NODE: newNodeElements.inputNodes.push(newNode)
+            case NodeType.INPUT_NODE: newNodeElements.inputNodes.push(newNode as InputNode)
                 break;
             case NodeType.INTERMEDIATE_NODE: newNodeElements.intermediateNodes.push(newNode as IntermediateNode)
                 break;
@@ -63,9 +64,7 @@ function App() {
                 }<AppBar position="static">
                 <h1 style={{userSelect: "none"}}>{getPipe()}Pipify</h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-
                     <Tab label="Editor" value="1"/>
-
                     <Tab label="Meta Daten" value="2"/>
                 </TabList>
             </AppBar>
@@ -92,6 +91,7 @@ function App() {
             {/* @ts-ignore*/}
             <FileDownload grid={{...nodeElements, pipes}} setRenderUpload={(val: boolean) => setRenderUpload(val)}/>
             <UserTour endTest={clearGrid} startTest={insertGrid}/>
+            <Notifications />
         </div>
     );
 }

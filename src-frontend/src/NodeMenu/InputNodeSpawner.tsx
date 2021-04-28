@@ -10,7 +10,9 @@ export const InputNodeSpawner = ({onNewNode}: NodeSpawner) => {
         data: {label: "Default Node"},
         position: {x: 300, y: 300},
         id: generateUniqueID(),
-        type: NodeType.INPUT_NODE
+        type: NodeType.INPUT_NODE,
+        flowTemperatureTemplate: "x+3", // mathematical expression like `x+5` with x as outside temperature
+        returnTemperatureTemplate: "x+2"
     }
 
 

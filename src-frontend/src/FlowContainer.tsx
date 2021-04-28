@@ -67,11 +67,15 @@ const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
         },
         body: JSON.stringify(grid)
     }
-    return fetch('/api/grid/verify', configuration)
+    return fetch('http://127.0.0.1:8080/api/grid/verify', configuration)
         .then(response => {
+            response.text().then((text) => {
+                if(text){
+                    notify(text)
+                }
+            })
             return response.status}).then( (status) => {return status===ResultCode.OK} )
         .catch(e => {
-            console.log(e)
             return false});
 }
 
@@ -92,8 +96,6 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
                     //@ts-ignore
                     setPipes((els) => addEdge(params, els))
                 }, () => console.log("Nothing to do here"), params.id)
-            } else {
-                notify("Netz nicht valide")
             }
         }
         )
