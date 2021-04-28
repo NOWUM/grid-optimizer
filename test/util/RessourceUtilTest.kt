@@ -3,7 +3,7 @@ package de.fhac.ewi.util
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class TimeSeriesUtilTest {
+class RessourceUtilTest {
 
     @Test
     fun loadTemperatureTimeSeriesTest() {

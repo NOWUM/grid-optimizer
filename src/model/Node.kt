@@ -20,8 +20,9 @@ abstract class Node(val id: String) {
     open val connectedPressureLoss: Double
         get() = connectedPipes.filter { it.source == this }.sumOf { it.target.connectedPressureLoss }
 
-    open val connectedThermalEnergyDemand: Double
-        get() = connectedPipes.filter { it.source == this }.sumOf { it.target.connectedThermalEnergyDemand }
+    open val connectedThermalEnergyDemand: HeatDemandCurve
+        get() = connectedPipes.filter { it.source == this }
+            .fold(HeatDemandCurve.ZERO) { r, p -> r + p.target.connectedThermalEnergyDemand }
 
     fun isParentOf(target: Node): Boolean =
         target in connectedChildNodes || connectedChildNodes.any { it.isParentOf(target) }
@@ -32,10 +33,10 @@ abstract class Node(val id: String) {
         if (pipe.source != this)
             throw IllegalArgumentException("Source of $pipe does not match $this.")
 
-        if(isParentOf(pipe.target))
+        if (isParentOf(pipe.target))
             throw IllegalArgumentException("$this is already parent of ${pipe.target}")
 
-        if(!pipe.target.canReceiveInputFrom(this))
+        if (!pipe.target.canReceiveInputFrom(this))
             throw IllegalArgumentException("${pipe.target} can not receive input from $this.")
 
         connectedPipes += pipe
