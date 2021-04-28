@@ -8,14 +8,20 @@ import ReactFlow, {
     Elements,
     removeElements
 } from 'react-flow-renderer';
-// you need these styles for React Flow to work properly
 import 'react-flow-renderer/dist/style.css';
 
-// additionally you can load the default theme
 import 'react-flow-renderer/dist/theme-default.css';
 import {EdgePopover} from "./Overlays/EdgePopover";
 import {showEditPipeDialog} from "./Overlays/EdgeContextOverlay";
-import {BaseNode, HotWaterGrid, NodeElements, NodeType, OutputNode as OutputNodeModel, Pipe} from "./models";
+import {
+    BaseNode,
+    HotWaterGrid,
+    InputNode as InputNodeModel,
+    NodeElements,
+    NodeType,
+    OutputNode as OutputNodeModel,
+    Pipe
+} from "./models";
 import {InputNode} from './CustomNodes/InputNode';
 import {IntermediateNode} from "./CustomNodes/IntermediateNode";
 import {OutputNode} from "./CustomNodes/OutputNode";
@@ -142,11 +148,21 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
             return {...el, ...edgeConfiguration}
         })
 
-        outputNodes.map((n) => {
+        inputNodes.map((n) => {
+            const {flowTemperatureTemplate, returnTemperatureTemplate} = (n as InputNodeModel)
             n.data = {
-                ...n.data, thermalEnergyDemand: (n as OutputNodeModel).thermalEnergyDemand,
-                pressureLoss: (n as OutputNodeModel).pressureLoss,
-                updateNode
+                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode
+            }
+        })
+
+        intermediateNodes.map((n) => {
+            n.data = {...n.data, updateNode}
+        })
+
+        outputNodes.map((n) => {
+            const {thermalEnergyDemand, pressureLoss} = (n as OutputNodeModel)
+            n.data = {
+                ...n.data, thermalEnergyDemand, pressureLoss, updateNode
             }
         })
 
@@ -166,7 +182,6 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
                 nodeType = "outputNodes"
                 break;
             default:
-                console.log("Node to be updated cant be found")
                 notify("Node to be updated cant be found")
                 return;
         }

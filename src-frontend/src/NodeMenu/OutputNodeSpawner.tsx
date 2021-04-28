@@ -18,7 +18,7 @@ export const OutputNodeSpawner = ({onNewNode}: NodeSpawner) => {
 
 
     const handleClick = () => {
-        showNodeOutputDialog("Zeige eine Output Node", defaultNode,
+        showNodeOutputDialog("Erzeuge eine neue Output Node", defaultNode,
             (node) => {
                 console.log(node)
                 onNewNode(node)

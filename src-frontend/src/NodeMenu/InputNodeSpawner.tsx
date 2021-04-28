@@ -3,6 +3,7 @@ import {NodeSpawner} from "./NodeMenuSpawnerContainer";
 import {Button} from "@material-ui/core";
 import {InputNode, NodeType} from "../models";
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
+import {showNodeInputDialog} from "../Overlays/NodeContextOverlay";
 
 
 export const InputNodeSpawner = ({onNewNode}: NodeSpawner) => {
@@ -17,7 +18,7 @@ export const InputNodeSpawner = ({onNewNode}: NodeSpawner) => {
 
 
     const handleClick = () => {
-        onNewNode(defaultNode)
+        showNodeInputDialog("Erzeuge eine neue Input Node", defaultNode, onNewNode, () => {} )
     }
 
     return <Button onClick={handleClick}>
