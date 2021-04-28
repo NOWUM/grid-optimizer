@@ -72,7 +72,7 @@ const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
         },
         body: JSON.stringify(grid)
     }
-    return fetch('http://127.0.0.1:8080/api/grid/verify', configuration)
+    return fetch('/api/grid/verify', configuration)
         .then(response => {
             response.text().then((text) => {
                 if(text){
