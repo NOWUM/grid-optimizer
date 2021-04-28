@@ -102,7 +102,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
     };
 
     // @ts-ignore
-    const onElementsRemove = (elementsToRemove) => setElements((els) => removeElements(elementsToRemove, els));
+    const onElementsRemove = (elementsToRemove) => setPipes((els) => removeElements(elementsToRemove, els));
 
     const onElementClick = (event: any, edge: Edge) => {
         // showEdgeDialog("Gib bitte ein paar Rohrdaten an", () => console.log("confirm"), () => console.log())
