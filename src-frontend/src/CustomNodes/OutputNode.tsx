@@ -1,6 +1,9 @@
-import {customInputHandleStyle, CustomNodeDate} from "./InputNode";
+import React from "react";
+import {customInputHandleStyle} from "./InputNode";
 import {Handle, Position} from "react-flow-renderer";
 import {showNodeOutputDialog} from "../Overlays/NodeContextOverlay";
+import {OutputNode as OutputNodeModel} from "../models";
+import {Tooltip} from "@material-ui/core";
 
 const customNodeStyles = {
     background: 'red',
@@ -8,15 +11,28 @@ const customNodeStyles = {
     padding: 10,
 };
 
-export const OutputNode = ({ data } : {data: CustomNodeDate}) => {
-    const handleClick = () => {
-        showNodeOutputDialog("Bearbeiten sie diese Node", () => {}, () => {}, "123")
+export const OutputNode = (node: OutputNodeModel) => {
+
+    const getOutputNode = (): OutputNodeModel => {
+        const newNode = {...node}
+        newNode.thermalEnergyDemand = newNode.data.thermalEnergyDemand
+        newNode.pressureLoss = newNode.data.pressureLoss
+        return newNode
     }
 
-    return (
-        <div style={customNodeStyles} onDoubleClick={handleClick}>
-            <Handle type="target" position={Position.Top} style={{ ... customInputHandleStyle}} />
-            <div>{data.label}</div>
-        </div>
+    const handleClick = () => {
+        showNodeOutputDialog("Bearbeiten sie diese Node", getOutputNode(),
+            (newNode) => {node.data.updateNode(newNode)}, () => {})
+    }
+
+    return (<Tooltip title={<>
+            Wärmebedarf: {node.data.thermalEnergyDemand}kwh<br/>
+            Druckverlust: {node.data.pressureLoss} Bar
+    </>}>
+            <div style={customNodeStyles} onDoubleClick={handleClick}>
+                <Handle type="target" position={Position.Top} style={{...customInputHandleStyle}}/>
+                <div>{node?.data.label}</div>
+            </div>
+        </Tooltip>
     );
 };

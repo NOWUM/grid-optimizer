@@ -20,12 +20,20 @@ function App() {
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
     const [tabVal, setTabVal] = useState("1")
 
-    const [nodeElements, setNodeElements] = useState<NodeElements>({inputNodes: [], intermediateNodes: [], outputNodes: []});
+    const [nodeElements, setNodeElements] = useState<NodeElements>({
+        inputNodes: [],
+        intermediateNodes: [],
+        outputNodes: []
+    });
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
 
     useEffect(() => {
         uploadDropboxInit(renderUpload, setRenderUpload)
     }, []);
+
+    useEffect(() => {
+        console.log(nodeElements.outputNodes)
+    }, [nodeElements])
 
     const getNodeElements = (hwg: HotWaterGrid): NodeElements => {
         return {inputNodes: hwg.inputNodes, intermediateNodes: hwg.intermediateNodes, outputNodes: hwg.outputNodes}
@@ -56,8 +64,6 @@ function App() {
     }
 
     return (
-
-
         <div className="App">
             <TabContext value={tabVal}>
                 {// @ts-ignore
@@ -71,15 +77,14 @@ function App() {
                 <TabPanel value="1">
                     <div className="react-flow-container">
                         <FlowContainer pipes={pipes} setPipes={setPipes}
-                                       nodeElements={nodeElements} setNodeElements={setNodeElements}
-                        />
-
-                        <VersionNumber />
-
+                                       nodeElements={nodeElements} setNodeElements={setNodeElements} />
+                        <VersionNumber/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
                     </div>
                 </TabPanel>
-                <TabPanel value="2"><MetaDataContainer/></TabPanel>
+                <TabPanel value="2">
+                    <MetaDataContainer/>
+                </TabPanel>
             </TabContext>
             {renderUpload ?
                 <FileUpload loadGrid={(hwg) => {

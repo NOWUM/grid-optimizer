@@ -15,13 +15,12 @@ import 'react-flow-renderer/dist/style.css';
 import 'react-flow-renderer/dist/theme-default.css';
 import {EdgePopover} from "./Overlays/EdgePopover";
 import {showEditPipeDialog} from "./Overlays/EdgeContextOverlay";
-import {BaseNode, HotWaterGrid, NodeElements, NodeType, Pipe} from "./models";
+import {BaseNode, HotWaterGrid, NodeElements, NodeType, OutputNode as OutputNodeModel, Pipe} from "./models";
 import {InputNode} from './CustomNodes/InputNode';
 import {IntermediateNode} from "./CustomNodes/IntermediateNode";
 import {OutputNode} from "./CustomNodes/OutputNode";
 import {createGrid} from "./utils/utility";
 import {notify} from "./Overlays/Notifications";
-
 
 const style = getComputedStyle(document.body)
 const corpColor = style.getPropertyValue('--corp-main-color')
@@ -135,22 +134,65 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
         })
     }
 
-    const getElements = (): Elements => {
+    const getElementsForFlow = (): Elements => {
         const inputNodes = addTypeToNodes(nodeElements.inputNodes, NodeType.INPUT_NODE)
         const intermediateNodes = addTypeToNodes(nodeElements.intermediateNodes, NodeType.INTERMEDIATE_NODE)
         const outputNodes = addTypeToNodes(nodeElements.outputNodes, NodeType.OUTPUT_NODE)
-        const defaultPipes = pipes.map((el) => {return {...el, ...edgeConfiguration}})
+        const defaultPipes = pipes.map((el) => {
+            return {...el, ...edgeConfiguration}
+        })
+
+        outputNodes.map((n) => {
+            n.data = {
+                ...n.data, thermalEnergyDemand: (n as OutputNodeModel).thermalEnergyDemand,
+                pressureLoss: (n as OutputNodeModel).pressureLoss,
+                updateNode
+            }
+        })
 
         return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
 
+    const updateNode = (newNode: BaseNode) => {
+        let nodeType;
+        switch (newNode.type) {
+            case NodeType.INPUT_NODE:
+                nodeType = "inputNodes"
+                break;
+            case NodeType.INTERMEDIATE_NODE:
+                nodeType = "intermediateNodes"
+                break;
+            case NodeType.OUTPUT_NODE:
+                nodeType = "outputNodes"
+                break;
+            default:
+                console.log("Node to be updated cant be found")
+                notify("Node to be updated cant be found")
+                return;
+        }
+
+        console.log(nodeType)
+
+        const newNodeElements = {...nodeElements}
+
+        // @ts-ignore
+        newNodeElements[nodeType] = nodeElements[nodeType].map((n) => {
+            if (n.id === newNode.id) {
+                return newNode
+            } return n
+        })
+
+        console.log(newNodeElements)
+        setNodeElements(newNodeElements)
+    }
+
     // @ts-ignore
-    return <ReactFlow elements={getElements()}
-        onConnect={(params) => onConnect(params)}
-        nodeTypes={nodeTypes}
-        onEdgeContextMenu={onElementClick}
-        deleteKeyCode={46}
-        onClick={() => closePopupTarget()}
+    return <ReactFlow elements={getElementsForFlow()}
+                      onConnect={(params) => onConnect(params)}
+                      nodeTypes={nodeTypes}
+                      onEdgeContextMenu={onElementClick}
+                      deleteKeyCode={46}
+                      onClick={() => closePopupTarget()}
     >
         <Background
             variant={BackgroundVariant.Dots}

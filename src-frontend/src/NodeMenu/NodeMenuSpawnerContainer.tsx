@@ -1,4 +1,4 @@
-import {BaseNode} from "../models";
+import {BaseNode, OutputNode} from "../models";
 import React from "react";
 import {InputNodeSpawner} from "./InputNodeSpawner";
 import {IntermediateNodeSpawner} from "./IntermediateNodeSpawner";
@@ -13,6 +13,8 @@ export const NodeMenuSpawnerContainer = ({onNewNode}: NodeSpawner) => {
     return <div className={"node-menu-container"}>
         <InputNodeSpawner onNewNode={(baseNode: BaseNode) => onNewNode(baseNode)}/>
         <IntermediateNodeSpawner onNewNode={(baseNode: BaseNode) => onNewNode(baseNode)}/>
-        <OutputNodeSpawner onNewNode={(baseNode: BaseNode) => onNewNode(baseNode)}/>
+        <OutputNodeSpawner onNewNode={(baseNode: BaseNode) => {
+            console.log(baseNode)
+            onNewNode(baseNode)}}/>
     </div>
 }
