@@ -93,17 +93,27 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
         console.log(params);
         params.animated = true;
 
-        verifyBackend(createGrid(nodeElements, pipes as Pipe[])).then((verified: boolean) => {
-            if(verified) {
-                showEditPipeDialog("Füge ein neues Rohr hinzu", () => {
-                    params= {...params, ...edgeConfiguration}
-
-                    //@ts-ignore
-                    setPipes((els) => addEdge(params, els))
-                }, () => console.log("Nothing to do here"), params.id)
+        showEditPipeDialog("Füge ein neues Rohr hinzu", (id, length1) => {
+            const pipesToVerify = [...pipes]
+            const newPipe = {
+                source: params.source,
+                target: params.target,
+                id, length: length1
             }
-        }
-        )
+
+            pipesToVerify.push(newPipe)
+            verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[])).then((verified: boolean) => {
+                    if(verified) {
+                        params= {...params, ...edgeConfiguration}
+                        //@ts-ignore
+                        setPipes((els) => addEdge(params, els))
+                    }
+                }
+            )
+
+        }, () => console.log("Nothing to do here"), params.id)
+
+
     };
 
     // @ts-ignore
@@ -186,18 +196,14 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
                 return;
         }
 
-        console.log(nodeType)
 
         const newNodeElements = {...nodeElements}
-
         // @ts-ignore
         newNodeElements[nodeType] = nodeElements[nodeType].map((n) => {
             if (n.id === newNode.id) {
                 return newNode
             } return n
         })
-
-        console.log(newNodeElements)
         setNodeElements(newNodeElements)
     }
 
