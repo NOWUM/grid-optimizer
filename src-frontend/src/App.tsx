@@ -14,6 +14,7 @@ import {getPipe} from "./pipe";
 import {VersionNumber} from "./VersionNumber";
 import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
 import Notifications from "./Overlays/Notifications";
+import {OptimizationResults} from "./OptimizationResults";
 
 function App() {
 
@@ -72,6 +73,7 @@ function App() {
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
                     <Tab label="Editor" value="1"/>
                     <Tab label="Meta Daten" value="2"/>
+                    <Tab label="Optimierung" value="3"/>
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
@@ -84,6 +86,9 @@ function App() {
                 </TabPanel>
                 <TabPanel value="2">
                     <MetaDataContainer/>
+                </TabPanel>
+                <TabPanel value={"3"}>
+                    <OptimizationResults />
                 </TabPanel>
             </TabContext>
             {renderUpload ?
