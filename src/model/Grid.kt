@@ -8,6 +8,8 @@ class Grid {
     private val nodes = mutableListOf<Node>()
     private val pipes = mutableListOf<Pipe>()
 
+    val input: InputNode by lazy { nodes.filterIsInstance<InputNode>().single() }
+
     private fun addNode(node: Node) {
         if (nodes.any { it.id.equals(node.id, true) })
             throw IllegalArgumentException("There is already an node with id ${node.id}")
