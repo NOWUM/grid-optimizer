@@ -9,10 +9,7 @@ export const VersionNumber = () => {
     }, [])
 
     const configuration = {
-        method: 'GET',
-        headers: {
-            "Access-Control-Allow-Origin": "*"
-        }
+        method: 'GET'
     }
 
     const fetchVersionNumber = () => {
