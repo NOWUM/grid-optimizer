@@ -1,4 +1,4 @@
-import {BaseNode, OutputNode} from "../models";
+import {BaseNode} from "../models";
 import React from "react";
 import {InputNodeSpawner} from "./InputNodeSpawner";
 import {IntermediateNodeSpawner} from "./IntermediateNodeSpawner";

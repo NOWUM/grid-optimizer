@@ -1,5 +1,5 @@
-import {BottomNavigation} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
+import {baseUrl} from "./utils/utility";
 
 export const VersionNumber = () => {
     const [version, setVersion] = useState()
@@ -16,7 +16,7 @@ export const VersionNumber = () => {
     }
 
     const fetchVersionNumber = () => {
-        return fetch('/api/version', configuration)
+        fetch(`${baseUrl}/api/version`, configuration)
             .then(response => {
                 return response.json()
             }).then(response => {

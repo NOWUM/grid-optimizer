@@ -163,18 +163,18 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
             return {...el, ...edgeConfiguration}
         })
 
-        inputNodes.map((n) => {
+        inputNodes.forEach((n) => {
             const {flowTemperatureTemplate, returnTemperatureTemplate} = (n as InputNodeModel)
             n.data = {
                 ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode
             }
         })
 
-        intermediateNodes.map((n) => {
+        intermediateNodes.forEach((n) => {
             n.data = {...n.data, updateNode}
         })
 
-        outputNodes.map((n) => {
+        outputNodes.forEach((n) => {
             const {thermalEnergyDemand, pressureLoss, loadProfileName} = (n as OutputNodeModel)
             n.data = {
                 ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName

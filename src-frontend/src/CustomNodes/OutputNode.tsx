@@ -23,7 +23,7 @@ export const OutputNode = (node: OutputNodeModel) => {
 
     const handleClick = () => {
         showNodeOutputDialog("Bearbeiten sie diese Node", getOutputNode(),
-            (newNode) => {node.data.updateNode(newNode)}, () => {})
+            (newNode) => {node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
     }
 
     return (<Tooltip title={<>

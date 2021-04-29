@@ -17,7 +17,7 @@ export const IntermediateNodeSpawner = ({onNewNode}: NodeSpawner) => {
 
 
     const handleClick = () => {
-        showNodeIntermediateDialog("Erzeuge eine neue Intermediate Node", defaultNode, onNewNode, () => {})
+        showNodeIntermediateDialog("Erzeuge eine neue Intermediate Node", defaultNode, onNewNode, () => {/*Nothing to do here*/})
     }
 
     return <Button onClick={handleClick}>

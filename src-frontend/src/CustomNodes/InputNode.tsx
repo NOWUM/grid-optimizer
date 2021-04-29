@@ -1,8 +1,8 @@
 import {Handle, Position} from "react-flow-renderer";
 import {Tooltip} from "@material-ui/core";
 import React from "react";
-import {InputNode as InputNodeModel, OutputNode as OutputNodeModel} from "../models";
-import {showNodeInputDialog, showNodeOutputDialog} from "../Overlays/NodeContextOverlay";
+import {InputNode as InputNodeModel} from "../models";
+import {showNodeInputDialog} from "../Overlays/NodeContextOverlay";
 
 
 const customNodeStyles = {
@@ -38,7 +38,7 @@ export const InputNode = (node: InputNodeModel) => {
         showNodeInputDialog("Bearbeiten sie diese Node", getInputNode(),
             (newNode) => {
             console.log(newNode)
-            node.data.updateNode(newNode)}, () => {})
+            node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
     }
 
     return (

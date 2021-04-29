@@ -18,7 +18,7 @@ export const InputNodeSpawner = ({onNewNode}: NodeSpawner) => {
 
 
     const handleClick = () => {
-        showNodeInputDialog("Erzeuge eine neue Input Node", defaultNode, onNewNode, () => {} )
+        showNodeInputDialog("Erzeuge eine neue Input Node", defaultNode, onNewNode, () => {/*Nothing to do here*/} )
     }
 
     return <Button onClick={handleClick}>

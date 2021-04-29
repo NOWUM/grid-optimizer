@@ -23,9 +23,7 @@ export const OutputNodeSpawner = ({onNewNode}: NodeSpawner) => {
             (node) => {
                 console.log(node)
                 onNewNode(node)
-            }
-            , () => {
-            })
+            },() => {/*Nothing to do here*/})
     }
 
     return <Button onClick={handleClick}>

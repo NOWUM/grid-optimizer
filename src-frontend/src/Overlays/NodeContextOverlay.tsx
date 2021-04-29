@@ -1,6 +1,6 @@
 import {confirmAlert} from "react-confirm-alert";
 import React, {ChangeEvent, useEffect, useState} from "react";
-import {BaseNode, HotWaterGrid, InputNode, IntermediateNode, NodeType, OutputNode} from "../models";
+import {BaseNode, InputNode, IntermediateNode, NodeType, OutputNode} from "../models";
 import {Button, FormLabel, Grid, MenuItem, Select, TextField, Typography} from "@material-ui/core";
 import {notify} from "./Notifications";
 import {baseUrl} from "../utils/utility";
@@ -12,7 +12,7 @@ export const showNodeInputDialog = (message: string,
                                     onConfirm: (node: InputNode) => void,
                                     onAbort: () => void) => {
 
-    showNodeDialog(message, (node) => onConfirm(node as InputNode), onAbort, node as InputNode)
+    showNodeDialog(message, (n) => onConfirm(n as InputNode), onAbort, node)
 }
 
 export const showNodeOutputDialog = (message: string,
@@ -20,7 +20,7 @@ export const showNodeOutputDialog = (message: string,
                                      onConfirm: (node: OutputNode) => void,
                                      onAbort: () => void) => {
 
-    showNodeDialog(message, (node) => onConfirm(node as OutputNode), onAbort, node)
+    showNodeDialog(message, (n) => onConfirm(n as OutputNode), onAbort, node)
 }
 
 export const showNodeIntermediateDialog = (message: string,
@@ -28,7 +28,7 @@ export const showNodeIntermediateDialog = (message: string,
                                             onConfirm: (node: IntermediateNode) => void,
                                             onAbort: () => void) => {
 
-    showNodeDialog(message, (node) => onConfirm(node as IntermediateNode), onAbort, node)
+    showNodeDialog(message, (n) => onConfirm(n as IntermediateNode), onAbort, node)
 }
 
 export const showNodeDialog = (message: string,
