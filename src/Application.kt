@@ -81,7 +81,7 @@ fun Application.module(testing: Boolean = false) {
             // Add services for injection usage
             single { TemperatureTimeSeriesService(loadTemperatureTimeSeries()) }
             single { LoadProfileService(loadStandardLoadProfiles()) }
-            single { GridService(get()) }
+            single { GridService(get(), get()) }
         })
     }
 
