@@ -1,7 +1,4 @@
-import ReactFlow, {
-    Edge,
-    Node
-} from 'react-flow-renderer';
+import {Edge, Node} from 'react-flow-renderer';
 
 export interface NodeElements {
     inputNodes: InputNode[],
@@ -14,18 +11,22 @@ export interface HotWaterGrid extends NodeElements{
 
 export interface BaseNode extends Node{
     id: string,
+    type: NodeType
 }
 
-export interface InputNode extends BaseNode{}
+export interface InputNode extends BaseNode{
+    flowTemperatureTemplate: string, // mathematical expression like `x+5` with x as outside temperature
+    returnTemperatureTemplate: string // mathematical expression like `x+5` with x as outside temperature
+}
 
 export interface IntermediateNode extends BaseNode{
     connect_limit: 3
 }
 
-export interface OutputNode extends BaseNode{
-    hotWater: number,
-    area: number,
-    loadProfile: LoadProfile
+export interface OutputNode extends BaseNode {
+    thermalEnergyDemand: number, // kwh per year
+    pressureLoss: number, // Bar,
+    loadProfileName: string
 }
 
 export enum LoadProfile{
@@ -41,3 +42,5 @@ export enum NodeType {
     INTERMEDIATE_NODE="INTERMEDIATE_NODE",
     OUTPUT_NODE="OUTPUT_NODE"
 }
+
+

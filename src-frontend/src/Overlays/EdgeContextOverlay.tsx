@@ -1,7 +1,8 @@
 import {confirmAlert} from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import {Button, CardHeader, FormLabel, Grid, TextField, Typography} from "@material-ui/core";
+import { Grid, TextField} from "@material-ui/core";
 import React from "react";
+import {FormSkeleton} from "./FormSkeleton";
 
 
 
@@ -36,27 +37,7 @@ const PipeSplitForm = ({message, onConfirm, onAbort, type, id}: {
     type: PipeActionType,
     id: string
 }) => {
-    return <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-    >
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <Typography className={"header-form"} color="textSecondary" gutterBottom>
-                    {message}
-                </Typography>
-            </Grid>
-        </Grid>
-
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <FormLabel> Leitungs-ID: {id} </FormLabel>
-            </Grid>
-        </Grid>
+    return <FormSkeleton id={id} message={message} onConfirm={() => {onConfirm("1", 1, 1)}} onAbort={onAbort}>
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
@@ -71,24 +52,7 @@ const PipeSplitForm = ({message, onConfirm, onAbort, type, id}: {
                 </Grid>
             </Grid> : <></>
         }
-        <Grid container direction="row" item xs={7} spacing={1}>
-            <Grid item xs={4}>
-                <Button onClick={() => {
-                    onConfirm("1", 1, 1)
-                }}>
-                    Bestätigen
-                </Button>
-            </Grid>
-            <Grid item xs={6}>
-                <Button onClick={() => {
-                    onAbort()
-                }}>
-                    Abbruch
-                </Button>
-            </Grid>
-        </Grid>
-
-    </Grid>
+    </FormSkeleton>
 }
 
 export const showEditPipeDialog = (message: string,

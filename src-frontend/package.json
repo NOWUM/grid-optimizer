@@ -2,6 +2,7 @@
   "name": "net-builder",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
@@ -16,12 +17,14 @@
     "@types/react-dom": "^17.0.0",
     "@types/reactour": "^1.18.1",
     "event-emitter": "^0.3.5",
+    "plotly.js": "^1.58.4",
     "react": "^17.0.2",
     "react-confirm-alert": "^2.7.0",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.2",
     "react-flow-renderer": "^9.5.0",
     "react-id-generator": "^3.0.1",
+    "react-plotly.js": "^2.5.1",
     "react-scripts": "4.0.3",
     "reactour": "^1.18.3",
     "styled-components": "^5.2.3",
@@ -53,6 +56,7 @@
     ]
   },
   "devDependencies": {
+    "@types/plotly.js": "^1.54.10",
     "@types/styled-components": "^5.1.9"
   }
 }

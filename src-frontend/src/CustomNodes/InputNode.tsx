@@ -1,4 +1,8 @@
 import {Handle, Position} from "react-flow-renderer";
+import {Tooltip} from "@material-ui/core";
+import React from "react";
+import {InputNode as InputNodeModel} from "../models";
+import {showNodeInputDialog} from "../Overlays/NodeContextOverlay";
 
 
 const customNodeStyles = {
@@ -21,16 +25,36 @@ export interface CustomNodeDate {
 
 
 
-export const InputNode = ({ data }: {data: CustomNodeDate}) => {
+export const InputNode = (node: InputNodeModel) => {
+
+    const getInputNode = (): InputNodeModel => {
+        const newNode = {...node}
+        newNode.flowTemperatureTemplate = newNode.data.flowTemperatureTemplate
+        newNode.returnTemperatureTemplate = newNode.data.returnTemperatureTemplate
+        return newNode
+    }
+
+    const handleClick = () => {
+        showNodeInputDialog("Bearbeiten sie diese Node", getInputNode(),
+            (newNode) => {
+            console.log(newNode)
+            node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
+    }
+
     return (
-        <div style={customNodeStyles}>
-            <Handle
-                type="source"
-                position={Position.Bottom}
-                id="a"
-                style={{ ...customOutputHandleStyle }}
-            />
-            <div>{data.label}</div>
-        </div>
+        <Tooltip title={<>
+            Flow Temperatur Template: {node.data.flowTemperatureTemplate}<br/>
+            Return Temperatur Template: {node.data.returnTemperatureTemplate}
+        </>}>
+            <div style={customNodeStyles} onClick={handleClick}>
+                <Handle
+                    type="source"
+                    position={Position.Bottom}
+                    id="a"
+                    style={{...customOutputHandleStyle}}
+                />
+                <div>{node.data.label}</div>
+            </div>
+        </Tooltip>
     );
 };

@@ -1,10 +1,9 @@
 .file-download-container {
     display: flex;
     justify-content: end;
-    margin-top: -7vh;
-    margin-right: 5vw;
-    position: relative;
-    z-index: 9999; }
+    bottom: 7vh;
+    position: absolute;
+    z-index: 30; }
 
 .file-download-container .text {
     width: 100px; }

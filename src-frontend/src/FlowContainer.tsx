@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import ReactFlow, {
     addEdge,
     ArrowHeadType,
@@ -8,18 +8,25 @@ import ReactFlow, {
     Elements,
     removeElements
 } from 'react-flow-renderer';
-// you need these styles for React Flow to work properly
 import 'react-flow-renderer/dist/style.css';
 
-// additionally you can load the default theme
 import 'react-flow-renderer/dist/theme-default.css';
 import {EdgePopover} from "./Overlays/EdgePopover";
 import {showEditPipeDialog} from "./Overlays/EdgeContextOverlay";
-import {BaseNode, HotWaterGrid, NodeElements, NodeType, Pipe} from "./models";
+import {
+    BaseNode,
+    HotWaterGrid,
+    InputNode as InputNodeModel,
+    NodeElements,
+    NodeType,
+    OutputNode as OutputNodeModel,
+    Pipe
+} from "./models";
 import {InputNode} from './CustomNodes/InputNode';
 import {IntermediateNode} from "./CustomNodes/IntermediateNode";
 import {OutputNode} from "./CustomNodes/OutputNode";
-
+import {baseUrl, createGrid} from "./utils/utility";
+import {notify} from "./Overlays/Notifications";
 
 const style = getComputedStyle(document.body)
 const corpColor = style.getPropertyValue('--corp-main-color')
@@ -51,8 +58,38 @@ interface FlowContainerProperties {
     setNodeElements: Dispatch<SetStateAction<NodeElements>>
 }
 
+enum ResultCode {
+    OK = 200,
+    INTERNAL_SERVER_ERROR = 500
+}
+
+
+
+
+const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
+    const configuration = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(grid)
+    }
+
+    return fetch(`${baseUrl}/api/grid/verify`, configuration)
+        .then(response => {
+            response.text().then((text) => {
+                if(text){
+                    notify(text)
+                }
+            })
+            return response.status}).then( (status) => {return status===ResultCode.OK} )
+        .catch(e => {
+            return false});
+}
 
 export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: FlowContainerProperties) => {
+
+
 
     const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
 
@@ -60,18 +97,32 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
     const onConnect = (params) => {
         console.log(params);
         params.animated = true;
-        showEditPipeDialog("Füge ein neues Rohr hinzu", () => {
-            params= {...params, ...edgeConfiguration}
 
-            //@ts-ignore
-            setPipes((els) => addEdge(params, els))
+        showEditPipeDialog("Füge ein neues Rohr hinzu", (id, length1) => {
+            const pipesToVerify = [...pipes]
+            const newPipe = {
+                source: params.source,
+                target: params.target,
+                id, length: length1
+            }
+
+            pipesToVerify.push(newPipe)
+            verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[])).then((verified: boolean) => {
+                    if(verified) {
+                        params= {...params, ...edgeConfiguration}
+                        //@ts-ignore
+                        setPipes((els) => addEdge(params, els))
+                    }
+                }
+            )
+
         }, () => console.log("Nothing to do here"), params.id)
 
 
     };
 
     // @ts-ignore
-    const onElementsRemove = (elementsToRemove) => setElements((els) => removeElements(elementsToRemove, els));
+    const onElementsRemove = (elementsToRemove) => setPipes((els) => removeElements(elementsToRemove, els));
 
     const onElementClick = (event: any, edge: Edge) => {
         // showEdgeDialog("Gib bitte ein paar Rohrdaten an", () => console.log("confirm"), () => console.log())
@@ -104,22 +155,70 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
         })
     }
 
-    const getElements = (): Elements => {
+    const getElementsForFlow = (): Elements => {
         const inputNodes = addTypeToNodes(nodeElements.inputNodes, NodeType.INPUT_NODE)
         const intermediateNodes = addTypeToNodes(nodeElements.intermediateNodes, NodeType.INTERMEDIATE_NODE)
         const outputNodes = addTypeToNodes(nodeElements.outputNodes, NodeType.OUTPUT_NODE)
-        const defaultPipes = pipes.map((el) => {return {...el, ...edgeConfiguration}})
+        const defaultPipes = pipes.map((el) => {
+            return {...el, ...edgeConfiguration}
+        })
+
+        inputNodes.forEach((n) => {
+            const {flowTemperatureTemplate, returnTemperatureTemplate} = (n as InputNodeModel)
+            n.data = {
+                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode
+            }
+        })
+
+        intermediateNodes.forEach((n) => {
+            n.data = {...n.data, updateNode}
+        })
+
+        outputNodes.forEach((n) => {
+            const {thermalEnergyDemand, pressureLoss, loadProfileName} = (n as OutputNodeModel)
+            n.data = {
+                ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName
+            }
+        })
 
         return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
 
+    const updateNode = (newNode: BaseNode) => {
+        let nodeType;
+        switch (newNode.type) {
+            case NodeType.INPUT_NODE:
+                nodeType = "inputNodes"
+                break;
+            case NodeType.INTERMEDIATE_NODE:
+                nodeType = "intermediateNodes"
+                break;
+            case NodeType.OUTPUT_NODE:
+                nodeType = "outputNodes"
+                break;
+            default:
+                notify("Node to be updated cant be found")
+                return;
+        }
+
+
+        const newNodeElements = {...nodeElements}
+        // @ts-ignore
+        newNodeElements[nodeType] = nodeElements[nodeType].map((n) => {
+            if (n.id === newNode.id) {
+                return newNode
+            } return n
+        })
+        setNodeElements(newNodeElements)
+    }
+
     // @ts-ignore
-    return <ReactFlow elements={getElements()}
-        onConnect={(params) => onConnect(params)}
-        nodeTypes={nodeTypes}
-        onEdgeContextMenu={onElementClick}
-        deleteKeyCode={46}
-        onClick={() => closePopupTarget()}
+    return <ReactFlow elements={getElementsForFlow()}
+                      onConnect={(params) => onConnect(params)}
+                      nodeTypes={nodeTypes}
+                      onEdgeContextMenu={onElementClick}
+                      deleteKeyCode={46}
+                      onClick={() => closePopupTarget()}
     >
         <Background
             variant={BackgroundVariant.Dots}

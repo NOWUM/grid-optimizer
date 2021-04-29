@@ -50,7 +50,8 @@
       "source": "node-1",
       "target": "node-2",
       "length": 16.2
-    }, {
+    },
+    {
       "id": "pipe-2",
       "source": "node-1",
       "target": "node-3",

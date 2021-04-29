@@ -68,7 +68,7 @@ export const FileUpload = (props: UploadProps) => {
 
     return (
         <div {...getRootProps({
-            onClick: (event) => event.stopPropagation(),
+            // onClick: (event) => event.stopPropagation(),
             onDragEnter: (event) => console.log("DRAG ENTER")
         })} className={"upload-container"}>
             <input {...getInputProps({
