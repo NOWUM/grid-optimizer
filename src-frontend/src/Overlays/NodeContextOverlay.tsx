@@ -1,10 +1,10 @@
 import {confirmAlert} from "react-confirm-alert";
 import React, {ChangeEvent, useEffect, useState} from "react";
 import {BaseNode, InputNode, IntermediateNode, NodeType, OutputNode} from "../models";
-import {Button, FormLabel, Grid, MenuItem, Select, TextField, Typography} from "@material-ui/core";
+import {Grid, MenuItem, Select, TextField} from "@material-ui/core";
 import {notify} from "./Notifications";
 import {baseUrl} from "../utils/utility";
-
+import {FormSkeleton} from "./FormSkeleton";
 
 
 export const showNodeInputDialog = (message: string,
@@ -157,54 +157,31 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
         return !isNaN(val)
     }
 
-    const handleSelectChange = (event: ChangeEvent<{name?: string, value: unknown}>) => {
+    const handleSelectChange = (event: ChangeEvent<{ name?: string, value: unknown }>) => {
         setLoadProfileName(event.target.value as string)
     }
 
-    return <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-    >
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <Typography className={"header-form"} color="textSecondary" gutterBottom>
-                    {message}
-                </Typography>
+    return <FormSkeleton id={node.id} message={message} onConfirm={submitNewNode} onAbort={onAbort}>
+        <>
+            <Grid container
+                  direction="row" item xs={7} spacing={3}>
+                <Grid item xs={12}>
+                    <TextField id="standard-basic" label="Label" placeholder="OutputLabel"
+                               value={label}
+                               onChange={(val) => {
+                                   setLabel(val.target.value)
+                               }}/>
+                </Grid>
             </Grid>
-        </Grid>
-
-
-
-
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <FormLabel> Node-ID: {node.id} </FormLabel>
+            <Grid container
+                  direction="row" item xs={7} spacing={3}>
+                <Grid item xs={12}>
+                    <TextField id="standard-basic" label="Warmwasserbedarf [Kwh]" type="number"
+                               value={thermalEnergyDemand}
+                               onChange={(val) => setThermalEnergyDemand(val.target.value)}
+                               placeholder="127.30"/>
+                </Grid>
             </Grid>
-        </Grid>
-
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <TextField id="standard-basic" label="Label" placeholder="OutputLabel"
-                           value={label}
-                           onChange={(val) =>{
-                               setLabel(val.target.value)
-                           }}/>
-            </Grid>
-        </Grid>
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <TextField id="standard-basic" label="Warmwasserbedarf [Kwh]" type="number"
-                           value={thermalEnergyDemand}
-                           onChange={(val) => setThermalEnergyDemand(val.target.value)}
-                           placeholder="127.30"/>
-            </Grid>
-        </Grid>
 
         <Grid container
               direction="row" item xs={7} spacing={3}>
@@ -242,26 +219,8 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
                 </Select>
             </Grid>
         </Grid>
-
-        <Grid container direction="row" item xs={7} spacing={1}>
-
-            <Grid item xs={4}>
-                <Button onClick={() => {
-                    submitNewNode()
-                }}>
-                    Bestätigen
-                </Button>
-            </Grid>
-            <Grid item xs={6}>
-                <Button onClick={() => {
-                    onAbort()
-                }}>
-                    Abbruch
-                </Button>
-            </Grid>
-        </Grid>
-
-    </Grid>
+        </>
+    </FormSkeleton>
 }
 
 
@@ -299,28 +258,7 @@ const InputNodeForm = ({message, onConfirm, onAbort, node}: {
         return true;
     }
 
-    return <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-    >
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <Typography className={"header-form"} color="textSecondary" gutterBottom>
-                    {message}
-                </Typography>
-            </Grid>
-        </Grid>
-
-
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <FormLabel> Node-ID: {node.id} </FormLabel>
-            </Grid>
-        </Grid>
+    return <FormSkeleton id={node.id} message={message} onAbort={onAbort} onConfirm={submitNewNode}>
 
         <Grid container
               direction="row" item xs={7} spacing={3}>
@@ -355,25 +293,7 @@ const InputNodeForm = ({message, onConfirm, onAbort, node}: {
         </Grid>
 
 
-        <Grid container direction="row" item xs={7} spacing={1}>
-
-            <Grid item xs={4}>
-                <Button onClick={() => {
-                    submitNewNode()
-                }}>
-                    Bestätigen
-                </Button>
-            </Grid>
-            <Grid item xs={6}>
-                <Button onClick={() => {
-                    onAbort()
-                }}>
-                    Abbruch
-                </Button>
-            </Grid>
-        </Grid>
-
-    </Grid>
+    </FormSkeleton>
 }
 
 
@@ -398,28 +318,7 @@ const IntermediateNodeForm = ({message, onConfirm, onAbort, node}: {
         onConfirm(newNode)
     }
 
-    return <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-    >
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <Typography className={"header-form"} color="textSecondary" gutterBottom>
-                    {message}
-                </Typography>
-            </Grid>
-        </Grid>
-
-
-        <Grid container
-              direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <FormLabel> Node-ID: {node.id} </FormLabel>
-            </Grid>
-        </Grid>
+    return <FormSkeleton id={node.id} message={message} onConfirm={submitNewNode} onAbort={onAbort}>
 
         <Grid container
               direction="row" item xs={7} spacing={3}>
@@ -432,24 +331,5 @@ const IntermediateNodeForm = ({message, onConfirm, onAbort, node}: {
             </Grid>
         </Grid>
 
-
-        <Grid container direction="row" item xs={7} spacing={1}>
-
-            <Grid item xs={4}>
-                <Button onClick={() => {
-                    submitNewNode()
-                }}>
-                    Bestätigen
-                </Button>
-            </Grid>
-            <Grid item xs={6}>
-                <Button onClick={() => {
-                    onAbort()
-                }}>
-                    Abbruch
-                </Button>
-            </Grid>
-        </Grid>
-
-    </Grid>
+    </FormSkeleton>
 }
