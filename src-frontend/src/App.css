@@ -69,10 +69,10 @@ body {
   background: #fff;
 }
 
-.MuiPopover-root{
-  z-index: 10 !important;
+.MuiPopover-root {
+  /*z-index: 10 !important;*/
+  /*}*/
 }
-
 .header-form {
   font-size: 1.5rem !important;
   color: rgba(var(--corp-main-color)) !important;

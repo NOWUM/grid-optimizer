@@ -1,8 +1,10 @@
 import {confirmAlert} from "react-confirm-alert";
-import React, {useState} from "react";
-import {BaseNode, InputNode, IntermediateNode, NodeType, OutputNode} from "../models";
-import {Button, FormLabel, Grid, TextField, Typography} from "@material-ui/core";
+import React, {ChangeEvent, useEffect, useState} from "react";
+import {BaseNode, HotWaterGrid, InputNode, IntermediateNode, NodeType, OutputNode} from "../models";
+import {Button, FormLabel, Grid, MenuItem, Select, TextField, Typography} from "@material-ui/core";
 import {notify} from "./Notifications";
+import {baseUrl} from "../utils/utility";
+
 
 
 export const showNodeInputDialog = (message: string,
@@ -82,6 +84,23 @@ export const showNodeDialog = (message: string,
 }
 
 
+// : Promise<string[]>
+const fetchLoadProfileOptions = () => {
+    const configuration = {
+        method: 'GET',
+        contentType: "application/json",
+        accept: "application/json"
+    }
+
+    return fetch(`${baseUrl}/api/profiles/names`, configuration)
+        .then(response => {
+            return response.json()
+        })
+        .catch(e => {
+            console.error(e)
+        });
+}
+
 const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
     message: string
     onConfirm: (node: OutputNode) => void,
@@ -92,6 +111,20 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
     const [label, setLabel] = useState(node.data.label)
     const [thermalEnergyDemand, setThermalEnergyDemand] = useState<string>(`${node.thermalEnergyDemand}`)
     const [pressureLoss, setPressureLoss] = useState<string>(`${node.pressureLoss}`)
+    const [loadProfileName, setLoadProfileName] = useState(node.loadProfileName)
+    const [loadProfileOptions, setLoadProfileOption] = useState<string[]>([])
+    const [selectOpen, setSelectOpen] = useState(false)
+
+    useEffect(() => {
+        fetchLoadProfileOptions().then(options => {
+            if(options) {
+                setLoadProfileOption(options)
+            } else {
+                notify("Load Profiles could not be fetched.")
+            }
+        })
+    }, [])
+
 
     const submitNewNode = () => {
         if (validateInput()) {
@@ -103,7 +136,8 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
                 // @ts-ignore
                 position: {x: node.position?.x ?? node.xPos, y: node.position?.y ?? node.yPos},
                 type: node.type,
-                id: node.id
+                id: node.id,
+                loadProfileName
             }
             onConfirm(newNode)
         } else {
@@ -121,6 +155,10 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
     const isNumeric = (val: string) => {
         //@ts-ignore
         return !isNaN(val)
+    }
+
+    const handleSelectChange = (event: ChangeEvent<{name?: string, value: unknown}>) => {
+        setLoadProfileName(event.target.value as string)
     }
 
     return <Grid
@@ -181,6 +219,30 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
         </Grid>
 
 
+        <Grid container
+              direction="row" item xs={7} spacing={3}>
+            <Grid item xs={12}>
+
+                <Select
+                    label="Standard Lastprofile"
+                    id="demo-controlled-open-select"
+                    open={selectOpen}
+                    onClose={() => setSelectOpen(false)}
+                    onOpen={() => setSelectOpen(true)}
+                    value={loadProfileName}
+                    onChange={handleSelectChange}
+                >
+                    <MenuItem value="">
+                        <em>Please select</em>
+                    </MenuItem>
+
+                    {loadProfileOptions.map((option) => {
+                        return <MenuItem value={option}>{option}</MenuItem>
+                    })}
+                </Select>
+            </Grid>
+        </Grid>
+
         <Grid container direction="row" item xs={7} spacing={1}>
 
             <Grid item xs={4}>
@@ -201,8 +263,6 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
 
     </Grid>
 }
-
-
 
 
 const InputNodeForm = ({message, onConfirm, onAbort, node}: {
@@ -272,6 +332,7 @@ const InputNodeForm = ({message, onConfirm, onAbort, node}: {
                            }}/>
             </Grid>
         </Grid>
+
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>

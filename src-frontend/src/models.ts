@@ -1,8 +1,4 @@
-import ReactFlow, {
-    Edge,
-    Node
-} from 'react-flow-renderer';
-import {CustomNodeDate} from "./CustomNodes/InputNode";
+import {Edge, Node} from 'react-flow-renderer';
 
 export interface NodeElements {
     inputNodes: InputNode[],
@@ -27,9 +23,10 @@ export interface IntermediateNode extends BaseNode{
     connect_limit: 3
 }
 
-export interface OutputNode extends BaseNode{
-        thermalEnergyDemand: number, // kwh per year
-        pressureLoss: number // Bar
+export interface OutputNode extends BaseNode {
+    thermalEnergyDemand: number, // kwh per year
+    pressureLoss: number, // Bar,
+    loadProfileName: string
 }
 
 export enum LoadProfile{

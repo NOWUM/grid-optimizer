@@ -25,7 +25,7 @@ import {
 import {InputNode} from './CustomNodes/InputNode';
 import {IntermediateNode} from "./CustomNodes/IntermediateNode";
 import {OutputNode} from "./CustomNodes/OutputNode";
-import {createGrid} from "./utils/utility";
+import {baseUrl, createGrid} from "./utils/utility";
 import {notify} from "./Overlays/Notifications";
 
 const style = getComputedStyle(document.body)
@@ -63,16 +63,19 @@ enum ResultCode {
     INTERNAL_SERVER_ERROR = 500
 }
 
+
+
+
 const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
     const configuration = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Origin": "*"
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(grid)
     }
-    return fetch('/api/grid/verify', configuration)
+
+    return fetch(`${baseUrl}/api/grid/verify`, configuration)
         .then(response => {
             response.text().then((text) => {
                 if(text){
@@ -85,6 +88,8 @@ const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
 }
 
 export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: FlowContainerProperties) => {
+
+
 
     const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
 
@@ -170,9 +175,9 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
         })
 
         outputNodes.map((n) => {
-            const {thermalEnergyDemand, pressureLoss} = (n as OutputNodeModel)
+            const {thermalEnergyDemand, pressureLoss, loadProfileName} = (n as OutputNodeModel)
             n.data = {
-                ...n.data, thermalEnergyDemand, pressureLoss, updateNode
+                ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName
             }
         })
 

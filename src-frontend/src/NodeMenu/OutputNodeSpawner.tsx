@@ -8,6 +8,7 @@ import {NodeSpawner} from "./NodeMenuSpawnerContainer";
 
 export const OutputNodeSpawner = ({onNewNode}: NodeSpawner) => {
     const defaultNode: OutputNode = {
+        loadProfileName: "",
         thermalEnergyDemand: 123,
         pressureLoss: 0.56,
         data: {label: "Default Node"},

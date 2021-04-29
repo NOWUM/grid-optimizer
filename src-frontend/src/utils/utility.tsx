@@ -34,3 +34,6 @@ export const uploadDropboxInit = (renderUpload: boolean, setRenderUpload: Dispat
 export const createGrid = (nodes: NodeElements, pipes: Pipe[]): HotWaterGrid => {
     return {...nodes, pipes}
 }
+
+
+export const baseUrl = `http://${window.location.host}`
