@@ -36,4 +36,4 @@ export const createGrid = (nodes: NodeElements, pipes: Pipe[]): HotWaterGrid => 
 }
 
 
-export const baseUrl = `http://${window.location.host}`
+export const baseUrl = `${window.location.protocol.split(':')[0]}://${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`
