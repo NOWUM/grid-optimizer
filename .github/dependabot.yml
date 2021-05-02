@@ -7,22 +7,30 @@ version: 2
 updates:
   - package-ecosystem: "gradle" # See documentation for possible values
     directory: "/" # Location of package manifests
-    schedule: "daily"
-    default_assignees:
+    schedule:
+      interval: "daily"
+      time: "07:00"
+    assignees:
       - "V3lop5"
   - package-ecosystem: "github-actions"
     directory: "/"
-    schedule: "daily"
-    default_assignees:
+    schedule:
+      interval: "daily"
+      time: "07:00"
+    assignees:
       - "V3lop5"
   - package-ecosystem: "docker"
     directory: "/"
-    schedule: "daily"
-    default_assignees:
+    schedule:
+      interval: "daily"
+      time: "07:00"
+    assignees:
       - "V3lop5"
   - package-ecosystem: "npm"
     directory: "/src-frontend"
-    schedule: "daily"
-    default_assignees:
+    schedule:
+      interval: "daily"
+      time: "07:00"
+    assignees:
       - "V3lop5"
       
