@@ -10,19 +10,27 @@ updates:
     schedule:
       interval: "daily"
       time: "07:00"
+    default_assignees:
+      - V3lop5
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
       time: "07:00"
+    default_assignees:
+      - V3lop5
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "daily"
       time: "07:00"
+    default_assignees:
+      - V3lop5
   - package-ecosystem: "npm"
     directory: "/src-frontend"
     schedule:
       interval: "daily"
       time: "07:00"
+    default_assignees:
+      - V3lop5
       
