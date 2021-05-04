@@ -3,16 +3,16 @@ package de.fhac.ewi.util
 /**
  * Berechnet den Massenstrom.
  *
- * Formel: `m = Q * 860 / temp_diff`
- * Mit
- *  - Q = Heizleistung (bzw benötigte Energie)
- *  - temp_diff = Spreizung Vorlauf/Rücklauftemperatur
+ * Formel `_m° = Q°/(c * ∆v) [kg/h]` mit folgenden Parametern:
+ * - Q° = Wärmeleistung [W]
+ * - c = spezifische Wärmekapazität [kWs/kg * K] (das K steht für Kelvin) (mit Wasser als Transportmedium ist c=4,187)
+ * - ∆v = Temperaturdifferenz [K] (Anfangstemperatur - Endtemperatur)
  *
- * Quelle: https://www.ibo-plan.de/rohrnetzberechnung-formeln.html
  *
  * @param flowIn Double - Vorlauftemperatur in °C
  * @param flowOut Double - Rücklauftemperatur in °C
  * @param heatDemand Double - Benötigte Wärmeenergie in kW
+ * @param c Double - spezifische Wärmekapazität (default Wert für Wasser)
  * @return Double - Massenstrom in kg/h
  */
-fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double) = heatDemand * 860 / (flowIn - flowOut)
+fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double, c: Double = 4.187) = (heatDemand * 10_000) / (c * (flowIn - flowOut))
