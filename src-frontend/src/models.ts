@@ -71,7 +71,7 @@ export const instanceOfPosition = (position: any): position is Position => {
     if (!position) {
         return false
     }
-    const isCoordinate = (c: any) => c && c === "number"
+    const isCoordinate = (c: any) => c && typeof(c) === "number"
     return isCoordinate(position.x) && isCoordinate(position.y)
 }
 
@@ -82,7 +82,8 @@ export const instanceOfBaseNode = (baseNode: any): baseNode is BaseNode => {
     const id = instanceOfString(baseNode.id)
     const position = baseNode.position && instanceOfPosition(baseNode.position)
     const label = baseNode.data && instanceOfString(baseNode.data.label)
-    return id && position && label
+    const type = instanceOfString(baseNode.type)
+    return id && position && label && type
 }
 
 export const instanceOfInputNode = (inputNode: any): inputNode is InputNode => {
