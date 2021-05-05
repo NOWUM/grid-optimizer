@@ -15,6 +15,7 @@ import {VersionNumber} from "./VersionNumber";
 import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
 import Notifications from "./Overlays/Notifications";
 import {OptimizationResults} from "./OptimizationResults";
+import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButton";
 
 function App() {
 
@@ -82,6 +83,7 @@ function App() {
                                        nodeElements={nodeElements} setNodeElements={setNodeElements} />
                         <VersionNumber/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
+                        <DetermineMassFlowRateButton grid={{pipes: (pipes as Pipe[]), ...nodeElements}} />
                     </div>
                 </TabPanel>
                 <TabPanel value="2">
