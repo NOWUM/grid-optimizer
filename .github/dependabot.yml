@@ -9,9 +9,28 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
-      time: "02:00"
+      time: "07:00"
+    assignees:
+      - "V3lop5"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
-      time: "02:00"
+      time: "07:00"
+    assignees:
+      - "V3lop5"
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "07:00"
+    assignees:
+      - "V3lop5"
+  - package-ecosystem: "npm"
+    directory: "/src-frontend"
+    schedule:
+      interval: "daily"
+      time: "07:00"
+    assignees:
+      - "V3lop5"
+      

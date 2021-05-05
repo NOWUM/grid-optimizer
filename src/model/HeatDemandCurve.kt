@@ -1,6 +1,6 @@
 package de.fhac.ewi.model
 
-class HeatDemandCurve(private val curve: List<Double>) {
+class HeatDemandCurve(val curve: List<Double>) {
     val total = curve.sum()
 
     init {
