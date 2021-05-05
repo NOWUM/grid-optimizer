@@ -3,7 +3,17 @@ import './App.css';
 import {FlowContainer} from "./FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
 import {uploadDropboxInit} from "./utils/utility";
-import {BaseNode, HotWaterGrid, InputNode, IntermediateNode, NodeElements, NodeType, OutputNode, Pipe} from "./models";
+import {
+    BaseNode,
+    HotWaterGrid,
+    InputNode,
+    IntermediateNode,
+    MassenstromResponse,
+    NodeElements,
+    NodeType,
+    OutputNode,
+    Pipe
+} from "./models";
 import {FileDownload} from "./Filemanagement/FileDownload";
 import {Elements} from "react-flow-renderer";
 import {UserTour} from "./UserTour/UserTour";
@@ -16,11 +26,13 @@ import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
 import Notifications from "./Overlays/Notifications";
 import {OptimizationResults} from "./OptimizationResults";
 import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButton";
+import {defaultMassenstrom} from "./defaultConfig";
 
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
     const [tabVal, setTabVal] = useState("1")
+    const [massenstrom, setMassenstrom] = useState<MassenstromResponse>(defaultMassenstrom)
 
     const [nodeElements, setNodeElements] = useState<NodeElements>({
         inputNodes: [],
@@ -74,7 +86,7 @@ function App() {
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
                     <Tab label="Editor" value="1"/>
                     <Tab label="Meta Daten" value="2"/>
-                    <Tab label="Optimierung" value="3"/>
+                    <Tab label="Max Massenstrom" value="3"/>
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
@@ -83,14 +95,14 @@ function App() {
                                        nodeElements={nodeElements} setNodeElements={setNodeElements} />
                         <VersionNumber/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
-                        <DetermineMassFlowRateButton grid={{pipes: (pipes as Pipe[]), ...nodeElements}} />
+                        <DetermineMassFlowRateButton grid={{pipes: (pipes as Pipe[]), ...nodeElements}}  onResult={setMassenstrom}/>
                     </div>
                 </TabPanel>
                 <TabPanel value="2">
                     <MetaDataContainer/>
                 </TabPanel>
                 <TabPanel value={"3"}>
-                    <OptimizationResults />
+                    <OptimizationResults massenstrom={massenstrom}/>
                 </TabPanel>
             </TabContext>
             {renderUpload ?

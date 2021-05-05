@@ -89,8 +89,6 @@ const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
 
 export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: FlowContainerProperties) => {
 
-
-
     const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
 
     // @ts-ignore
@@ -113,15 +111,11 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
                         const newPipes = [...pipes]
                         newPipes.filter((p) => p.id !== id)
                         newPipes.push(params)
-                        console.log(newPipes)
                         setPipes(newPipes)
                     }
                 }
             )
-
         }, () => console.log("Nothing to do here"), params.id)
-
-
     };
 
     // @ts-ignore

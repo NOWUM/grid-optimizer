@@ -3,6 +3,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Grid, TextField} from "@material-ui/core";
 import React from "react";
 import {FormSkeleton} from "./FormSkeleton";
+import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 
 
 
@@ -37,7 +38,7 @@ const PipeSplitForm = ({message, onConfirm, onAbort, type, id}: {
     type: PipeActionType,
     id: string
 }) => {
-    return <FormSkeleton id={id} message={message} onConfirm={() => {onConfirm("1", 1, 1)}} onAbort={onAbort}>
+    return <FormSkeleton id={id} message={message} onConfirm={() => {onConfirm(id ?? generateUniqueID(), 1, 1)}} onAbort={onAbort}>
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
