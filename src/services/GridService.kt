@@ -6,7 +6,8 @@ import de.fhac.ewi.model.Grid
 import de.fhac.ewi.util.massenstrom
 import de.fhac.ewi.util.toDoubleFunction
 
-class GridService(private val profileService: LoadProfileService, private val temperatureService: TemperatureTimeSeriesService) {
+class GridService(private val demandService: HeatDemandService,
+                  private val temperatureService: TemperatureTimeSeriesService) {
 
     fun createByGridRequest(request: GridRequest): Grid {
         val grid = Grid()
@@ -20,7 +21,7 @@ class GridService(private val profileService: LoadProfileService, private val te
             grid.addIntermediateNode(it.id)
         }
         request.outputNodes.forEach {
-            val curve = profileService.distribute(it.loadProfileName, it.thermalEnergyDemand)
+            val curve = demandService.createCurve(it.thermalEnergyDemand, it.loadProfileName, request.temperatureSeries)
             grid.addOutputNode(it.id, curve, it.pressureLoss)
         }
         request.pipes.forEach {
@@ -30,8 +31,8 @@ class GridService(private val profileService: LoadProfileService, private val te
         return grid
     }
 
-    fun calculateMaxMassenstrom(grid: Grid): MassenstromResponse {
-        val tempRow = temperatureService.getSeries(temperatureService.getAllKeys().first()).temperatures
+    fun calculateMaxMassenstrom(grid: Grid, temperatureSeries: String): MassenstromResponse {
+        val tempRow = temperatureService.getSeries(temperatureSeries).temperatures
         val flowTemps = tempRow.map { grid.input.flowTemperature(it) }
         val returnTemps = tempRow.map { grid.input.returnTemperature(it) }
         val heatDemand = grid.input.connectedThermalEnergyDemand

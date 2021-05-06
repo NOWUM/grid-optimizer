@@ -1,21 +1,26 @@
 package de.fhac.ewi.model
 
+/**
+ * Beinhaltet für jede Stunde im Jahr den Energiebedarf.
+ *
+ * @property curve List<Double>
+ * @property total Double
+ * @constructor
+ */
 class HeatDemandCurve(val curve: List<Double>) {
-    val total = curve.sum()
 
-    init {
-        if (curve.size != 365) throw IllegalArgumentException("The curve must contain exactly 365 elements.")
-        if (curve.any { it < 0.0 }) throw IllegalArgumentException("The curve must contain only positive values.")
-    }
+    val total = curve.sum()
 
     operator fun get(index: Int) = curve[index]
 
     operator fun plus(other: HeatDemandCurve) = HeatDemandCurve(curve.zip(other.curve).map { it.first + it.second })
 
-    fun copy(heatDemand: Double) = HeatDemandCurve(curve.map { it * heatDemand / total })
-
     companion object {
-        val ZERO = HeatDemandCurve(List(365) { 0.0 })
-        val ONES = HeatDemandCurve(List(365) { 1.0 })
+        val ZERO = HeatDemandCurve(List(8760) { 0.0 })
+    }
+
+    init {
+        if (curve.size != 8760) throw IllegalArgumentException("The curve must contain exactly 8760 elements. For each hour of year one.")
+        if (curve.any { it < 0.0 }) throw IllegalArgumentException("The curve must contain only positive values.")
     }
 }

@@ -28,7 +28,7 @@ fun Route.grid(gridService: GridService) {
             val request = call.receive<GridRequest>()
             val grid = catchAndThrowIllegalArgument { gridService.createByGridRequest(request) }
             grid.validate()
-            call.respond(gridService.calculateMaxMassenstrom(grid))
+            call.respond(gridService.calculateMaxMassenstrom(grid, request.temperatureSeries))
         }
     }
 }
