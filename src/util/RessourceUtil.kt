@@ -6,14 +6,14 @@ import de.fhac.ewi.model.TemperatureTimeSeries
 import de.fhac.ewi.model.heatprofile.HProfile
 import de.fhac.ewi.model.heatprofile.HourDistribution
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 
 private fun getResourceAsStream(resource: String) =
     TemperatureTimeSeries::class.java.classLoader.getResourceAsStream(resource)
 
-fun getResourceFiles(path: String): List<String> = getResourceAsStream(path).use{
-    return if (it == null) emptyList() else BufferedReader(InputStreamReader(it)).readLines()
-}
+fun getResourceFiles(path: String): Array<String> =
+    File(TemperatureTimeSeries::class.java.classLoader.getResource(path)!!.path).list()!!
 
 fun loadTemperatureTimeSeries(): List<TemperatureTimeSeries> {
     return csvReader { delimiter = ';' }
@@ -24,11 +24,11 @@ fun loadTemperatureTimeSeries(): List<TemperatureTimeSeries> {
 
 fun loadHProfiles(): List<HProfile> {
     val reader = csvReader { delimiter = ';' }
-    return getResourceFiles("/loadprofiles/").map { profile ->
-        val ressource = getResourceAsStream("/loadprofiles/$profile")!!
+    return getResourceFiles("loadprofiles/").map { profile ->
+        val ressource = getResourceAsStream("loadprofiles/$profile")!!
         val input = reader.readAll(ressource)
-        val parameters = input.first().map { it.toDouble() }
-        val hourDistribution = input.drop(1).map { it.map { it.toDouble() } }
+        val parameters = input.first().take(9).map { it.toDouble() }
+        val hourDistribution = input.drop(1).map { row -> row.take(26).map { it.toDouble() } }
             .associate { list -> list.component1()..list.component2() to list.drop(2) }
             .run { HourDistribution(this) }
         HProfile(

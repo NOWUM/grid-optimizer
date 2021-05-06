@@ -10,4 +10,16 @@ class RessourceUtilTest {
         val series = loadTemperatureTimeSeries()
         assertEquals(1, series.size)
     }
+
+    @Test
+    fun checkLoadProfilesFolder() {
+        val files = getResourceFiles("loadprofiles/")
+        assertEquals(2, files.size)
+    }
+
+    @Test
+    fun loadHProfilesTest() {
+        val profiles = loadHProfiles()
+        assertEquals(2, profiles.size)
+    }
 }
