@@ -1,19 +1,15 @@
 package de.fhac.ewi.util
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
-import de.fhac.ewi.model.HeatDemandCurve
 import de.fhac.ewi.model.TemperatureTimeSeries
 import de.fhac.ewi.model.heatprofile.HProfile
 import de.fhac.ewi.model.heatprofile.HourDistribution
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
 
 private fun getResourceAsStream(resource: String) =
     TemperatureTimeSeries::class.java.classLoader.getResourceAsStream(resource)
 
-fun getResourceFiles(path: String): Array<String> =
-    File(TemperatureTimeSeries::class.java.classLoader.getResource(path)!!.path).list()!!
+fun getHProfileNames() = listOf("EFH", "MFH")
 
 fun loadTemperatureTimeSeries(): List<TemperatureTimeSeries> {
     return csvReader { delimiter = ';' }
@@ -24,8 +20,8 @@ fun loadTemperatureTimeSeries(): List<TemperatureTimeSeries> {
 
 fun loadHProfiles(): List<HProfile> {
     val reader = csvReader { delimiter = ';' }
-    return getResourceFiles("loadprofiles/").map { profile ->
-        val ressource = getResourceAsStream("loadprofiles/$profile")!!
+    return getHProfileNames().map { profile ->
+        val ressource = getResourceAsStream("loadprofiles/$profile.csv")!!
         val input = reader.readAll(ressource)
         val parameters = input.first().take(9).map { it.toDouble() }
         val hourDistribution = input.drop(1).map { row -> row.take(26).map { it.toDouble() } }

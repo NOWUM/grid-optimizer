@@ -13,7 +13,7 @@ class RessourceUtilTest {
 
     @Test
     fun checkLoadProfilesFolder() {
-        val files = getResourceFiles("loadprofiles/")
+        val files = getHProfileNames()
         assertEquals(2, files.size)
     }
 
