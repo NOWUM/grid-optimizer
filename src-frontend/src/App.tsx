@@ -27,6 +27,7 @@ function App() {
         outputNodes: []
     });
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
+    const [temperatureKey, setTemperatureKey] = useState<string>("")
 
     useEffect(() => {
         uploadDropboxInit(renderUpload, setRenderUpload)
@@ -85,7 +86,7 @@ function App() {
                     </div>
                 </TabPanel>
                 <TabPanel value="2">
-                    <MetaDataContainer/>
+                    <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}/>
                 </TabPanel>
                 <TabPanel value={"3"}>
                     <OptimizationResults />

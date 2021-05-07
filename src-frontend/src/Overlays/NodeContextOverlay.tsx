@@ -1,10 +1,11 @@
 import {confirmAlert} from "react-confirm-alert";
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {BaseNode, InputNode, IntermediateNode, NodeType, OutputNode} from "../models";
-import {Grid, MenuItem, Select, TextField} from "@material-ui/core";
+import {Grid, TextField} from "@material-ui/core";
 import {notify} from "./Notifications";
 import {baseUrl} from "../utils/utility";
 import {FormSkeleton} from "./FormSkeleton";
+import {CustomSelect} from "../Components/CustomSelect";
 
 
 export const showNodeInputDialog = (message: string,
@@ -24,11 +25,17 @@ export const showNodeOutputDialog = (message: string,
 }
 
 export const showNodeIntermediateDialog = (message: string,
-                                            node: IntermediateNode,
-                                            onConfirm: (node: IntermediateNode) => void,
-                                            onAbort: () => void) => {
+                                           node: IntermediateNode,
+                                           onConfirm: (node: IntermediateNode) => void,
+                                           onAbort: () => void) => {
 
     showNodeDialog(message, (n) => onConfirm(n as IntermediateNode), onAbort, node)
+}
+
+export const defaultGetConfiguration = {
+    method: 'GET',
+    contentType: "application/json",
+    accept: "application/json"
 }
 
 export const showNodeDialog = (message: string,
@@ -86,13 +93,9 @@ export const showNodeDialog = (message: string,
 
 // : Promise<string[]>
 const fetchLoadProfileOptions = () => {
-    const configuration = {
-        method: 'GET',
-        contentType: "application/json",
-        accept: "application/json"
-    }
 
-    return fetch(`${baseUrl}/api/profiles/names`, configuration)
+
+    return fetch(`${baseUrl}/api/profiles/names`, defaultGetConfiguration)
         .then(response => {
             return response.json()
         })
@@ -147,7 +150,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
 
     const validateInput = () => {
         const inputsAreNumbers = isNumeric(thermalEnergyDemand) && isNumeric(pressureLoss)
-        const pressureLossIsInRange = (Number(pressureLoss) >= 0 && Number(pressureLoss)<=1)
+        const pressureLossIsInRange = (Number(pressureLoss) >= 0 && Number(pressureLoss) <= 1)
 
         return inputsAreNumbers && pressureLossIsInRange;
     }
@@ -157,8 +160,8 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
         return !isNaN(val)
     }
 
-    const handleSelectChange = (event: ChangeEvent<{ name?: string, value: unknown }>) => {
-        setLoadProfileName(event.target.value as string)
+    const handleSelectChange = (val: string) => {
+        setLoadProfileName(val)
     }
 
     return <FormSkeleton id={node.id} message={message} onConfirm={submitNewNode} onAbort={onAbort}>
@@ -199,24 +202,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
-
-                <Select
-                    label="Standard Lastprofile"
-                    id="demo-controlled-open-select"
-                    open={selectOpen}
-                    onClose={() => setSelectOpen(false)}
-                    onOpen={() => setSelectOpen(true)}
-                    value={loadProfileName}
-                    onChange={handleSelectChange}
-                >
-                    <MenuItem value="">
-                        <em>Please select</em>
-                    </MenuItem>
-
-                    {loadProfileOptions.map((option) => {
-                        return <MenuItem value={option}>{option}</MenuItem>
-                    })}
-                </Select>
+                <CustomSelect value={loadProfileName} options={loadProfileOptions} onValueChange={handleSelectChange}/>
             </Grid>
         </Grid>
         </>
