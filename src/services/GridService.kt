@@ -4,6 +4,7 @@ import de.fhac.ewi.dto.GridRequest
 import de.fhac.ewi.dto.MassenstromResponse
 import de.fhac.ewi.model.Grid
 import de.fhac.ewi.util.massenstrom
+import de.fhac.ewi.util.repeatEach
 import de.fhac.ewi.util.toDoubleFunction
 
 class GridService(private val demandService: HeatDemandService,
@@ -32,7 +33,7 @@ class GridService(private val demandService: HeatDemandService,
     }
 
     fun calculateMaxMassenstrom(grid: Grid, temperatureSeries: String): MassenstromResponse {
-        val tempRow = temperatureService.getSeries(temperatureSeries).temperatures
+        val tempRow = temperatureService.getSeries(temperatureSeries).temperatures.repeatEach(24)
         val flowTemps = tempRow.map { grid.input.flowTemperature(it) }
         val returnTemps = tempRow.map { grid.input.returnTemperature(it) }
         val heatDemand = grid.input.connectedThermalEnergyDemand
