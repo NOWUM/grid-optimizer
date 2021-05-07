@@ -7,7 +7,7 @@ class GridTest {
 
 
     private val SIMPLE_HEAT_DEMAND = HeatDemandCurve(List(8760) { 1.0 })
-    
+
     @Test
     fun createEmptyGrid() {
         Grid()

@@ -4,7 +4,6 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import de.fhac.ewi.model.TemperatureTimeSeries
 import de.fhac.ewi.model.heatprofile.HProfile
 import de.fhac.ewi.model.heatprofile.HourDistribution
-import java.io.File
 
 private fun getResourceAsStream(resource: String) =
     TemperatureTimeSeries::class.java.classLoader.getResourceAsStream(resource)
