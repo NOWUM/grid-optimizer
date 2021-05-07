@@ -28,7 +28,7 @@ fun loadHProfiles(): List<HProfile> {
             .associate { list -> list.component1()..list.component2() to list.drop(2) }
             .run { HourDistribution(this) }
         HProfile(
-            profile.dropLast(4), parameters[0], parameters[1], parameters[2],
+            profile, parameters[0], parameters[1], parameters[2],
             parameters[3], parameters[4], parameters[5], parameters[6], parameters[7], parameters[8],
             hourDistribution
         )
