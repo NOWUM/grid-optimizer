@@ -108,8 +108,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
             verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[])).then((verified: boolean) => {
                     if(verified) {
                         params= {...params, ...edgeConfiguration, id, length: length1}
-                        const newPipes = [...pipes]
-                        newPipes.filter((p) => p.id !== id)
+                        const newPipes = [...pipes].filter((p) => p.id !== id)
                         newPipes.push(params)
                         setPipes(newPipes)
                     }
