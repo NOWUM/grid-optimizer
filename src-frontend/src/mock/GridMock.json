@@ -8,7 +8,9 @@
       },
       "data": {
         "label": "KWK Heinsberg"
-      }, "type": "INPUT_NODE"
+      }, "type": "INPUT_NODE",
+      "flowTemperatureTemplate": "x+3",
+      "returnTemperatureTemplate": "x-7"
     }],
   "intermediateNodes": [
     {
@@ -19,7 +21,7 @@
       },
       "data": {
         "label": "Verteiler 1"
-      }
+      }, "type": "INTERMEDIATE_NODE"
     },
     {
       "id": "node-3",
@@ -29,7 +31,7 @@
       },
       "data": {
         "label": "Verteiler 2"
-      }
+      }, "type": "INTERMEDIATE_NODE"
     }
   ],
   "outputNodes": [
@@ -41,7 +43,11 @@
       },
       "data": {
         "label": "Hausanschluss Famile Schmitz"
-      }
+      },
+      "thermalEnergyDemand": 123,
+      "pressureLoss": 0.567,
+      "loadProfileName": "H00",
+      "type": "OUTPUT_NODE"
     }
   ],
   "pipes": [
