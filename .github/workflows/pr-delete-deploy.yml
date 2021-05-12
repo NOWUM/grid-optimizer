@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Remove Environment
-        uses: strumwolf/delete-deployment-environment@v2
+        uses: strumwolf/delete-deployment-environment@v2.0.1
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
           environment: "PR #${{ github.event.pull_request.number }} Review"
