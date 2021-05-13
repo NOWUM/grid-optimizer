@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "http://localhost:8080/",
   "dependencies": {
-    "@material-ui/core": "^4.11.3",
+    "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@testing-library/jest-dom": "^5.12.0",
@@ -12,7 +12,7 @@
     "@testing-library/user-event": "^13.1.8",
     "@types/event-emitter": "^0.3.3",
     "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
+    "@types/node": "^15.0.3",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.0",
     "@types/reactour": "^1.18.1",
