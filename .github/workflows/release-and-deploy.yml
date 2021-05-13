@@ -35,7 +35,7 @@ jobs:
       # Caching node_modules for speedup
       #
       - name: Cache node_modules 
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.5
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
