@@ -20,7 +20,6 @@ function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
     const [tabVal, setTabVal] = useState("1")
-
     const [nodeElements, setNodeElements] = useState<NodeElements>({
         inputNodes: [],
         intermediateNodes: [],
@@ -80,7 +79,7 @@ function App() {
                 <TabPanel value="1">
                     <div className="react-flow-container">
                         <FlowContainer pipes={pipes} setPipes={setPipes}
-                                       nodeElements={nodeElements} setNodeElements={setNodeElements} />
+                                       nodeElements={nodeElements} setNodeElements={setNodeElements} temperature={temperatureKey}/>
                         <VersionNumber/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
                     </div>
@@ -89,6 +88,7 @@ function App() {
                     <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}/>
                 </TabPanel>
                 <TabPanel value={"3"}>
+                    {/*@ts-ignore*/}
                     <OptimizationResults />
                 </TabPanel>
             </TabContext>
