@@ -5,7 +5,7 @@ import org.junit.Test
 class OutputNodeTest {
 
     private val SIMPLE_HEAT_DEMAND = HeatDemandCurve(List(8760) { 1.0 })
-    
+
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailWithEmptyId() {
         OutputNode("", HeatDemandCurve.ZERO, 0.0)

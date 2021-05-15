@@ -88,6 +88,14 @@ fun Application.module(testing: Boolean = false) {
     }
 
     routing {
+        route("api") {
+            // add api endpoints here
+            grid(get())
+            temperature(get())
+            profiles(get())
+            version(apiConfig)
+        }
+
         when {
             isDev -> get("/") {
                 // redirect to frontend dev server
@@ -98,14 +106,6 @@ fun Application.module(testing: Boolean = false) {
                 resources("build")
                 resource("/", "build/index.html")
             }
-        }
-
-        route("api") {
-            // add api endpoints here
-            grid(get())
-            temperature(get())
-            profiles(get())
-            version(apiConfig)
         }
     }
 

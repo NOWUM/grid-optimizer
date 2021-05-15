@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
     implementation("io.ktor:ktor-server-netty:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
@@ -30,14 +31,14 @@ dependencies {
     implementation("io.ktor:ktor-server-sessions:$ktor_version")
     implementation("io.ktor:ktor-gson:$ktor_version")
 
-    implementation("org.koin:koin-core:$koin_version")
-    implementation("org.koin:koin-ktor:$koin_version")
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation("io.insert-koin:koin-ktor:$koin_version")
 
 
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:$csv_version")
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
-    testImplementation("org.koin:koin-test:$koin_version")
+    testImplementation("io.insert-koin:koin-test:$koin_version")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")

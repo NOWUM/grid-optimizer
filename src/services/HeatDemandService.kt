@@ -1,7 +1,6 @@
 package de.fhac.ewi.services
 
 import de.fhac.ewi.model.HeatDemandCurve
-import de.fhac.ewi.model.heatprofile.HProfile
 
 class HeatDemandService(
     private val temperatureService: TemperatureTimeSeriesService,

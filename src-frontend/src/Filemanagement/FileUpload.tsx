@@ -1,7 +1,8 @@
 import React, {useCallback} from "react";
 import {useDropzone} from 'react-dropzone';
 import "./file-upload.css";
-import {HotWaterGrid} from "../models";
+import {HotWaterGrid, instanceOfHotWaterGrid} from "../models";
+import {notify} from "../Overlays/Notifications";
 
 
 
@@ -42,9 +43,15 @@ export const FileUpload = (props: UploadProps) => {
 
     const handleJSONUpload = (reader: FileReader) => {
         const jsonResult = mapToJSON(reader);
-        console.log(jsonResult)
-        props.loadGrid(jsonResult)
+        console.log(instanceOfHotWaterGrid(jsonResult))
+        if(instanceOfHotWaterGrid(jsonResult)) {
+            props.loadGrid(jsonResult)
+        } else {
+            notify("Die Eingabedatei ist leider nicht valide")
+        }
     }
+
+
 
     const handleCSVUpload = (reader: FileReader) => {
         const csvStr = mapCSVToArray(reader)
