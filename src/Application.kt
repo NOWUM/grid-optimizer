@@ -62,6 +62,7 @@ fun Application.module(testing: Boolean = false) {
 
     install(StatusPages) {
         exception<IllegalArgumentException> { cause ->
+            cause.printStackTrace()
             call.respond(HttpStatusCode.BadRequest, "${cause.message}")
         }
         exception<ScriptException> { cause ->
