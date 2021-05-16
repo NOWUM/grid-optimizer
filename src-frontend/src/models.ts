@@ -6,7 +6,8 @@ export interface NodeElements {
     outputNodes: OutputNode[],
 }
 export interface HotWaterGrid extends NodeElements{
-    pipes: Pipe[]
+    pipes: Pipe[],
+    temperatureSeries: string
 }
 
 export interface BaseNode extends Node{

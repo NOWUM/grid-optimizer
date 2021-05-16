@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import './App.css';
 import {FlowContainer} from "./FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
@@ -27,19 +27,20 @@ import Notifications from "./Overlays/Notifications";
 import {OptimizationResults} from "./OptimizationResults";
 import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButton";
 import {defaultMassenstrom} from "./defaultConfig";
+import Backdrop from "./Backdrop";
 
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
     const [tabVal, setTabVal] = useState("1")
     const [massenstrom, setMassenstrom] = useState<MassenstromResponse>(defaultMassenstrom)
-
     const [nodeElements, setNodeElements] = useState<NodeElements>({
         inputNodes: [],
         intermediateNodes: [],
         outputNodes: []
     });
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
+    const [temperatureKey, setTemperatureKey] = useState<string>("")
 
     useEffect(() => {
         uploadDropboxInit(renderUpload, setRenderUpload)
@@ -77,6 +78,10 @@ function App() {
         setNodeElements(newNodeElements)
     }
 
+    const getGrid = () => {
+        return {pipes: (pipes as Pipe[]), ...nodeElements, temperatureSeries: temperatureKey}
+    }
+
     return (
         <div className="App">
             <TabContext value={tabVal}>
@@ -92,17 +97,22 @@ function App() {
                 <TabPanel value="1">
                     <div className="react-flow-container">
                         <FlowContainer pipes={pipes} setPipes={setPipes}
-                                       nodeElements={nodeElements} setNodeElements={setNodeElements} />
+                                       nodeElements={nodeElements} setNodeElements={setNodeElements}
+                                       temperature={temperatureKey}/>
                         <VersionNumber/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
-                        <DetermineMassFlowRateButton grid={{pipes: (pipes as Pipe[]), ...nodeElements}}  onResult={setMassenstrom}/>
+                        <DetermineMassFlowRateButton
+                            grid={getGrid()}
+                            onResult={setMassenstrom}/>
                     </div>
                 </TabPanel>
                 <TabPanel value="2">
-                    <MetaDataContainer/>
+                    <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}/>
                 </TabPanel>
                 <TabPanel value={"3"}>
-                    <OptimizationResults massenstrom={massenstrom}/>
+                    <Suspense fallback={<Backdrop open={true}/>}>
+                        <OptimizationResults massenstrom={massenstrom}/>
+                    </Suspense>
                 </TabPanel>
             </TabContext>
             {renderUpload ?

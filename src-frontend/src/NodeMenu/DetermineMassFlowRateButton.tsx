@@ -2,6 +2,7 @@ import React from "react";
 import {Button} from "@material-ui/core";
 import {baseUrl} from "../utils/utility";
 import {HotWaterGrid, MassenstromResponse} from "../models";
+import {trackPromise} from "react-promise-tracker";
 
 export const DetermineMassFlowRateButton = ({grid, onResult}: {grid: HotWaterGrid, onResult: (massenStrom: MassenstromResponse) => void}) => {
     const configuration = {
@@ -13,12 +14,13 @@ export const DetermineMassFlowRateButton = ({grid, onResult}: {grid: HotWaterGri
     }
 
     const fetchMassFlowRate = () => {
+        trackPromise(
         fetch(`${baseUrl}/api/grid/maxmassenstrom`, configuration)
             .then(response => {
                 return response.json()
             }).then(p => onResult(p))
             .catch(e => {
-                return false});
+                return false}));
     }
 
     return <div className={"determine-mass-flow-rate-button"}>

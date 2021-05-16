@@ -1,11 +1,19 @@
-import React, {useState} from "react";
+import React, {Dispatch, SetStateAction, useState} from "react";
 import {Button, Grid, InputLabel, TextField, Typography} from "@material-ui/core";
+import {TemperatureDropdown} from "./TemperatureDropdown";
 
-export const MetaDataContainer = () => {
+interface Properties {
+    temperatureKey: string,
+    setTemperatureKey: Dispatch<SetStateAction<string>>
+}
+
+export const MetaDataContainer = ({temperatureKey, setTemperatureKey}: Properties) => {
 
 
     const [insulationThickness, setInsulationThickness] = useState(0);
     const [pressureDropPerOutput, setPressureDropPerOutput] = useState(0)
+
+
 
     return <Grid
         container
@@ -44,6 +52,17 @@ export const MetaDataContainer = () => {
 
             </Grid>
         </Grid>
+
+        <Grid container
+              direction="row" item xs={7} spacing={3}>
+            <Grid item xs={6}>
+                <InputLabel>Temperaturreihe</InputLabel>
+            </Grid>
+            <Grid item xs={6}>
+                <TemperatureDropdown temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}/>
+            </Grid>
+        </Grid>
+
         <Grid container direction="row" item xs={7} spacing={1}>
             <Grid item xs={12}>
                 <Button variant="contained" onClick={() => {
@@ -55,3 +74,4 @@ export const MetaDataContainer = () => {
 
     </Grid>
 }
+

@@ -5,9 +5,10 @@ import de.fhac.ewi.routes.profiles
 import de.fhac.ewi.routes.temperature
 import de.fhac.ewi.routes.version
 import de.fhac.ewi.services.GridService
+import de.fhac.ewi.services.HeatDemandService
 import de.fhac.ewi.services.LoadProfileService
 import de.fhac.ewi.services.TemperatureTimeSeriesService
-import de.fhac.ewi.util.loadStandardLoadProfiles
+import de.fhac.ewi.util.loadHProfiles
 import de.fhac.ewi.util.loadTemperatureTimeSeries
 import io.ktor.application.*
 import io.ktor.features.*
@@ -61,6 +62,7 @@ fun Application.module(testing: Boolean = false) {
 
     install(StatusPages) {
         exception<IllegalArgumentException> { cause ->
+            cause.printStackTrace()
             call.respond(HttpStatusCode.BadRequest, "${cause.message}")
         }
         exception<ScriptException> { cause ->
@@ -80,7 +82,8 @@ fun Application.module(testing: Boolean = false) {
         modules(org.koin.dsl.module {
             // Add services for injection usage
             single { TemperatureTimeSeriesService(loadTemperatureTimeSeries()) }
-            single { LoadProfileService(loadStandardLoadProfiles()) }
+            single { LoadProfileService(loadHProfiles()) }
+            single { HeatDemandService(get(), get()) }
             single { GridService(get(), get()) }
         })
     }
