@@ -35,7 +35,7 @@ export const InputNode = (node: InputNodeModel) => {
     }
 
     const handleClick = () => {
-        showNodeInputDialog("Bearbeiten sie diese Node", getInputNode(),
+        showNodeInputDialog("Bearbeiten sie diesen Einspeisepunkt", getInputNode(),
             (newNode) => {
             console.log(newNode)
             node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
@@ -43,10 +43,10 @@ export const InputNode = (node: InputNodeModel) => {
 
     return (
         <Tooltip title={<>
-            Flow Temperatur Template: {node.data.flowTemperatureTemplate}<br/>
-            Return Temperatur Template: {node.data.returnTemperatureTemplate}
+            Formel Vorlauftemperatur: {node.data.flowTemperatureTemplate}<br/>
+            Formel Rücklauftemperatur: {node.data.returnTemperatureTemplate}
         </>}>
-            <div style={customNodeStyles} onClick={handleClick}>
+            <div style={customNodeStyles} onDoubleClick={handleClick}>
                 <Handle
                     type="source"
                     position={Position.Bottom}

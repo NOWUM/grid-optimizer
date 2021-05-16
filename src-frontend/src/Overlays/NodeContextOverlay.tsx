@@ -169,7 +169,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
             <Grid container
                   direction="row" item xs={7} spacing={3}>
                 <Grid item xs={12}>
-                    <TextField id="standard-basic" label="Label" placeholder="OutputLabel"
+                    <TextField id="standard-basic" label="Label" placeholder="Output Node Label"
                                value={label}
                                onChange={(val) => {
                                    setLabel(val.target.value)
@@ -179,17 +179,17 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
             <Grid container
                   direction="row" item xs={7} spacing={3}>
                 <Grid item xs={12}>
-                    <TextField id="standard-basic" label="Warmwasserbedarf [Kwh]" type="number"
+                    <TextField id="standard-basic" label="Warmwasserbedarf [kWh]" type="number"
                                value={thermalEnergyDemand}
                                onChange={(val) => setThermalEnergyDemand(val.target.value)}
-                               placeholder="127.30"/>
+                               placeholder="55.30"/>
                 </Grid>
             </Grid>
 
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
-                <TextField id="standard-basic" label="Druckverluste" type="number" placeholder="0.30"
+                <TextField id="standard-basic" label="Druckverluste [bar]" type="number" placeholder="0.30"
                            helperText={"Der Druck muss zwischen 0 und 1 Bar liegen."}
                            value={pressureLoss}
                            onChange={(val) =>{
@@ -235,7 +235,7 @@ const InputNodeForm = ({message, onConfirm, onAbort, node}: {
             }
             onConfirm(newNode)
         } else {
-            notify("Eingaben nicht valide")
+            notify("Eingaben nicht valide.")
         }
     }
 
@@ -249,7 +249,7 @@ const InputNodeForm = ({message, onConfirm, onAbort, node}: {
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
-                <TextField id="standard-basic" label="Label" placeholder="OutputLabel"
+                <TextField id="standard-basic" label="Label" placeholder="Input Node Label"
                            value={label}
                            onChange={(val) => {
                                setLabel(val.target.value)
@@ -260,17 +260,17 @@ const InputNodeForm = ({message, onConfirm, onAbort, node}: {
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
-                <TextField id="standard-basic" label="Warmwasserbedarf [Kwh]"
+                <TextField id="standard-basic" label="Vorlauftemperatur [°C als f(Außentemperatur)]"
                            value={flowTemperatureTemplate}
                            onChange={(val) => setFlowTemperatureTemplate(val.target.value)}
-                           placeholder="3x+5"/>
+                           placeholder="x+70"/>
             </Grid>
         </Grid>
 
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
-                <TextField id="standard-basic" label="Druckverluste" placeholder="7x^2+8"
+                <TextField id="standard-basic" label="Rücklauftemperatur [°C als f(Außentemperatur)]" placeholder="x+60"
                            value={returnTemperatureTemplate}
                            onChange={(val) => {
                                setReturnTemperatureTemplate(val.target.value)
@@ -309,7 +309,7 @@ const IntermediateNodeForm = ({message, onConfirm, onAbort, node}: {
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
-                <TextField id="standard-basic" label="Label" placeholder="OutputLabel"
+                <TextField id="standard-basic" label="Label" placeholder="Intermediate Node Label"
                            value={label}
                            onChange={(val) => {
                                setLabel(val.target.value)

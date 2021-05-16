@@ -11,6 +11,7 @@ export const FormSkeleton: FunctionComponent<SkeletonInterface> = (props) => {
         direction="row"
         justify="center"
         alignItems="center"
+        spacing={3}
     >
         <Grid container
               direction="row" item xs={7} spacing={3}>

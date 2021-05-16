@@ -22,12 +22,12 @@ export const OutputNode = (node: OutputNodeModel) => {
     }
 
     const handleClick = () => {
-        showNodeOutputDialog("Bearbeiten sie diese Node", getOutputNode(),
+        showNodeOutputDialog("Bearbeiten sie diese Entnahmestelle", getOutputNode(),
             (newNode) => {node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
     }
 
     return (<Tooltip title={<>
-            Wärmebedarf: {node.data.thermalEnergyDemand}kwh<br/>
+            Wärmebedarf: {node.data.thermalEnergyDemand} kWh<br/>
             Druckverlust: {node.data.pressureLoss} Bar <br />
             Lastprofil: {node.data.loadProfileName}
     </>}>
