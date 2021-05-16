@@ -1,10 +1,10 @@
-import React from "react";
+import React, {memo} from "react";
 // @ts-ignore
 import Plot from 'react-plotly.js';
 import {MassenstromResponse} from "./models";
 // const temps =  require("./mock/temperature-mock")
 
-export const OptimizationResults = ({massenstrom}: {massenstrom: MassenstromResponse}) => {
+export const OptimizationResultsComponent = ({massenstrom}: {massenstrom: MassenstromResponse}) => {
     const getPlotData = () => {
         return [
             {
@@ -12,31 +12,31 @@ export const OptimizationResults = ({massenstrom}: {massenstrom: MassenstromResp
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'red'},
-                name: "Energie Heat Demand"
+                name: "Energie Heat Demand in kW"
             }, {
                 y: massenstrom.flowInTemperatures,
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'green'},
-                name: "Flow In Temperature"
+                name: "Flow In Temperature in °C"
             },{
                 y: massenstrom.flowOutTemperatures,
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'blue'},
-                name: "Flow Out Temperature"
+                name: "Flow Out Temperature °C"
             },{
                 y: massenstrom.massenstrom,
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'orange'},
-                name: "Massenstrom"
+                name: "Massenstrom in Kg"
             },{
                 y: massenstrom.temperatures,
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'brown'},
-                name: "Temperaturen"
+                name: "Temperaturen in °C"
             },
         ]
     }
@@ -45,3 +45,5 @@ export const OptimizationResults = ({massenstrom}: {massenstrom: MassenstromResp
      layout={ {width: "90vw", height: "80vh", title: 'Temperaturverlauf'} }
  />
 }
+
+export const OptimizationResults = memo(OptimizationResultsComponent)

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import './App.css';
 import {FlowContainer} from "./FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
@@ -27,6 +27,7 @@ import Notifications from "./Overlays/Notifications";
 import {OptimizationResults} from "./OptimizationResults";
 import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButton";
 import {defaultMassenstrom} from "./defaultConfig";
+import Backdrop from "./Backdrop";
 
 function App() {
 
@@ -109,7 +110,9 @@ function App() {
                     <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}/>
                 </TabPanel>
                 <TabPanel value={"3"}>
-                    <OptimizationResults massenstrom={massenstrom}/>
+                    <Suspense fallback={<Backdrop open={true}/>}>
+                        <OptimizationResults massenstrom={massenstrom}/>
+                    </Suspense>
                 </TabPanel>
             </TabContext>
             {renderUpload ?
