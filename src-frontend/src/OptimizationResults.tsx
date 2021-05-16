@@ -42,7 +42,11 @@ export const OptimizationResultsComponent = ({massenstrom}: {massenstrom: Massen
     }
  return <Plot
      data={getPlotData()}
-     layout={ {width: "90vw", height: "80vh", title: 'Maximaler Massenstrom'} }
+     useResizeHandler
+     style={{ width: '100%', height: '100%' }}
+     layout={{
+         autosize: true, title: 'Maximaler Massenstrom'
+     }}
  />
 }
 
