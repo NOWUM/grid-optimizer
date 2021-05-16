@@ -46,7 +46,7 @@ export const InputNode = (node: InputNodeModel) => {
             Flow Temperatur Template: {node.data.flowTemperatureTemplate}<br/>
             Return Temperatur Template: {node.data.returnTemperatureTemplate}
         </>}>
-            <div style={customNodeStyles} onClick={handleClick}>
+            <div style={customNodeStyles} onDoubleClick={handleClick}>
                 <Handle
                     type="source"
                     position={Position.Bottom}
