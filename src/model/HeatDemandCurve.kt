@@ -1,5 +1,7 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.util.requireNoNaNs
+
 /**
  * Beinhaltet für jede Stunde im Jahr den Energiebedarf.
  *
@@ -22,5 +24,6 @@ class HeatDemandCurve(val curve: List<Double>) {
     init {
         if (curve.size != 8760) throw IllegalArgumentException("The curve must contain exactly 8760 elements. For each hour of year one.")
         if (curve.any { it < 0.0 }) throw IllegalArgumentException("The curve must contain only positive values.")
+        curve.requireNoNaNs()
     }
 }
