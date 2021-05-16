@@ -42,11 +42,8 @@ export const OptimizationResultsComponent = ({massenstrom}: {massenstrom: Massen
     }
  return <Plot
      data={getPlotData()}
-     useResizeHandler
      style={{ width: '100%', height: '100%' }}
-     layout={{
-         autosize: true, title: 'Maximaler Massenstrom'
-     }}
+     layout={ {autosize: true, title: 'Maximaler Massenstrom', xaxis: { title: 'Stunde im Jahr' } } }
  />
 }
 
