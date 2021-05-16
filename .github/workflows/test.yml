@@ -11,8 +11,17 @@ on:
 
 # Runs all tests
 jobs:
+  # Validates all gradle wrapper jars in this repository
+  validation:
+    name: "Gradle validation"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: gradle/wrapper-validation-action@v1
+      
   test:
     runs-on: ubuntu-latest
+    needs: validation
     steps:
       - uses: actions/checkout@v2.3.4
   
