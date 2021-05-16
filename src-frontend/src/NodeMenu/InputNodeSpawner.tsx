@@ -8,17 +8,17 @@ import {showNodeInputDialog} from "../Overlays/NodeContextOverlay";
 
 export const InputNodeSpawner = ({onNewNode}: NodeSpawner) => {
     const defaultNode: InputNode = {
-        data: {label: "Default Node"},
+        data: {label: "Default Einspeisepunkt"},
         position: {x: 300, y: 300},
         id: generateUniqueID(),
         type: NodeType.INPUT_NODE,
-        flowTemperatureTemplate: "x+3", // mathematical expression like `x+5` with x as outside temperature
-        returnTemperatureTemplate: "x+2"
+        flowTemperatureTemplate: "x+70", // mathematical expression like `x+5` with x as outside temperature
+        returnTemperatureTemplate: "x+60"
     }
 
 
     const handleClick = () => {
-        showNodeInputDialog("Erzeuge eine neue Input Node", defaultNode, onNewNode, () => {/*Nothing to do here*/} )
+        showNodeInputDialog("Erzeuge einen neuen Einspeisepunkt", defaultNode, onNewNode, () => {/*Nothing to do here*/} )
     }
 
     return <Button onClick={handleClick}>

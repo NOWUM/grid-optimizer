@@ -9,9 +9,9 @@ import {NodeSpawner} from "./NodeMenuSpawnerContainer";
 export const OutputNodeSpawner = ({onNewNode}: NodeSpawner) => {
     const defaultNode: OutputNode = {
         loadProfileName: "",
-        thermalEnergyDemand: 123,
+        thermalEnergyDemand: 55,
         pressureLoss: 0.56,
-        data: {label: "Default Node"},
+        data: {label: "Default Entnahmestelle"},
         position: {x: 300, y: 300},
         type: NodeType.OUTPUT_NODE,
         id: generateUniqueID()
@@ -19,7 +19,7 @@ export const OutputNodeSpawner = ({onNewNode}: NodeSpawner) => {
 
 
     const handleClick = () => {
-        showNodeOutputDialog("Erzeuge eine neue Output Node", defaultNode,
+        showNodeOutputDialog("Erzeuge eine neue Entnahmestelle", defaultNode,
             (node) => {
                 console.log(node)
                 onNewNode(node)
