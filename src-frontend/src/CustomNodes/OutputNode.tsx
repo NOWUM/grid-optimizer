@@ -22,7 +22,7 @@ export const OutputNode = (node: OutputNodeModel) => {
     }
 
     const handleClick = () => {
-        showNodeOutputDialog("Bearbeiten sie diese Node", getOutputNode(),
+        showNodeOutputDialog("Bearbeiten sie diese Entnahmestelle", getOutputNode(),
             (newNode) => {node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
     }
 

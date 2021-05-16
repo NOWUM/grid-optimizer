@@ -35,7 +35,7 @@ export const InputNode = (node: InputNodeModel) => {
     }
 
     const handleClick = () => {
-        showNodeInputDialog("Bearbeiten sie diese Node", getInputNode(),
+        showNodeInputDialog("Bearbeiten sie diesen Einspeisepunkt", getInputNode(),
             (newNode) => {
             console.log(newNode)
             node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
