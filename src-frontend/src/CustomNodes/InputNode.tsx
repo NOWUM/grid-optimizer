@@ -43,8 +43,8 @@ export const InputNode = (node: InputNodeModel) => {
 
     return (
         <Tooltip title={<>
-            Flow Temperatur Template: {node.data.flowTemperatureTemplate}<br/>
-            Return Temperatur Template: {node.data.returnTemperatureTemplate}
+            Formel Vorlauftemperatur: {node.data.flowTemperatureTemplate}<br/>
+            Formel Rücklauftemperatur: {node.data.returnTemperatureTemplate}
         </>}>
             <div style={customNodeStyles} onDoubleClick={handleClick}>
                 <Handle
