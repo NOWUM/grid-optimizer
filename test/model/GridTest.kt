@@ -5,6 +5,9 @@ import org.junit.Test
 
 class GridTest {
 
+
+    private val SIMPLE_HEAT_DEMAND = HeatDemandCurve(List(8760) { 1.0 })
+
     @Test
     fun createEmptyGrid() {
         Grid()
@@ -71,21 +74,21 @@ class GridTest {
     @Test
     fun addOutputNode() {
         val grid = Grid()
-        grid.addOutputNode("1", HeatDemandCurve.ONES, 1.0)
+        grid.addOutputNode("1", SIMPLE_HEAT_DEMAND, 1.0)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnTwoOutputNodesWithSameId() {
         val grid = Grid()
-        grid.addOutputNode("1", HeatDemandCurve.ONES, 1.0)
-        grid.addOutputNode("1", HeatDemandCurve.ONES, 1.0)
+        grid.addOutputNode("1", SIMPLE_HEAT_DEMAND, 1.0)
+        grid.addOutputNode("1", SIMPLE_HEAT_DEMAND, 1.0)
     }
 
     @Test
     fun acceptTwoOutputNodesWithDifferentId() {
         val grid = Grid()
-        grid.addOutputNode("1", HeatDemandCurve.ONES, 1.0)
-        grid.addOutputNode("2", HeatDemandCurve.ONES, 1.0)
+        grid.addOutputNode("1", SIMPLE_HEAT_DEMAND, 1.0)
+        grid.addOutputNode("2", SIMPLE_HEAT_DEMAND, 1.0)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -139,7 +142,7 @@ class GridTest {
         val grid = Grid()
         grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
         grid.addIntermediateNode("2")
-        grid.addOutputNode("3", HeatDemandCurve.ONES, 1.0)
+        grid.addOutputNode("3", SIMPLE_HEAT_DEMAND, 1.0)
         grid.addPipe("P1", "1", "2", 10.0)
         grid.addPipe("P2", "2", "3", 10.0)
         grid.validate()

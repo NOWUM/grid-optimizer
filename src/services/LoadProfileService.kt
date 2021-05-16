@@ -1,17 +1,16 @@
 package de.fhac.ewi.services
 
-import de.fhac.ewi.model.HeatDemandCurve
-import de.fhac.ewi.model.LoadProfile
+import de.fhac.ewi.model.TemperatureTimeSeries
+import de.fhac.ewi.model.heatprofile.HProfile
+import de.fhac.ewi.model.heatprofile.LoadProfile
 
-class LoadProfileService(val profiles: List<LoadProfile>) {
+class LoadProfileService(private val hProfiles: List<HProfile>) {
 
-    fun getAllProfileNames() = profiles.map { it.profileName }
+    fun getAllHProfileNames() = hProfiles.map { it.profileName }
 
-    fun getProfile(profileName: String) = profiles.firstOrNull { it.profileName == profileName }
-        ?: throw IllegalArgumentException("No standard load profile found for name $profileName.")
+    fun getHProfile(profileName: String) = hProfiles.firstOrNull { it.profileName == profileName }
+        ?: throw IllegalArgumentException("No hProfile found for name $profileName.")
 
-    fun distribute(profileName: String, kwh: Double): HeatDemandCurve {
-        val profile = getProfile(profileName)
-        return profile.curve.copy(kwh)
-    }
+    fun getLoadProfile(profileName: String, temperatureSeries: TemperatureTimeSeries) =
+        LoadProfile(temperatureSeries, getHProfile(profileName))
 }

@@ -55,7 +55,8 @@ interface FlowContainerProperties {
     pipes: Elements<Pipe>,
     setPipes: Dispatch<SetStateAction<Elements<Pipe>>>,
     nodeElements: NodeElements,
-    setNodeElements: Dispatch<SetStateAction<NodeElements>>
+    setNodeElements: Dispatch<SetStateAction<NodeElements>>,
+    temperature: string
 }
 
 enum ResultCode {
@@ -87,7 +88,7 @@ const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
             return false});
 }
 
-export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: FlowContainerProperties) => {
+export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, temperature}: FlowContainerProperties) => {
 
     const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
 
@@ -105,7 +106,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
             }
 
             pipesToVerify.push(newPipe)
-            verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[])).then((verified: boolean) => {
+            verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[], temperature)).then((verified: boolean) => {
                     if(verified) {
                         params= {...params, ...edgeConfiguration, id, length: length1}
                         const newPipes = [...pipes]
@@ -208,13 +209,17 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements}: 
         setNodeElements(newNodeElements)
     }
 
-    // @ts-ignore
+
     return <ReactFlow elements={getElementsForFlow()}
                       onConnect={(params) => onConnect(params)}
+
+                      onNodeDragStart={(e) => e.stopPropagation()}
+                      onNodeDrag={(e) => e.stopPropagation()}
+                      onNodeDragStop={(e) => e.stopPropagation()}
                       nodeTypes={nodeTypes}
                       onEdgeContextMenu={onElementClick}
                       deleteKeyCode={46}
-                      onClick={() => closePopupTarget()}
+                      onClick={(e) => closePopupTarget()}
     >
         <Background
             variant={BackgroundVariant.Dots}

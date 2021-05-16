@@ -7,8 +7,11 @@ class GridServiceTest {
 
     @Test
     fun createGridByEmptyRequest() {
-        val service = GridService(LoadProfileService(emptyList()), TemperatureTimeSeriesService(emptyList()))
-        val request = GridRequest(emptyList(), emptyList(), emptyList(), emptyList())
+        val service = GridService(
+            HeatDemandService(TemperatureTimeSeriesService(emptyList()), LoadProfileService(emptyList())),
+            TemperatureTimeSeriesService(emptyList())
+        )
+        val request = GridRequest("", emptyList(), emptyList(), emptyList(), emptyList())
         service.createByGridRequest(request)
     }
 }

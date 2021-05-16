@@ -1,0 +1,109 @@
+{
+  "pipes": [
+    {
+      "source": "v1-1621154237834-6570763281377",
+      "sourceHandle": "a",
+      "target": "v1-1621154242410-5194769964889",
+      "targetHandle": null,
+      "animated": true,
+      "type": "step",
+      "arrowHeadType": "arrowclosed",
+      "style": {
+        "stroke": "rgb( 253 126 20)",
+        "strokeWidth": "3px"
+      },
+      "id": "v1-1621154299719-8252351093684",
+      "length": 1
+    },
+    {
+      "source": "v1-1621154242410-5194769964889",
+      "sourceHandle": "a",
+      "target": "v1-1621154244198-2654438853996",
+      "targetHandle": null,
+      "animated": true,
+      "type": "step",
+      "arrowHeadType": "arrowclosed",
+      "style": {
+        "stroke": "rgb( 253 126 20)",
+        "strokeWidth": "3px"
+      },
+      "id": "v1-1621154305308-7360327928935",
+      "length": 1
+    },
+    {
+      "source": "v1-1621154242410-5194769964889",
+      "sourceHandle": "c",
+      "target": "v1-1621154247322-5746772149591",
+      "targetHandle": null,
+      "animated": true,
+      "type": "step",
+      "arrowHeadType": "arrowclosed",
+      "style": {
+        "stroke": "rgb( 253 126 20)",
+        "strokeWidth": "3px"
+      },
+      "id": "v1-1621154314562-6190012343380",
+      "length": 1
+    }
+  ],
+  "inputNodes": [
+    {
+      "flowTemperatureTemplate": "x+3",
+      "returnTemperatureTemplate": "x+2",
+      "data": {
+        "label": "Default Node"
+      },
+      "position": {
+        "x": 400,
+        "y": 350
+      },
+      "type": "INPUT_NODE",
+      "id": "v1-1621154237834-6570763281377"
+    }
+  ],
+  "intermediateNodes": [
+    {
+      "data": {
+        "label": "Default Node"
+      },
+      "position": {
+        "x": 300,
+        "y": 300
+      },
+      "type": "INTERMEDIATE_NODE",
+      "connect_limit": 3,
+      "id": "v1-1621154242410-5194769964889"
+    }
+  ],
+  "outputNodes": [
+    {
+      "thermalEnergyDemand": 123,
+      "pressureLoss": 0.56,
+      "data": {
+        "label": "Default Node"
+      },
+      "position": {
+        "x": 544,
+        "y": 455
+      },
+      "type": "OUTPUT_NODE",
+      "id": "v1-1621154244198-2654438853996",
+      "loadProfileName": "EFH"
+    },
+    {
+      "thermalEnergyDemand": 123,
+      "pressureLoss": 0.56,
+      "data": {
+        "label": "Default Node"
+      },
+      "position": {
+        "x": 174,
+        "y": 534
+      },
+      "type": "OUTPUT_NODE",
+      "id": "v1-1621154247322-5746772149591",
+      "loadProfileName": "MFH"
+    }
+  ],
+  "temperatureSeries": "Schemm 2018"
+}
