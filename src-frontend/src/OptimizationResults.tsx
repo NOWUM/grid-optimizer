@@ -12,37 +12,37 @@ export const OptimizationResultsComponent = ({massenstrom}: {massenstrom: Massen
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'red'},
-                name: "Energie Heat Demand in kW"
+                name: "Energie Heat Demand [kWh]"
             }, {
                 y: massenstrom.flowInTemperatures,
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'green'},
-                name: "Flow In Temperature in °C"
+                name: "Flow In Temperature [°C]"
             },{
                 y: massenstrom.flowOutTemperatures,
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'blue'},
-                name: "Flow Out Temperature °C"
+                name: "Flow Out Temperature [°C]"
             },{
                 y: massenstrom.massenstrom,
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'orange'},
-                name: "Massenstrom in Kg"
+                name: "Massenstrom in [kg]"
             },{
                 y: massenstrom.temperatures,
                 type: 'scatter',
                 mode: 'lines+markers',
                 marker: {color: 'brown'},
-                name: "Temperaturen in °C"
+                name: "Temperaturen [°C]"
             },
         ]
     }
  return <Plot
      data={getPlotData()}
-     layout={ {width: "90vw", height: "80vh", title: 'Temperaturverlauf'} }
+     layout={ {width: "90vw", height: "80vh", title: 'Maximaler Massenstrom'} }
  />
 }
 
