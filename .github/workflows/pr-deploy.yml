@@ -57,10 +57,11 @@ jobs:
   deploy:
     needs: [build]
     runs-on: ubuntu-latest
+    permissions: 
+      deployments: write
     steps:
       - uses: actions/checkout@v2.3.4
-        
-        # Update status   
+     
       - name: Create GitHub deployment
         uses: bobheadxi/deployments@v0.5.2
         id: deployment
