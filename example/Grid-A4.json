@@ -1,369 +1,421 @@
 {
-  "inputNodes": [
+  "inputNodes":
+ [
+   {
+     "flowTemperatureTemplate":"x+70",
+     "returnTemperatureTemplate":"x+60",
+     "data":
+     {
+       "label":"Erzeuger"
+     },
+     "position":
+     {
+       "x":-286,
+       "y":138
+     },
+     "type":"INPUT_NODE",
+     "id":"v1-1621177974627-4475240057456"
+   }
+ ],
+ "intermediateNodes":
+ [
+   {
+     "id":"v1-1621185871251-9919604707138",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":-161,
+       "y":305
+     },
+     "data":
+     {
+       "label":"Schuetzenstr. (bis 15/26)"
+     }
+   },
+   {
+     "id":"v1-1621185898211-7831046798307",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":96,
+       "y":308
+     },
+     "data":
+     {
+       "label":"Gerberstr."
+     }
+   },
+   {
+     "id":"v1-1621185911440-4962016131877",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":-151,
+       "y":583
+     },
+     "data":
+     {
+       "label":"Schuetzenstr. (bis Kleine Rurstr.)"
+     }
+   },
+   {
+     "id":"v1-1621185949072-5762848366935",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":164,
+       "y":579
+     },
+     "data":
+     {
+       "label":"Kleine Rurstr."
+     }
+   },
+   {
+     "id":"v1-1621185960881-2278928340772",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":248,
+       "y":730
+     },
+     "data":
+     {
+       "label":"Grosserurstr. (Block 10)"
+     }
+   },
+   {
+     "id":"v1-1621185980565-8743695485867",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":153,
+       "y":132
+     },
+     "data":
+     {
+       "label":"Schirmerstr."
+     }
+   },
+   {
+     "id":"v1-1621185993404-8663399000808",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":134,
+       "y":223
+     },
+     "data":
+     {
+       "label":"An der Synagoge"
+     }
+   },
+   {
+     "id":"v1-1621186006012-3164455616714",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":315,
+       "y":226
+     },
+     "data":
+     {
+       "label":"Bocksgasse"
+     }
+   },
+   {
+     "id":"v1-1621186022327-2899379456646",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":161,
+       "y":406.00000000000006
+     },
+     "data":
+     {
+       "label":"Gruenstr."
+     }
+   },
+   {
+     "id":"v1-1621186037332-6365011053297",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":297,
+       "y":408
+     },
+     "data":
+     {
+       "label":"Raderstr."
+     }
+   },
+   {
+     "id":"v1-1621186044694-1690334569077",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":-111,
+       "y":136
+     },
+     "data":
+     {
+       "label":"Zuleitung"
+     }
+   },
+   {
+     "id":"v1-1621186098528-4388784622092",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":473,
+       "y":135
+     },
+     "data":
+     {
+       "label":"Schirmerstr. 1a-9"
+     }
+   },
+   {
+     "id":"v1-1621186594588-2147702602155",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":410,
+       "y":271
+     },
+     "data":
+     {
+       "label":"Duesseldorferstr. 23-31 (Block 3)"
+     }
+   },
+   {
+     "id":"v1-1621186629583-9384125582204",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":405,
+       "y":366
+     },
+     "data":
+     {
+       "label":"Duesseldorferstr. 8-21 (Block 4+6)"
+     }
+   },
+   {
+     "id":"v1-1621186652759-4960965729761",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":734,
+       "y":364
+     },
+     "data":
+     {
+       "label":"Kapuzinerstr. 1-9 (Block 4)"
+     }
+   },
+   {
+     "id":"v1-1621186682472-9169377069812",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":187,
+       "y":498
+     },
+     "data":
+     {
+       "label":"2-6"
+     }
+   },
+   {
+     "id":"v1-1621186812935-9961997802525",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":515,
+       "y":468
+     },
+     "data":
+     {
+       "label":"3-4"
+     }
+   },
+   {
+     "id":"v1-1621186851560-6291085778803",
+     "type":"INTERMEDIATE_NODE",
+     "position":
+     {
+       "x":628,
+       "y":467
+     },
+     "data":
+     {
+       "label":"Koelnstr. 1-13"
+     }
+   },
+   {
+     "id":"v1-1621186901941-8243265721583",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":834,"y":468},
+     "data":{"label":"Koelnstr. 14-19"}},
+   {
+     "id":"v1-1621186913293-8028595782128",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":727,"y":612},
+     "data":{"label":"Stiftherrenstr."}},
+   {
+     "id":"v1-1621186926888-1586477936382",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":496,"y":625},
+     "data":{"label":"Marktstr."}},
+   {
+     "id":"v1-1621186938005-8206520472260",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":614,"y":728},
+     "data":{"label":"Grosse Rurstr. (Block 8+11)"}},
+   {
+     "id":"v1-1621186954765-7676883760911",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":915,"y":262},
+     "data":{"label":"Schossstr. 2-8 (Block 4)"}},
+   {
+     "id":"v1-1621187146185-4822434399630",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":948,"y":337},
+     "data":{"label":"Baierstr. 6-15"}},
+   {
+     "id":"v1-1621187165108-3673108523208",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":1119,"y":363},
+     "data":{"label":"Kapuzinerstr. 10-17 (Block 5+9)"}},
+   {
+     "id":"v1-1621187186495-8646703581612",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":961,"y":540},
+     "data":{"label":"Baierstr. 2-4"}},
+   {
+     "id":"v1-1621187204200-7802240284225",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":1289,"y":266},
+     "data":{"label":"Schlossstr. 10-16 (Block 5)"}},
+   {
+     "id":"v1-1621187356851-6725650088354",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":1285,"y":447},
+     "data":{"label":"Schlossstr. 18-22 (Block 9)"}},
+   {
+     "id":"v1-1621187373900-1465702534212",
+     "type":"INTERMEDIATE_NODE",
+     "position":{"x":1355,"y":552},
+     "data":{"label":"Poststr."}
+   }
+ ],
+  "outputNodes":[],
+  "pipes":
+  [
     {
-      "flowTemperatureTemplate": "10804,07",
-      "returnTemperatureTemplate": "x+2",
-      "data": {
-        "label": "Erzeuger"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INPUT_NODE",
-      "id": "v1-1621177974627-4475240057456"
-    }
-  ],
-  "intermediateNodes": [
+      "source":"v1-1621177974627-4475240057456",
+     "sourceHandle":"a",
+     "target":"v1-1621186044694-1690334569077",
+     "targetHandle":null,
+     "animated":true,
+     "type":"step",
+     "arrowHeadType":"arrowclosed",
+     "style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},
+     "id":"v1-1621237811834-1375063441238",
+     "length":1},
     {
-      "data": {
-        "label": "Schützenstr. (bis 15/26)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621185871251-9919604707138"
-    },
+      "source":"v1-1621186044694-1690334569077",
+      "sourceHandle":"b",
+      "target":"v1-1621185871251-9919604707138",
+      "targetHandle":null,
+      "animated":true,
+      "type":"step",
+      "arrowHeadType":"arrowclosed",
+      "style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},
+      "id":"v1-1621237836852-2609306591446","length":1},
     {
-      "data": {
-        "label": "Gerberstr."
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621185898211-7831046798307"
-    },
+      "source":"v1-1621185871251-9919604707138",
+      "sourceHandle":"a","target":"v1-1621185898211-7831046798307","targetHandle":null,
+      "animated":true,"type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},
+      "id":"v1-1621237912891-4880024270202","length":1},
     {
-      "data": {
-        "label": "Schützenstr. (bis Kleine Rurstr.)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621185911440-4962016131877"
-    },
+      "source":"v1-1621185871251-9919604707138","sourceHandle":"b","target":"v1-1621185911440-4962016131877","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621237936658-3873627509835","length":1},
     {
-      "data": {
-        "label": "Kleine Rurstr."
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621185949072-5762848366935"
-    },
+      "source":"v1-1621185911440-4962016131877","sourceHandle":"a","target":"v1-1621185949072-5762848366935","targetHandle":null,
+      "animated":true,"type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},
+      "id":"v1-1621237967640-4700805956094","length":1},
     {
-      "data": {
-        "label": "Großerurstr. (Block 10)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621185960881-2278928340772"
-    },
+      "source":"v1-1621186044694-1690334569077","sourceHandle":"a","target":"v1-1621185980565-8743695485867","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621240335753-7422815988709","length":1},
     {
-      "data": {
-        "label": "Schirmerstr."
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621185980565-8743695485867"
-    },
+      "source":"v1-1621185980565-8743695485867","sourceHandle":"b","target":"v1-1621185993404-8663399000808","targetHandle":null,"animated":true,"type":"step",
+      "arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621240355810-3284576235232","length":1},
     {
-      "data": {
-        "label": "An der Synagoge"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621185993404-8663399000808"
-    },
+      "source":"v1-1621185993404-8663399000808","sourceHandle":"b","target":"v1-1621186022327-2899379456646","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621240833545-3042182605263","length":1},
     {
-      "data": {
-        "label": "Bocksgasse"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186006012-3164455616714"
-    },
+      "source":"v1-1621186022327-2899379456646","sourceHandle":"b","target":"v1-1621186682472-9169377069812","targetHandle":null,
+      "animated":true,"type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},
+      "id":"v1-1621240854127-2817602883343","length":1},
     {
-      "data": {
-        "label": "Grünstr."
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186022327-2899379456646"
-    },
+      "source":"v1-1621186022327-2899379456646","sourceHandle":"a","target":"v1-1621186037332-6365011053297","targetHandle":null,
+      "animated":true,"type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621240874443-5559104125188","length":1},
     {
-      "data": {
-        "label": "Raderstr."
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186037332-6365011053297"
-    },
+      "source":"v1-1621185993404-8663399000808","sourceHandle":"a","target":"v1-1621186006012-3164455616714","targetHandle":null,"animated":true,"type":"step",
+      "arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621240893784-4140574569829","length":1},
     {
-      "data": {
-        "label": "Zuleitung"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186044694-1690334569077"
-    },
+      "source":"v1-1621185911440-4962016131877","sourceHandle":"b","target":"v1-1621185960881-2278928340772","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},
+      "id":"v1-1621241162815-7764866205910","length":1},
     {
-      "data": {
-        "label": "Schirmerstr. 1a-9"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186098528-4388784622092"
-    },
+      "source":"v1-1621185980565-8743695485867","sourceHandle":"a","target":"v1-1621186098528-4388784622092","targetHandle":null,
+      "animated":true,"type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},
+      "id":"v1-1621244420116-5605587252364","length":1},
     {
-      "data": {
-        "label": "Düsseldorferstr. 23-31 (Block 3)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186594588-2147702602155"
-    },
+      "source":"v1-1621186098528-4388784622092","sourceHandle":"a","target":"v1-1621186594588-2147702602155","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621244517733-2542389328113",
+      "length":1},
     {
-      "data": {
-        "label": "Düsseldorferstr. 8-21 (Block 4+6)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186629583-9384125582204"
-    },
+      "source":"v1-1621186594588-2147702602155","sourceHandle":"b","target":"v1-1621186629583-9384125582204","targetHandle":null,
+      "animated":true,"type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},
+      "id":"v1-1621244800785-1887146195151","length":1},
     {
-      "data": {
-        "label": "Kapuzinerstr. 1-9 (Block 4)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186652759-4960965729761"
-    },
+      "source":"v1-1621186629583-9384125582204","sourceHandle":"a","target":"v1-1621186652759-4960965729761","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621244825364-7761923781255","length":1},
     {
-      "data": {
-        "label": "2-6"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186682472-9169377069812"
-    },
+      "source":"v1-1621186629583-9384125582204","sourceHandle":"b","target":"v1-1621186812935-9961997802525","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621244843059-3500142644085","length":1},
     {
-      "data": {
-        "label": "3-4"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186812935-9961997802525"
-    },
+      "source":"v1-1621186812935-9961997802525","sourceHandle":"a","target":"v1-1621186851560-6291085778803","targetHandle":null,"animated":true,"type":"step",
+      "arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621244882143-7985251143629","length":1},
     {
-      "data": {
-        "label": "Kölnstr. 1-13"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186851560-6291085778803"
-    },
+      "source":"v1-1621186812935-9961997802525","sourceHandle":"b","target":"v1-1621186926888-1586477936382","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621244918629-9317605413070","length":1},
     {
-      "data": {
-        "label": "Kölnstr. 14-19"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186901941-8243265721583"
-    },
+      "source":"v1-1621186851560-6291085778803","sourceHandle":"a","target":"v1-1621186901941-8243265721583","targetHandle":null,"animated":true,"type":"step",
+      "arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621244934458-2732318061303","length":1},
     {
-      "data": {
-        "label": "Stiftherrenstr."
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186913293-8028595782128"
-    },
+      "source":"v1-1621186851560-6291085778803","sourceHandle":"b","target":"v1-1621186913293-8028595782128","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621244955932-5802718115042","length":1},
     {
-      "data": {
-        "label": "Marktstr."
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186926888-1586477936382"
-    },
+      "source":"v1-1621186926888-1586477936382","sourceHandle":"b","target":"v1-1621186938005-8206520472260","targetHandle":null,"animated":true,"type":"step",
+      "arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621244982508-2369629918285","length":1},
     {
-      "data": {
-        "label": "Große Rurstr. (Block 8+11)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186938005-8206520472260"
-    },
+      "source":"v1-1621186594588-2147702602155","sourceHandle":"a","target":"v1-1621186954765-7676883760911","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621250727230-2684974177724","length":1},
     {
-      "data": {
-        "label": "Schoßstr. 2-8 (Block 4)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621186954765-7676883760911"
-    },
+      "source":"v1-1621186954765-7676883760911","sourceHandle":"b","target":"v1-1621187146185-4822434399630","targetHandle":null,"animated":true,"type":"step",
+      "arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621250746766-3929335638966","length":1},
     {
-      "data": {
-        "label": "Baierstr. 6-15"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621187146185-4822434399630"
-    },
+      "source":"v1-1621187146185-4822434399630","sourceHandle":"a","target":"v1-1621187165108-3673108523208","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621250758969-7261109078115","length":1},
     {
-      "data": {
-        "label": "Kapuzinerstr. 10-17 (Block 5+9)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621187165108-3673108523208"
-    },
+      "source":"v1-1621187146185-4822434399630","sourceHandle":"b","target":"v1-1621187186495-8646703581612","targetHandle":null,"animated":true,"type":"step",
+      "arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621250768685-8513478725712","length":1},
     {
-      "data": {
-        "label": "Baierstr. 2-4"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621187186495-8646703581612"
-    },
-    {
-      "data": {
-        "label": "Schloßstr. 10-16 (Block 5)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621187204200-7802240284225"
-    },
-    {
-      "data": {
-        "label": "Schloßstr. 18-22 (Block 9)"
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621187356851-6725650088354"
-    },
-    {
-      "data": {
-        "label": "Poststr."
-      },
-      "position": {
-        "x": 300,
-        "y": 300
-      },
-      "type": "INTERMEDIATE_NODE",
-      "connect_limit": 3,
-      "id": "v1-1621187373900-1465702534212"
-    }
-  ],
-  "outputNodes": [],
-  "pipes": []
+      "source":"v1-1621186954765-7676883760911","sourceHandle":"a","target":"v1-1621187204200-7802240284225","targetHandle":null,"animated":true,
+      "type":"step","arrowHeadType":"arrowclosed","style":{"stroke":"rgb(253 126 20)","strokeWidth":"3px"},"id":"v1-1621250810159-5575390197435","length":1}
+  ]
 }
