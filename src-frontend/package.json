@@ -12,7 +12,7 @@
     "@testing-library/user-event": "^13.1.8",
     "@types/event-emitter": "^0.3.3",
     "@types/jest": "^26.0.23",
-    "@types/node": "^15.3.1",
+    "@types/node": "^15.6.0",
     "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.0",
     "@types/reactour": "^1.18.1",
