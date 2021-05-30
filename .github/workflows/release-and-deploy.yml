@@ -36,7 +36,7 @@ jobs:
       # Caching node_modules for speedup
       #
       - name: Cache node_modules 
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v2.1.6
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -49,7 +49,7 @@ jobs:
       # Caching gradle dependencies for speedup
       #
       - name: Cache gradle dependencies
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v2.1.6
         with:
           path: |
             ~/.gradle/caches
