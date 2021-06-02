@@ -33,7 +33,7 @@ import {KeyboardKey} from "./Components/ConfirmationButton";
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
-    const [tabVal, setTabVal] = useState("1")
+    const [tabVal, setTabVal] = useState("2")
     const [massenstrom, setMassenstrom] = useState<MassenstromResponse>(defaultMassenstrom)
     const [nodeElements, setNodeElements] = useState<NodeElements>({
         inputNodes: [],
@@ -97,6 +97,8 @@ function App() {
         return {pipes: (pipes as Pipe[]), ...nodeElements, temperatureSeries: temperatureKey}
     }
 
+    const isMetaDataComplete = () => temperatureKey !== ""
+
     return (
         <div className="App">
             <TabContext value={tabVal}>
@@ -104,7 +106,7 @@ function App() {
                 }<AppBar position="static">
                 <h1 style={{userSelect: "none"}}>{getPipe()}Pipify</h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-                    <Tab label="Editor" value="1"/>
+                    <Tab label="Editor" value="1" disabled={!isMetaDataComplete()}/>
                     <Tab label="Meta Daten" value="2"/>
                     <Tab label="Max Massenstrom" value="3"/>
                 </TabList>
