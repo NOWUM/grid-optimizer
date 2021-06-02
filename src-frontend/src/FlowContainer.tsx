@@ -177,6 +177,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName
             }
         })
+        console.log(updateNode)
 
         return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
@@ -212,7 +213,6 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
 
     return <ReactFlow elements={getElementsForFlow()}
                       onConnect={(params) => onConnect(params)}
-
                       onNodeDragStart={(e) => e.stopPropagation()}
                       onNodeDrag={(e) => e.stopPropagation()}
                       onNodeDragStop={(e) => e.stopPropagation()}

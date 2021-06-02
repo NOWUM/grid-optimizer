@@ -28,6 +28,7 @@ import {OptimizationResults} from "./OptimizationResults";
 import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButton";
 import {defaultMassenstrom} from "./defaultConfig";
 import Backdrop from "./Backdrop";
+import {KeyboardKey} from "./Components/ConfirmationButton";
 
 function App() {
 
@@ -41,6 +42,20 @@ function App() {
     });
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
     const [temperatureKey, setTemperatureKey] = useState<string>("")
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+
+        if (e.key === KeyboardKey.ENTER || e.key === KeyboardKey.ESC){
+            e.preventDefault()
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown, false);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown, false);
+        }
+    }, [])
 
     useEffect(() => {
         uploadDropboxInit(renderUpload, setRenderUpload)
