@@ -67,7 +67,7 @@ enum ResultCode {
 
 
 
-const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
+export const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
     const configuration = {
         method: 'POST',
         headers: {

@@ -1,6 +1,6 @@
 import React, {Suspense, useEffect, useState} from 'react';
 import './App.css';
-import {FlowContainer} from "./FlowContainer";
+import {FlowContainer, verifyBackend} from "./FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
 import {uploadDropboxInit} from "./utils/utility";
 import {
@@ -91,8 +91,15 @@ function App() {
                 break;
             default: console.error("Unknown Type")
         }
-        setNodeElements(newNodeElements)
+        verifyBackend({pipes: pipes as Pipe[], temperatureSeries: temperatureKey, ...newNodeElements})
+            .then((isValid) => {
+                if(isValid) {
+                    setNodeElements(newNodeElements)
+                }
+            })
     }
+
+
 
     const getGrid = () => {
         return {pipes: (pipes as Pipe[]), ...nodeElements, temperatureSeries: temperatureKey}
