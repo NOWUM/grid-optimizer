@@ -201,8 +201,12 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
 
         <Grid container
               direction="row" item xs={7} spacing={3}>
-            <Grid item xs={12}>
-                <CustomSelect value={loadProfileName} options={loadProfileOptions} onValueChange={handleSelectChange}/>
+            <Grid item xs={4}>
+                Standardlastprofil
+            </Grid>
+
+            <Grid item xs={8}>
+                <CustomSelect value={loadProfileName} options={loadProfileOptions} onValueChange={handleSelectChange} />
             </Grid>
         </Grid>
         </>
