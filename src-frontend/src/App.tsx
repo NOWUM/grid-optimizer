@@ -29,6 +29,7 @@ import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButto
 import {defaultMassenstrom} from "./defaultConfig";
 import Backdrop from "./Backdrop";
 import {KeyboardKey} from "./Components/ConfirmationButton";
+import {Map, Storage, Timeline} from "@material-ui/icons";
 
 function App() {
 
@@ -99,6 +100,8 @@ function App() {
 
     const isMetaDataComplete = () => temperatureKey !== ""
 
+    const isMaxMassenstromComplete = () => massenstrom.temperatures.length !== 0
+
     return (
         <div className="App">
             <TabContext value={tabVal}>
@@ -106,9 +109,9 @@ function App() {
                 }<AppBar position="static">
                 <h1 style={{userSelect: "none"}}>{getPipe()}Pipify</h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-                    <Tab label="Editor" value="1" disabled={!isMetaDataComplete()}/>
-                    <Tab label="Meta Daten" value="2"/>
-                    <Tab label="Max Massenstrom" value="3"/>
+                    <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
+                    <Tab icon={<Storage />} label="Meta Daten" value="2"/>
+                    <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
