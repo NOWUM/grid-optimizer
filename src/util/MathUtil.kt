@@ -18,6 +18,18 @@ package de.fhac.ewi.util
 fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double, c: Double = 4.187) =
     (heatDemand * 10_000) / (c * (flowIn - flowOut))
 
+/**
+ * Druckverlustberechnung in Rohrleitungen nach VL 2020 09 Wärmeverteilung Folie 4, Jungbluth
+ *
+ * @param flowSpeed Double - Strömungsgeschwindigkeit in m/s
+ * @param length Double - Länge der Rohrleitung in m
+ * @param diameter Double - Rohrinnendurchmesser in m
+ * @param lambda Double - Rohrwiederstandsbeiwert oder Rohrreibungszahl
+ * @param p Double - Dichte des Mediums in kg/m^3
+ * @return Double - Druckverlust in kg/(m*s^2)
+ */
+fun pipePressureLoss(flowSpeed: Double, length: Double, diameter: Double, lambda: Double, p: Double) =
+    lambda * length / diameter * p / 2 * flowSpeed * flowSpeed
 
 /**
  * Berechnet T_Allokation für Tagesmittelwerte

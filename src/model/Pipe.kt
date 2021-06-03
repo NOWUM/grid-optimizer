@@ -7,6 +7,8 @@ data class Pipe(
     val length: Double
 ) {
 
+    var diameter: Double = 0.25
+
     init {
         if (id.isBlank())
             throw IllegalArgumentException("Id of pipe must be filled.")

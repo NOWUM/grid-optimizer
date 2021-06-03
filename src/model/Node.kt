@@ -17,7 +17,7 @@ abstract class Node(val id: String) {
 
 
     // complex attributes
-    open val connectedPressureLoss: Double
+    open val connectedPressureLoss: Double // TODO maxOf (?) // + PressureLoss im Rohr (abhängig vom Durchmesser) // TODO Auf Zeitreihe umstellen?
         get() = connectedPipes.filter { it.source == this }.sumOf { it.target.connectedPressureLoss }
 
     open val connectedThermalEnergyDemand: HeatDemandCurve
