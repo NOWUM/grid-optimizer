@@ -30,7 +30,7 @@ jobs:
       # Caching for speedup
       #
       - name: Gradle Cache
-        uses: actions/cache@v2.1.5
+        uses: actions/cache@v2.1.6
         with:
           path: |
             ~/.gradle/caches
@@ -47,3 +47,13 @@ jobs:
       #
       - name: Test with Gradle
         run: ./gradlew test
+
+      #
+      # Publish test results
+      #
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1.17
+        if: always()
+        with:
+          files: build/test-results/test/**.xml
+            

@@ -6,7 +6,7 @@ val csv_version: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.5.0"
+    kotlin("jvm") version "1.5.10"
 }
 
 group = "de.fhac.ewi"
