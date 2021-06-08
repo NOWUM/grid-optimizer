@@ -1,5 +1,7 @@
 import {Button, FormLabel, Grid, Typography} from "@material-ui/core";
 import React, {FunctionComponent} from "react";
+import {ConfirmationButton} from "../Components/ConfirmationButton";
+import {AbortButton} from "../Components/AbortButton";
 
 interface SkeletonInterface {
     id: string, onConfirm: () => void, onAbort: () => void, message: string, children: any
@@ -34,14 +36,10 @@ export const FormSkeleton: FunctionComponent<SkeletonInterface> = (props) => {
         <Grid container direction="row" item xs={7} spacing={1}>
 
             <Grid item xs={4}>
-                <Button onClick={props.onConfirm}>
-                    Bestätigen
-                </Button>
+                <ConfirmationButton onConfirm={props.onConfirm} label={"Bestätigen"}/>
             </Grid>
             <Grid item xs={6}>
-                <Button onClick={props.onAbort}>
-                    Abbruch
-                </Button>
+                <AbortButton onAbort={props.onAbort} label={"Abbrechen"}/>
             </Grid>
         </Grid>
     </Grid>

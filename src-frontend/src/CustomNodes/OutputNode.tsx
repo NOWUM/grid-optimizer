@@ -27,7 +27,7 @@ export const OutputNode = (node: OutputNodeModel) => {
     }
 
     return (<Tooltip title={<>
-            Wärmebedarf: {node.data.thermalEnergyDemand} kWh<br/>
+            Warmwasserbedarf: {node.data.thermalEnergyDemand} kWh<br/>
             Druckverlust: {node.data.pressureLoss} Bar <br />
             Lastprofil: {node.data.loadProfileName}
     </>}>
