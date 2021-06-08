@@ -7,7 +7,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-fun Route.profiles(service: HeatDemandService) {
+fun Route.heatDemand(service: HeatDemandService) {
     route("/heatdemand") {
         post {
             val request = call.receive<HeatDemandRequest>()
