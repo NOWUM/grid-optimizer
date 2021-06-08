@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import ee from "event-emitter"
+import {red} from "@material-ui/core/colors";
 
 
 const style = getComputedStyle(document.body)
@@ -73,7 +74,7 @@ export default class Notifications extends React.Component<Properties, IState> {
         }, () => {
             this.timeout = setTimeout(() => {
                 this.setState({top: -100});
-            }, 3000)
+            }, 7000)
         });
     }
 
@@ -81,7 +82,7 @@ export default class Notifications extends React.Component<Properties, IState> {
     render() {
         return (
             <React.Fragment>
-                <Container className={"custom-toast"} top={this.state.top} > {this.state.msg} </Container>
+                <Container className={"custom-toast"} top={this.state.top}> {this.state.msg} </Container>
             </React.Fragment>
         )
     }

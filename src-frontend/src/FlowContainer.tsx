@@ -6,7 +6,7 @@ import ReactFlow, {
     BackgroundVariant,
     Edge,
     Elements,
-    removeElements
+    removeElements, Node
 } from 'react-flow-renderer';
 import 'react-flow-renderer/dist/style.css';
 
@@ -210,12 +210,34 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         setNodeElements(newNodeElements)
     }
 
+    const handleNodeDragStop = (n: Node) => {
+        const type: NodeType = n.type as NodeType;
+        let property;
+        switch (type) {
+            case NodeType.INPUT_NODE:
+                property = "inputNodes";
+                break;
+            case NodeType.INTERMEDIATE_NODE:
+                property = "intermediateNodes"
+                break;
+            case NodeType.OUTPUT_NODE:
+                property = "outputNodes";
+                break;
+            default:
+                console.log("ERROR UNKNOWN NODE TYPE")
+        }
+        // @ts-ignore
+        const index = nodeElements[property].findIndex((nEle) => n.id === nEle.id)
+        // @ts-ignore
+        nodeElements[property][index] = n;
+        setNodeElements(nodeElements)
+    }
 
     return <ReactFlow elements={getElementsForFlow()}
                       onConnect={(params) => onConnect(params)}
                       onNodeDragStart={(e) => e.stopPropagation()}
                       onNodeDrag={(e) => e.stopPropagation()}
-                      onNodeDragStop={(e) => e.stopPropagation()}
+                      onNodeDragStop={(e, n: Node) => handleNodeDragStop(n)}
                       nodeTypes={nodeTypes}
                       onEdgeContextMenu={onElementClick}
                       deleteKeyCode={46}
