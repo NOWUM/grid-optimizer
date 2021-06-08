@@ -67,7 +67,7 @@ enum ResultCode {
 
 
 
-const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
+export const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
     const configuration = {
         method: 'POST',
         headers: {
@@ -177,6 +177,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName
             }
         })
+        console.log(updateNode)
 
         return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
@@ -234,7 +235,6 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
 
     return <ReactFlow elements={getElementsForFlow()}
                       onConnect={(params) => onConnect(params)}
-
                       onNodeDragStart={(e) => e.stopPropagation()}
                       onNodeDrag={(e) => e.stopPropagation()}
                       onNodeDragStop={(e, n: Node) => handleNodeDragStop(n)}

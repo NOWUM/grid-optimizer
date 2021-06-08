@@ -9,31 +9,33 @@ export const OptimizationResultsComponent = ({massenstrom}: {massenstrom: Massen
         return [
             {
                 y: massenstrom.energyHeatDemand,
-                type: 'scatter',
+                type: "scattergl",
                 mode: 'lines+markers',
                 marker: {color: 'red'},
                 name: "Energie Heat Demand [kWh]"
-            }, {
-                y: massenstrom.flowInTemperatures,
-                type: 'scatter',
-                mode: 'lines+markers',
-                marker: {color: 'green'},
-                name: "Flow In Temperature [°C]"
-            },{
-                y: massenstrom.flowOutTemperatures,
-                type: 'scatter',
-                mode: 'lines+markers',
-                marker: {color: 'blue'},
-                name: "Flow Out Temperature [°C]"
-            },{
+            },
+            // {
+            //     y: massenstrom.flowInTemperatures,
+            //     type: "scattergl",
+            //     mode: 'lines+markers',
+            //     marker: {color: 'green'},
+            //     name: "Flow In Temperature [°C]"
+            // }, {
+            //     y: massenstrom.flowOutTemperatures,
+            //     type: "scattergl",
+            //     mode: 'lines+markers',
+            //     marker: {color: 'blue'},
+            //     name: "Flow Out Temperature [°C]"
+            // },
+            {
                 y: massenstrom.massenstrom,
-                type: 'scatter',
+                type: "scattergl",
                 mode: 'lines+markers',
                 marker: {color: 'orange'},
                 name: "Massenstrom in [kg]"
             },{
                 y: massenstrom.temperatures,
-                type: 'scatter',
+                type: "scattergl",
                 mode: 'lines+markers',
                 marker: {color: 'brown'},
                 name: "Temperaturen [°C]"

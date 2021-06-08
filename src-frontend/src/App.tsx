@@ -1,6 +1,6 @@
 import React, {Suspense, useEffect, useState} from 'react';
 import './App.css';
-import {FlowContainer} from "./FlowContainer";
+import {FlowContainer, verifyBackend} from "./FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
 import {uploadDropboxInit} from "./utils/utility";
 import {
@@ -27,6 +27,8 @@ import Notifications from "./Overlays/Notifications";
 import {OptimizationResults} from "./OptimizationResults";
 import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButton";
 import Backdrop from "./Backdrop";
+import {KeyboardKey} from "./Components/ConfirmationButton";
+import {Map, Storage, Timeline} from "@material-ui/icons";
 import {
     defaultMassenstrom,
     defaultNodeElements,
@@ -37,12 +39,26 @@ import {
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
-    const [tabVal, setTabVal] = useState("1")
+    const [tabVal, setTabVal] = useState("2")
     const [massenstrom, setMassenstrom] = useState<MassenstromResponse>(defaultMassenstrom)
     const [nodeElements, setNodeElements] = useState<NodeElements>(defaultNodeElements);
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
     const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
     const [optimizationMetadata, setOptimizationMetadata] = useState<OptimizationMetadata>(defaultOptimizationMetadata)
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+
+        if (e.key === KeyboardKey.ENTER || e.key === KeyboardKey.ESC){
+            e.preventDefault()
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyDown, false);
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown, false);
+        }
+    }, [])
 
     useEffect(() => {
         uploadDropboxInit(renderUpload, setRenderUpload)
@@ -77,12 +93,23 @@ function App() {
                 break;
             default: console.error("Unknown Type")
         }
-        setNodeElements(newNodeElements)
+        verifyBackend({pipes: pipes as Pipe[], temperatureSeries: temperatureKey, ...newNodeElements})
+            .then((isValid) => {
+                if(isValid) {
+                    setNodeElements(newNodeElements)
+                }
+            })
     }
+
+
 
     const getGrid = () => {
         return {pipes: (pipes as Pipe[]), ...nodeElements, temperatureSeries: temperatureKey}
     }
+
+    const isMetaDataComplete = () => temperatureKey !== ""
+
+    const isMaxMassenstromComplete = () => massenstrom.temperatures.length !== 0
 
     return (
         <div className="App">
@@ -91,9 +118,9 @@ function App() {
                 }<AppBar position="static">
                 <h1 style={{userSelect: "none"}}>{getPipe()}Pipify</h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-                    <Tab label="Editor" value="1"/>
-                    <Tab label="Meta Daten" value="2"/>
-                    <Tab label="Max Massenstrom" value="3"/>
+                    <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
+                    <Tab icon={<Storage />} label="Meta Daten" value="2"/>
+                    <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
