@@ -1,6 +1,7 @@
 package de.fhac.ewi.services
 
 import de.fhac.ewi.model.HeatDemandCurve
+import de.fhac.ewi.model.heatprofile.LoadProfile
 
 class HeatDemandService(
     private val temperatureService: TemperatureTimeSeriesService,
@@ -8,8 +9,11 @@ class HeatDemandService(
 ) {
 
     fun createCurve(thermalEnergyDemand: Double, profileName: String, tempSeriesName: String): HeatDemandCurve {
+        return retrieveProfile(profileName, tempSeriesName).createHeatDemandCurve(thermalEnergyDemand)
+    }
+
+    fun retrieveProfile(profileName: String, tempSeriesName: String): LoadProfile {
         val tempSeries = temperatureService.getSeries(tempSeriesName)
-        val profile = loadProfileService.getLoadProfile(profileName, tempSeries)
-        return profile.createHeatDemandCurve(thermalEnergyDemand)
+        return loadProfileService.getLoadProfile(profileName, tempSeries)
     }
 }
