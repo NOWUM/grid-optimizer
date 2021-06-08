@@ -52,6 +52,19 @@ export interface MassenstromResponse {
     massenstrom: number[]
 }
 
+export interface OptimizationMetadata {
+    insulationThickness: number,
+    gridInvestCostTemplate: String, // f(Durchmesser) = y [€/m]
+    gridOperatingCostTemplate: String, // f(gridInvestCost) = y [€/year]
+    pumpInvestCostTemplate: String, // f(Leistung) = y [€/kW]
+    heatGenerationCost: number, // €/kWh [for calculating heat loss]
+    lifespanOfResources: number, // Jahre
+    wacc: number, // Weighted Average Cost of Capital in %
+    electricityCost: number, // ct/kWh [for pump station]
+    electricalEfficiency: number, // for pump
+    hydraulicEfficiency: number, // for pump
+}
+
 
 export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {
     if (!object) {
