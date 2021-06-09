@@ -14,8 +14,8 @@ class OutputNode(
             throw IllegalArgumentException("Pressure loss must be between 0.5 and 1 Bar.")
     }
 
-    override val connectedPressureLoss: Double
-        get() = super.connectedPressureLoss + pressureLoss
+    override val connectedPressureLoss: List<Double>
+        get() = super.connectedPressureLoss.map { it + pressureLoss }
 
     override val connectedThermalEnergyDemand: HeatDemandCurve
         get() = super.connectedThermalEnergyDemand + thermalEnergyDemand

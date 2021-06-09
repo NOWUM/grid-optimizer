@@ -6,7 +6,9 @@ import de.fhac.ewi.util.DoubleFunction
 class Grid {
 
     private val nodes = mutableListOf<Node>()
-    private val pipes = mutableListOf<Pipe>()
+    private val _pipes = mutableListOf<Pipe>()
+    val pipes: List<Pipe>
+        get() = _pipes.toList()
 
     val input: InputNode by lazy { nodes.filterIsInstance<InputNode>().single() }
 
@@ -33,7 +35,7 @@ class Grid {
     }
 
     fun addPipe(id: String, sourceId: String, targetId: String, length: Double) {
-        if (pipes.any { it.id.equals(id, true) })
+        if (_pipes.any { it.id.equals(id, true) })
             throw IllegalArgumentException("There is already a pipe with id $id")
 
         // Retrieve nodes effected by connection
@@ -45,7 +47,7 @@ class Grid {
 
         val pipe = Pipe(id, source, target, length)
         source.connectChild(pipe)
-        pipes += pipe
+        _pipes += pipe
     }
 
     fun validate() {

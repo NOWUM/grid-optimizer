@@ -1,5 +1,7 @@
 package de.fhac.ewi.util
 
+const val WATER_DICHTE = 997.0
+
 /**
  * Berechnet den Massenstrom.
  *
@@ -24,11 +26,11 @@ fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double, c: Double =
  * @param flowSpeed Double - Strömungsgeschwindigkeit in m/s
  * @param length Double - Länge der Rohrleitung in m
  * @param diameter Double - Rohrinnendurchmesser in m
- * @param lambda Double - Rohrwiederstandsbeiwert oder Rohrreibungszahl
+ * @param lambda Double - Rohrwiederstandsbeiwert oder Rohrreibungszahl (TODO 0.15 von Wikipedia https://de.wikipedia.org/wiki/Rohrreibungszahl)
  * @param p Double - Dichte des Mediums in kg/m^3
  * @return Double - Druckverlust in kg/(m*s^2)
  */
-fun pipePressureLoss(flowSpeed: Double, length: Double, diameter: Double, lambda: Double, p: Double) =
+fun pipePressureLoss(flowSpeed: Double, length: Double, diameter: Double, lambda: Double = 0.15, p: Double = WATER_DICHTE) =
     lambda * length / diameter * p / 2 * flowSpeed * flowSpeed
 
 /**

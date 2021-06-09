@@ -17,8 +17,17 @@ abstract class Node(val id: String) {
 
 
     // complex attributes
-    open val connectedPressureLoss: Double // TODO maxOf (?) // + PressureLoss im Rohr (abhängig vom Durchmesser) // TODO Auf Zeitreihe umstellen?
-        get() = connectedPipes.filter { it.source == this }.sumOf { it.target.connectedPressureLoss }
+    open val connectedPressureLoss: List<Double>
+        get() {
+            // Retrieve losses per connected pipe
+            val losses = connectedPipes.filter { it.source == this }
+                .map { pipe -> pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b } }
+
+            if (losses.isEmpty()) return List(8760) { 0.0 }
+
+            // calculate maximum pressure loss for each hour
+            return losses.first().indices.map { idx -> losses.maxOf { it[idx] } }
+        }
 
     open val connectedThermalEnergyDemand: HeatDemandCurve
         get() = connectedPipes.filter { it.source == this }
