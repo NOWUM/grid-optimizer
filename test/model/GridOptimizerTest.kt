@@ -5,6 +5,7 @@ import de.fhac.ewi.services.LoadProfileService
 import de.fhac.ewi.services.TemperatureTimeSeriesService
 import de.fhac.ewi.util.loadHProfiles
 import de.fhac.ewi.util.loadTemperatureTimeSeries
+import de.fhac.ewi.util.round
 import de.fhac.ewi.util.toDoubleFunction
 import org.junit.Test
 
@@ -31,7 +32,7 @@ class GridOptimizerTest {
 
         optimizer.optimize(grid)
 
-        println("Grid costs u ${optimizer.calculateTotalCost(grid)}")
+        println("Grid costs u ${optimizer.calculateCosts(grid).total.round(2)} €")
         grid.pipes.forEach { println("${it.id} should have a diameter of ${it.diameter}") }
     }
 
