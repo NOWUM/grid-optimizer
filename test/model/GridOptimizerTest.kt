@@ -7,7 +7,6 @@ import de.fhac.ewi.util.loadHProfiles
 import de.fhac.ewi.util.loadTemperatureTimeSeries
 import de.fhac.ewi.util.toDoubleFunction
 import org.junit.Test
-import kotlin.math.pow
 
 
 class GridOptimizerTest {
@@ -20,20 +19,19 @@ class GridOptimizerTest {
     fun testOptimizer() {
         val grid = createSimpleGrid()
         val optimizer = Optimizer(
-            grid,
             { diameter -> 250 + diameter * 3 }, // invest cost for pipe per meter
             { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
             { pumpPower -> 500.0 + pumpPower * 4}, // invest cost for pump based on pump power
-            { need -> need * 0.3}, // unused (Kosten Erzeugung Wärmeverluste)
+            0.05, // unused (Kosten Erzeugung Wärmeverluste)
             15.0, // years to calculate
             0.3, // for pump operation
             0.9, // for pump
             0.60 // for pump
         )
 
-        optimizer.optimize()
+        optimizer.optimize(grid)
 
-        println("Grid costs u ${optimizer.calculateCurrentTotalCost()}")
+        println("Grid costs u ${optimizer.calculateTotalCost(grid)}")
         grid.pipes.forEach { println("${it.id} should have a diameter of ${it.diameter}") }
     }
 
