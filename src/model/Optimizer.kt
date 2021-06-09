@@ -51,18 +51,25 @@ class Optimizer(
         val pipeOperationCost = pipeOperationCostFunc(pipeInvestCost)
 
         val pumpInvestCost = pumpInvestCostFunc(calculateMaximumPumpPower() / hydraulicEfficiency)
-        val pumpOperationCost = grid.input.connectedPressureLoss.sumOf { it / hydraulicEfficiency / electricalEfficiency * electricityCost }
+        val pumpOperationCost = grid.input.neededPumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency * electricityCost }
 
         val investCost = pipeInvestCost + pumpInvestCost
         val operationCost = pipeOperationCost + pumpOperationCost + 0 // TODO heat loss
 
         val total = investCost + operationCost * lifespanOfResources
-        println("Invest Cost ${investCost.round(2)}  and Operating Cost ${operationCost.round(2)} € per year, total of ${total.round(2)} €")
+        println("=== Cost Overview ===\n" +
+                " > Invest: ${investCost.round(2)} €\n" +
+                " >> Pipe invest: ${pipeInvestCost.round(2)} € (for ${grid.pipes.sumOf { it.length }.round(2)} meter)\n" +
+                " >> Pump invest: ${pumpInvestCost.round(2)} € (for ${calculateMaximumPumpPower().round(2)} needed pump power for pressure loss of ${grid.input.connectedPressureLoss.maxOrNull()} Bar)\n" +
+                " > Operating: ${operationCost.round(2)} € per year\n" +
+                " >> Pipe operation: ${pipeOperationCost.round(2)} €\n" +
+                " >> Pump operation: ${pumpOperationCost.round(2)} €\n" +
+                " > Total of ${total.round(2)} € for $lifespanOfResources years")
         return total
     }
 
     private fun calculateMaximumPumpPower(): Double {
-        return grid.input.connectedPressureLoss.maxOrNull()!!
+        return grid.input.neededPumpPower.maxOrNull()!!
     }
 
 

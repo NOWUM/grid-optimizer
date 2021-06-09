@@ -29,6 +29,21 @@ abstract class Node(val id: String) {
             return losses.first().indices.map { idx -> losses.maxOf { it[idx] } }
         }
 
+    open val neededPumpPower: List<Double>
+        get() {
+            // (Druckverlust im Rohr + daran angeschlossener höchster Druckverlust) * Volumenstrom
+            val powers = connectedPipes.filter { it.source == this }
+                .map { pipe ->
+                    pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b }
+                        .zip(pipe.volumeFlow).map { (a, b) -> a * b }
+                }
+
+            if (powers.isEmpty()) return List(8760) { 0.0 }
+
+            // calculate maximum needed pump power for each hour
+            return powers.first().indices.map { idx -> powers.maxOf { it[idx] } }
+        }
+
     open val connectedThermalEnergyDemand: HeatDemandCurve
         get() = connectedPipes.filter { it.source == this }
             .fold(HeatDemandCurve.ZERO) { r, p -> r + p.target.connectedThermalEnergyDemand }

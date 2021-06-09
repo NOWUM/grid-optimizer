@@ -27,7 +27,7 @@ class GridOptimizerTest {
             { need -> need * 0.3}, // unused (Kosten Erzeugung Wärmeverluste)
             15.0, // years to calculate
             0.3, // for pump operation
-            0.65, // for pump
+            0.9, // for pump
             0.60 // for pump
         )
 

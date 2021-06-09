@@ -1,5 +1,7 @@
 package de.fhac.ewi.util
 
+import kotlin.math.pow
+
 const val WATER_DICHTE = 997.0
 
 /**
@@ -15,23 +17,24 @@ const val WATER_DICHTE = 997.0
  * @param flowOut Double - Rücklauftemperatur in °C
  * @param heatDemand Double - Benötigte Wärmeenergie in kW
  * @param c Double - spezifische Wärmekapazität (default Wert für Wasser)
- * @return Double - Massenstrom in kg/h
+ * @return Double - Massenstrom in kg/s
  */
 fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double, c: Double = 4.187) =
-    (heatDemand * 10_000) / (c * (flowIn - flowOut))
+    (heatDemand * 10_000) / (c * (flowIn - flowOut)) / 3600
 
 /**
- * Druckverlustberechnung in Rohrleitungen nach VL 2020 09 Wärmeverteilung Folie 4, Jungbluth
+ * Druckverlustberechnung in Rohrleitungen nach https://www.schweizer-fn.de/stroemung/druckverlust/druckverlust.php#druckverlustrohr
+ * Formel ist für Pa ausgelegt - umrechnung in Bar
  *
  * @param flowSpeed Double - Strömungsgeschwindigkeit in m/s
  * @param length Double - Länge der Rohrleitung in m
  * @param diameter Double - Rohrinnendurchmesser in m
  * @param lambda Double - Rohrwiederstandsbeiwert oder Rohrreibungszahl (TODO 0.15 von Wikipedia https://de.wikipedia.org/wiki/Rohrreibungszahl)
  * @param p Double - Dichte des Mediums in kg/m^3
- * @return Double - Druckverlust in kg/(m*s^2)
+ * @return Double - Druckverlust in Bar
  */
 fun pipePressureLoss(flowSpeed: Double, length: Double, diameter: Double, lambda: Double = 0.15, p: Double = WATER_DICHTE) =
-    lambda * length / diameter * p / 2 * flowSpeed * flowSpeed
+    (lambda * length * p * flowSpeed.pow(2)) / (diameter * 2) / 100_000
 
 /**
  * Berechnet T_Allokation für Tagesmittelwerte
