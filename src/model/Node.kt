@@ -31,11 +31,11 @@ abstract class Node(val id: String) {
 
     open val neededPumpPower: List<Double>
         get() {
-            // (Druckverlust im Rohr + daran angeschlossener höchster Druckverlust) * Volumenstrom
+            // (Druckverlust im Rohr + daran angeschlossener höchster Druckverlust) * 100_000 [Umrechnung Bar zu Pascal]  * Volumenstrom
             val powers = connectedPipes.filter { it.source == this }
                 .map { pipe ->
                     pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b }
-                        .zip(pipe.volumeFlow).map { (a, b) -> a * b }
+                        .zip(pipe.volumeFlow).map { (a, b) -> a * 100_000 * b }
                 }
 
             if (powers.isEmpty()) return List(8760) { 0.0 }
