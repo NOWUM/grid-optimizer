@@ -6,7 +6,7 @@ import de.fhac.ewi.util.round
 class Optimizer(
     val pipeInvestCostFunc: DoubleFunction, // invest costs (1x) for a one meter pipe as f(diameter) = €
     val pipeOperationCostFunc: DoubleFunction, // annual operation cost for a grid as f(sum of pipeInvestCost) = €
-    val pumpInvestCostFunc: DoubleFunction, // invest costs (1x) for a pump as f(Leistung) = €
+    val pumpInvestCostFunc: DoubleFunction, // invest costs (1x) for a pump as f(Leistung in Watt) = €
     val heatGenerationCost: Double, // costs for generating heat losses
     val lifespanOfResources: Double, // Livetime of ressources. Needed for total cost calculation
     val electricityCost: Double, // ct/kWh [for pump station]
@@ -49,7 +49,7 @@ class Optimizer(
         val pipeOperationCost = pipeOperationCostFunc(pipeInvestCost)
 
         val pumpInvestCost = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency)
-        val pumpOperationCost = grid.input.neededPumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency * electricityCost }
+        val pumpOperationCost = grid.input.neededPumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
 
         val investCost = pipeInvestCost + pumpInvestCost
         val operationCost = pipeOperationCost + pumpOperationCost + 0 // TODO heat loss
