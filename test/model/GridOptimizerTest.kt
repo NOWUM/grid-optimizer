@@ -25,15 +25,18 @@ class GridOptimizerTest {
             { pumpPower -> 500.0 + pumpPower * 4}, // invest cost for pump based on pump power
             0.05, // unused (Kosten Erzeugung Wärmeverluste)
             15.0, // years to calculate
-            0.3, // for pump operation
+            0.3, // for pump operation per kWh
             0.9, // for pump
             0.60 // for pump
         )
 
         optimizer.optimize(grid)
 
-        println("Grid costs u ${optimizer.calculateCosts(grid).total.round(2)} €")
+        val costs = optimizer.calculateCosts(grid)
+
+        println("Grid costs u ${costs.total.round(2)} €")
         grid.pipes.forEach { println("${it.id} should have a diameter of ${it.diameter}") }
+        println(costs)
     }
 
 
