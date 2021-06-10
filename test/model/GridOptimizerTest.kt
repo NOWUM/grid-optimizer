@@ -24,7 +24,9 @@ class GridOptimizerTest {
             { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
             { pumpPower -> 500.0 + pumpPower * 4}, // invest cost for pump based on pump power
             0.05, // unused (Kosten Erzeugung Wärmeverluste)
-            15.0, // years to calculate
+            25.0, // years for grid
+            10.0, // years for pump
+            5.0, // years for including operation costs
             0.3, // for pump operation per kWh
             0.9, // for pump
             0.60 // for pump

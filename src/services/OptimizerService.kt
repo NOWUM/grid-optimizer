@@ -22,7 +22,9 @@ class OptimizerService {
             pipeOperationCostFunc,
             pumpInvestCostFunc,
             request.heatGenerationCost,
-            request.lifespanOfResources,
+            request.lifespanOfGrid,
+            request.lifespanOfPump,
+            request.yearsOfOperation,
             request.electricityCost,
             request.electricalEfficiency,
             request.hydraulicEfficiency

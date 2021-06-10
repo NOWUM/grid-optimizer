@@ -1,14 +1,16 @@
 package de.fhac.ewi.model
 
 import de.fhac.ewi.util.DoubleFunction
-import de.fhac.ewi.util.round
+import kotlin.math.ceil
 
 class Optimizer(
     val pipeInvestCostFunc: DoubleFunction, // invest costs (1x) for a one meter pipe as f(diameter) = €
     val pipeOperationCostFunc: DoubleFunction, // annual operation cost for a grid as f(sum of pipeInvestCost) = €
     val pumpInvestCostFunc: DoubleFunction, // invest costs (1x) for a pump as f(Leistung in Watt) = €
     val heatGenerationCost: Double, // costs for generating heat losses
-    val lifespanOfResources: Double, // Livetime of ressources. Needed for total cost calculation
+    val lifespanOfGrid: Double, // Lifespan of grid. Needed for invest cost calculation
+    val lifespanOfPump: Double, // Lifespan of pump. Needed for invest cost calculation
+    val yearsOfOperation: Double, // Needed for total cost calculation
     val electricityCost: Double, // ct/kWh [for pump station]
     val electricalEfficiency: Double, // for pump
     val hydraulicEfficiency: Double, // for pump
@@ -51,10 +53,10 @@ class Optimizer(
         val pumpInvestCost = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency)
         val pumpOperationCost = grid.input.neededPumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
 
-        val investCost = pipeInvestCost + pumpInvestCost
-        val operationCost = pipeOperationCost + pumpOperationCost + 0 // TODO heat loss
+        val investCost = pipeInvestCost * ceil(yearsOfOperation / lifespanOfGrid) + pumpInvestCost * ceil(yearsOfOperation / lifespanOfPump)
+        val operationCostPerYear = pipeOperationCost + pumpOperationCost + 0 // TODO heat loss
 
-        val total = investCost + operationCost * lifespanOfResources
+        val total = investCost + operationCostPerYear * yearsOfOperation
         return Costs(pipeInvestCost, pipeOperationCost, pumpInvestCost, pumpOperationCost, total)
     }
 
