@@ -10,7 +10,7 @@ import {
     IntermediateNode,
     MassenstromResponse,
     NodeElements,
-    NodeType,
+    NodeType, OptimizationMetadata,
     OutputNode,
     Pipe
 } from "./models";
@@ -26,23 +26,25 @@ import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
 import Notifications from "./Overlays/Notifications";
 import {OptimizationResults} from "./OptimizationResults";
 import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButton";
-import {defaultMassenstrom} from "./defaultConfig";
 import Backdrop from "./Backdrop";
 import {KeyboardKey} from "./Components/ConfirmationButton";
 import {Map, Storage, Timeline} from "@material-ui/icons";
+import {
+    defaultMassenstrom,
+    defaultNodeElements,
+    defaultOptimizationMetadata,
+    defaultTemperatureKey
+} from "./utils/defaults";
 
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
     const [tabVal, setTabVal] = useState("2")
     const [massenstrom, setMassenstrom] = useState<MassenstromResponse>(defaultMassenstrom)
-    const [nodeElements, setNodeElements] = useState<NodeElements>({
-        inputNodes: [],
-        intermediateNodes: [],
-        outputNodes: []
-    });
+    const [nodeElements, setNodeElements] = useState<NodeElements>(defaultNodeElements);
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
-    const [temperatureKey, setTemperatureKey] = useState<string>("")
+    const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
+    const [optimizationMetadata, setOptimizationMetadata] = useState<OptimizationMetadata>(defaultOptimizationMetadata)
 
     const handleKeyDown = (e: KeyboardEvent) => {
 
@@ -134,7 +136,8 @@ function App() {
                     </div>
                 </TabPanel>
                 <TabPanel value="2">
-                    <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}/>
+                    <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}
+                                       optimizationMetadata={optimizationMetadata} setOptimizationMetadata={setOptimizationMetadata}/>
                 </TabPanel>
                 <TabPanel value={"3"}>
                     <Suspense fallback={<Backdrop open={true}/>}>
