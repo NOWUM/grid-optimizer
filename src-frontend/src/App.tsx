@@ -11,6 +11,7 @@ import {
     MassenstromResponse,
     NodeElements,
     NodeType,
+    OptimizationMetadata,
     OutputNode,
     Pipe
 } from "./models";
@@ -26,23 +27,26 @@ import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
 import Notifications from "./Overlays/Notifications";
 import {OptimizationResults} from "./OptimizationResults";
 import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButton";
-import {defaultMassenstrom} from "./defaultConfig";
 import Backdrop from "./Backdrop";
 import {KeyboardKey} from "./Components/ConfirmationButton";
 import {Map, Storage, Timeline} from "@material-ui/icons";
+import {
+    defaultMassenstrom,
+    defaultNodeElements,
+    defaultOptimizationMetadata,
+    defaultTemperatureKey
+} from "./utils/defaults";
+import {FormulaCheck} from "./FormulaCheck";
 
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
     const [tabVal, setTabVal] = useState("2")
     const [massenstrom, setMassenstrom] = useState<MassenstromResponse>(defaultMassenstrom)
-    const [nodeElements, setNodeElements] = useState<NodeElements>({
-        inputNodes: [],
-        intermediateNodes: [],
-        outputNodes: []
-    });
+    const [nodeElements, setNodeElements] = useState<NodeElements>(defaultNodeElements);
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
-    const [temperatureKey, setTemperatureKey] = useState<string>("")
+    const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
+    const [optimizationMetadata, setOptimizationMetadata] = useState<OptimizationMetadata>(defaultOptimizationMetadata)
 
     const handleKeyDown = (e: KeyboardEvent) => {
 
@@ -119,6 +123,7 @@ function App() {
                     <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
                     <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
+                    <Tab icon={<Timeline />} label="Formel Check oder sowas" value="4" />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
@@ -134,13 +139,19 @@ function App() {
                     </div>
                 </TabPanel>
                 <TabPanel value="2">
-                    <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}/>
+                    <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}
+                                       optimizationMetadata={optimizationMetadata}
+                                       setOptimizationMetadata={setOptimizationMetadata}/>
                 </TabPanel>
                 <TabPanel value={"3"}>
                     <Suspense fallback={<Backdrop open={true}/>}>
                         <OptimizationResults massenstrom={massenstrom}/>
                     </Suspense>
                 </TabPanel>
+                <TabPanel value={"4"}>
+                    <FormulaCheck />
+                </TabPanel>
+
             </TabContext>
             {renderUpload ?
                 <FileUpload loadGrid={(hwg) => {
