@@ -37,6 +37,6 @@ fun pipePressureLoss(flowSpeed: Double, length: Double, diameter: Double, lambda
  * @return List<Double>
  */
 fun List<Double>.toAllocationTemperature() =
-    indices.map { d -> t(d) + 0.5 * t(d - 1) + 0.25 * t(d - 2) + 0.125 * t(d - 3) / (1 + 0.5 + 0.25 + 0.125) }
+    indices.map { d -> (t(d) + 0.5 * t(d - 1) + 0.25 * t(d - 2) + 0.125 * t(d - 3) ) / (1 + 0.5 + 0.25 + 0.125) }
 
 private fun List<Double>.t(d: Int) = get((d+size) % size)

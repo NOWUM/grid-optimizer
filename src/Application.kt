@@ -90,6 +90,7 @@ fun Application.module(testing: Boolean = false) {
             optimize(get(), get())
             temperature(get())
             profiles(get())
+            heatDemand(get(), get())
             version(apiConfig)
         }
 
