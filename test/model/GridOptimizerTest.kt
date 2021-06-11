@@ -37,7 +37,9 @@ class GridOptimizerTest {
 
         val costs = optimizer.calculateCosts(grid)
 
-        println("Grid costs u ${costs.total.round(2)} €")
+        println("> Grid costs u ${costs.total.round(2)} €")
+        println(">> ${grid.pipes.sumOf { it.length }} m of pipes cost ${costs.pipeInvestCost.round(2)} €.")
+        println(">> Pump with power of ${grid.neededPumpPower.round(3)} ? cost ${costs.pumpInvestCost.round(2)} €.")
         grid.pipes.forEach { println("${it.id} should have a diameter of ${it.type.diameter}") }
         println(costs)
     }
