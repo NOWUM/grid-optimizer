@@ -6,6 +6,7 @@ import {notify} from "./Notifications";
 import {baseUrl} from "../utils/utility";
 import {FormSkeleton} from "./FormSkeleton";
 import {CustomSelect} from "../Components/CustomSelect";
+import {LoadProfileSelect} from "../Components/LoadProfileSelect";
 
 
 export const showNodeInputDialog = (message: string,
@@ -92,7 +93,7 @@ export const showNodeDialog = (message: string,
 
 
 // : Promise<string[]>
-const fetchLoadProfileOptions = () => {
+export const fetchLoadProfileOptions = () => {
 
 
     return fetch(`${baseUrl}/api/profiles/names`, defaultGetConfiguration)
@@ -115,18 +116,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
     const [thermalEnergyDemand, setThermalEnergyDemand] = useState<string>(`${node.thermalEnergyDemand}`)
     const [pressureLoss, setPressureLoss] = useState<string>(`${node.pressureLoss}`)
     const [loadProfileName, setLoadProfileName] = useState(node.loadProfileName)
-    const [loadProfileOptions, setLoadProfileOption] = useState<string[]>([])
     const [selectOpen, setSelectOpen] = useState(false)
-
-    useEffect(() => {
-        fetchLoadProfileOptions().then(options => {
-            if(options) {
-                setLoadProfileOption(options)
-            } else {
-                notify("Load Profiles could not be fetched.")
-            }
-        })
-    }, [])
 
 
     const submitNewNode = () => {
@@ -158,10 +148,6 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
     const isNumeric = (val: string) => {
         //@ts-ignore
         return !isNaN(val)
-    }
-
-    const handleSelectChange = (val: string) => {
-        setLoadProfileName(val)
     }
 
     return <FormSkeleton id={node.id} message={message} onConfirm={submitNewNode} onAbort={onAbort}>
@@ -206,7 +192,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
             </Grid>
 
             <Grid item xs={8}>
-                <CustomSelect value={loadProfileName} options={loadProfileOptions} onValueChange={handleSelectChange} />
+                <LoadProfileSelect value={loadProfileName} onValueChange={setLoadProfileName} />
             </Grid>
         </Grid>
         </>

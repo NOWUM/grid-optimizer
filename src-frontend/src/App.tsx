@@ -10,7 +10,8 @@ import {
     IntermediateNode,
     MassenstromResponse,
     NodeElements,
-    NodeType, OptimizationMetadata,
+    NodeType,
+    OptimizationMetadata,
     OutputNode,
     Pipe
 } from "./models";
@@ -35,6 +36,7 @@ import {
     defaultOptimizationMetadata,
     defaultTemperatureKey
 } from "./utils/defaults";
+import {FormulaCheck} from "./FormulaCheck";
 
 function App() {
 
@@ -121,6 +123,7 @@ function App() {
                     <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
                     <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
+                    <Tab icon={<Timeline />} label="Formel Check oder sowas" value="4" disabled={!isMetaDataComplete()} />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
@@ -137,13 +140,18 @@ function App() {
                 </TabPanel>
                 <TabPanel value="2">
                     <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}
-                                       optimizationMetadata={optimizationMetadata} setOptimizationMetadata={setOptimizationMetadata}/>
+                                       optimizationMetadata={optimizationMetadata}
+                                       setOptimizationMetadata={setOptimizationMetadata}/>
                 </TabPanel>
                 <TabPanel value={"3"}>
                     <Suspense fallback={<Backdrop open={true}/>}>
                         <OptimizationResults massenstrom={massenstrom}/>
                     </Suspense>
                 </TabPanel>
+                <TabPanel value={"4"}>
+                    <FormulaCheck />
+                </TabPanel>
+
             </TabContext>
             {renderUpload ?
                 <FileUpload loadGrid={(hwg) => {
