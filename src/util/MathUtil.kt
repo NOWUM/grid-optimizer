@@ -5,22 +5,16 @@ import kotlin.math.pow
 const val WATER_DICHTE = 997.0
 
 /**
- * Berechnet den Massenstrom.
- *
- * Formel `_m° = Q°/(c * ∆v) [kg/h]` mit folgenden Parametern:
- * - Q° = Wärmeleistung [W]
- * - c = spezifische Wärmekapazität [kWs/kg * K] (das K steht für Kelvin) (mit Wasser als Transportmedium ist c=4,187)
- * - ∆v = Temperaturdifferenz [K] (Anfangstemperatur - Endtemperatur)
- *
+ * Berechnet den Massenstrom aus Temperaturdifferenz, Wärmebedarf und der spezifischen Wärmekapazität des Mediums.
  *
  * @param flowIn Double - Vorlauftemperatur in °C
  * @param flowOut Double - Rücklauftemperatur in °C
  * @param heatDemand Double - Benötigte Wärmeenergie in kW
- * @param c Double - spezifische Wärmekapazität (default Wert für Wasser)
+ * @param c Double - spezifische Wärmekapazität (default Wert für Wasser) kJ/kgK
  * @return Double - Massenstrom in kg/s
  */
 fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double, c: Double = 4.187) =
-    (heatDemand * 10_000) / (c * (flowIn - flowOut)) / 3600
+    (heatDemand) / (c * (flowIn - flowOut))
 
 /**
  * Druckverlustberechnung in Rohrleitungen nach https://www.schweizer-fn.de/stroemung/druckverlust/druckverlust.php#druckverlustrohr
