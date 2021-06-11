@@ -7,7 +7,7 @@ data class OptimizationRequest(
     val insulationThickness: Double,
 
     // cost functions
-    val gridInvestCostTemplate: String, // f(Durchmesser) = y [€/m]
+    val pipeTypes: List<PipeTypeRequest>,
     val gridOperatingCostTemplate: String, // f(gridInvestCost) = y [€/year]
     val pumpInvestCostTemplate: String, // f(Leistung) = y [€/kW]
     val heatGenerationCost: Double, // €/kWh [for calculating heat loss]

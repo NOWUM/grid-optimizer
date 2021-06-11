@@ -4,7 +4,7 @@ import de.fhac.ewi.util.DoubleFunction
 import kotlin.math.ceil
 
 class Optimizer(
-    val pipeInvestCostFunc: DoubleFunction, // invest costs (1x) for a one meter pipe as f(diameter) = €
+    val pipeTypes: List<PipeType>, // invest costs (1x) for a one meter pipe as f(diameter) = €
     val pipeOperationCostFunc: DoubleFunction, // annual operation cost for a grid as f(sum of pipeInvestCost) = €
     val pumpInvestCostFunc: DoubleFunction, // invest costs (1x) for a pump as f(Leistung in Watt) = €
     val heatGenerationCost: Double, // costs for generating heat losses
@@ -21,21 +21,21 @@ class Optimizer(
         var currentCost = Double.MAX_VALUE
 
         // Reset all diameters
-        grid.pipes.forEach { it.diameter = DIAMETERS.last() }
+        grid.pipes.forEach { it.type = PipeType.UNDEFINED }
 
         // until everything is optimized
         optimizer@ while (true) {
             // check for every pipe, if another diameter would be better in total costs
             for (pipe in grid.pipes) {
-                for (diameter in DIAMETERS) {
-                    val lastDiameter = pipe.diameter
-                    pipe.diameter = diameter
+                for (type in pipeTypes) {
+                    val lastType = pipe.type
+                    pipe.type = type
                     val newCost = calculateCosts(grid).total
                     if (newCost < currentCost) {
                         currentCost = newCost
                         continue@optimizer
                     } else {
-                        pipe.diameter = lastDiameter
+                        pipe.type = lastType
                     }
                 }
             }
@@ -47,7 +47,7 @@ class Optimizer(
 
 
     fun calculateCosts(grid: Grid): Costs {
-        val pipeInvestCost = grid.pipes.sumOf { pipeInvestCostFunc(it.diameter) * it.length }
+        val pipeInvestCost = grid.pipes.sumOf { it.type.costPerMeter * it.length }
         val pipeOperationCost = pipeOperationCostFunc(pipeInvestCost)
 
         val pumpInvestCost = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency)
@@ -58,9 +58,5 @@ class Optimizer(
 
         val total = investCost + operationCostPerYear * yearsOfOperation
         return Costs(pipeInvestCost, pipeOperationCost, pumpInvestCost, pumpOperationCost, total)
-    }
-
-    companion object {
-        val DIAMETERS = listOf(20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250).map { it / 1000.0 } // mm in m
     }
 }

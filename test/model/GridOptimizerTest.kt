@@ -19,8 +19,9 @@ class GridOptimizerTest {
     @Test
     fun testOptimizer() {
         val grid = createSimpleGrid()
+        val pipeTypes = createStreetPipes()
         val optimizer = Optimizer(
-            { diameter -> 250 + diameter * 3 }, // invest cost for pipe per meter
+            pipeTypes, // types of pipes that can be used
             { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
             { pumpPower -> 500.0 + pumpPower * 4}, // invest cost for pump based on pump power
             0.05, // unused (Kosten Erzeugung Wärmeverluste)
@@ -37,7 +38,7 @@ class GridOptimizerTest {
         val costs = optimizer.calculateCosts(grid)
 
         println("Grid costs u ${costs.total.round(2)} €")
-        grid.pipes.forEach { println("${it.id} should have a diameter of ${it.diameter}") }
+        grid.pipes.forEach { println("${it.id} should have a diameter of ${it.type.diameter}") }
         println(costs)
     }
 
@@ -54,5 +55,23 @@ class GridOptimizerTest {
         grid.addPipe("P2", "2", "3", 50.0)
         grid.addPipe("P3", "2", "4", 250.0)
         return grid
+    }
+
+    private fun createStreetPipes(): List<PipeType> {
+        // Quelle https://www.ingenieur.de/fachmedien/bwk/energieversorgung/dimensionierung-von-fernwaermenetzen/
+        return listOf(
+            PipeType(0.020, 391.0),
+            PipeType(0.025, 396.0),
+            PipeType(0.032, 422.0),
+            PipeType(0.040, 437.0),
+            PipeType(0.050, 495.0),
+            PipeType(0.065, 537.0),
+            PipeType(0.080, 616.0),
+            PipeType(0.100, 790.0),
+            PipeType(0.125, 912.0),
+            PipeType(0.150, 1101.0),
+            PipeType(0.200, 1311.0),
+            PipeType(0.250, 1755.0)
+        )
     }
 }

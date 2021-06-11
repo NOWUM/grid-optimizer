@@ -11,7 +11,7 @@ data class Pipe(
     val length: Double
 ) {
 
-    var diameter: Double = 0.0
+    var type: PipeType = PipeType.UNDEFINED
 
     // TODO Keine Fixen werte für Vorlauf und Rücklauf verwenden. Thats wrong!
     val volumeFlow: List<Double>
@@ -19,10 +19,10 @@ data class Pipe(
 
     // Strömungsgeschwindigkeit = Volumenstrom / Rohrquerschnittsfläche
     val flowRate: List<Double>
-        get() = volumeFlow.map { flowRate(diameter, it) }
+        get() = volumeFlow.map { flowRate(type.diameter, it) }
 
     val pipePressureLoss: List<Double>
-        get() = flowRate.map { pipePressureLoss(it, length, diameter) }
+        get() = flowRate.map { pipePressureLoss(it, length, type.diameter) }
 
     init {
         if (id.isBlank())
@@ -34,4 +34,5 @@ data class Pipe(
         if (length <= 0.0)
             throw IllegalArgumentException("Length of pipe can not be negative or zero.")
     }
+
 }
