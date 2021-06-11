@@ -1,9 +1,6 @@
 package de.fhac.ewi
 
-import de.fhac.ewi.routes.grid
-import de.fhac.ewi.routes.profiles
-import de.fhac.ewi.routes.temperature
-import de.fhac.ewi.routes.version
+import de.fhac.ewi.routes.*
 import de.fhac.ewi.services.GridService
 import de.fhac.ewi.services.HeatDemandService
 import de.fhac.ewi.services.LoadProfileService
@@ -94,6 +91,7 @@ fun Application.module(testing: Boolean = false) {
             grid(get())
             temperature(get())
             profiles(get())
+            heatDemand(get(), get())
             version(apiConfig)
         }
 

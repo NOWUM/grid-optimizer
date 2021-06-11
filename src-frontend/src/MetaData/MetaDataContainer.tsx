@@ -2,6 +2,7 @@ import React, {Dispatch, SetStateAction} from "react";
 import {Button, Grid, InputLabel, TextField, Typography} from "@material-ui/core";
 import {TemperatureDropdown} from "./TemperatureDropdown";
 import {OptimizationMetadata} from "../models";
+import {DEFAULT_GRID_SPACING} from "../utils/defaults";
 
 interface Properties {
     temperatureKey: string,
@@ -25,7 +26,6 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         insulationThickness
     } = optimizationMetadata;
 
-    const SPACING = 3
 
     const dispatchChange = (val: string, prop: string) => {
         const opt = {...optimizationMetadata};
@@ -65,12 +65,12 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         direction="row"
         justify="center"
         alignItems="center"
-        spacing={SPACING}
+        spacing={DEFAULT_GRID_SPACING}
     >
         <Grid container
               direction="row"
               alignContent="center"
-              justify="center" item xs={7} spacing={SPACING}>
+              justify="center" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={12}>
                 <Typography className={"header-form"} color="textSecondary" gutterBottom>
                     Hier kannst du gegebenenfalls die Meta Daten anpassen
@@ -79,7 +79,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}
                   alignContent="center"
                   justify="center">
@@ -94,7 +94,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Netzinvestitionskosten Template (f(Durchmesser) = [€/m])</InputLabel>
             </Grid>
@@ -107,7 +107,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Netzoperationskosten Template (f(Netzinvestitionskosten) = [€/a])</InputLabel>
             </Grid>
@@ -120,7 +120,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Pumpeninvestitionskosten Template (f(Leistung) = [€/kW])</InputLabel>
             </Grid>
@@ -133,7 +133,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Heizkosten [€/kWh])</InputLabel>
             </Grid>
@@ -146,7 +146,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Lebensspanne der Ressourcen [a]</InputLabel>
             </Grid>
@@ -159,7 +159,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Weighted Average Cost of Capital [%]</InputLabel>
             </Grid>
@@ -172,12 +172,12 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <h3>Pumpen</h3>
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Elektrizitätskosten Pumpstation [ct/kWh]</InputLabel>
             </Grid>
@@ -189,7 +189,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             </Grid>
         </Grid>
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Elektrische Effizienz (Pumpe)</InputLabel>
             </Grid>
@@ -201,7 +201,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             </Grid>
         </Grid>
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Hydraulische Effizienz (Pumpe)</InputLabel>
             </Grid>
@@ -214,7 +214,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
 
         <Grid container
-              direction="row" item xs={7} spacing={SPACING}>
+              direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Temperaturreihe</InputLabel>
             </Grid>
@@ -223,7 +223,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             </Grid>
         </Grid>
 
-        <Grid container direction="row" item xs={7} spacing={SPACING}>
+        <Grid container direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={12}>
                 <Button variant="contained" onClick={() => {
                 }}>

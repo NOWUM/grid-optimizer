@@ -65,6 +65,18 @@ export interface OptimizationMetadata {
     hydraulicEfficiency: number, // for pump
 }
 
+export interface HeatDemand {
+    temperatureSeries: string,
+    loadProfileName: string,
+    thermalEnergyDemand: number // kwh per year
+}
+export interface HeatDemandResult {
+    curve: number[],
+    temperature: number[],
+    allokation: number[],
+    dailyHeatCurve: number[]
+}
+
 
 export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {
     if (!object) {

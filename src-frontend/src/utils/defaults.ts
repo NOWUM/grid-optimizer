@@ -28,3 +28,6 @@ export const defaultNodeElements: NodeElements = {
 }
 
 export const defaultTemperatureKey: string = ""
+
+
+export const DEFAULT_GRID_SPACING = 3
