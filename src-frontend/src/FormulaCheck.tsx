@@ -111,7 +111,7 @@ export const FormulaCheck = () => {
         <Plot
             data={getPlotData()}
             style={{ width: '100%', height: '100%', color:"blue" }}
-            layout={ {autosize: true, title: 'Warmwasserbedarf', xaxis: { title: 'Stunde im Jahr' } } }
+            layout={ {autosize: true, title: 'Wärmebedarf', xaxis: { title: 'Stunde im Jahr' } } }
         />
     </>
 }
