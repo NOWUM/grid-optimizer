@@ -123,7 +123,7 @@ function App() {
                     <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
                     <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
-                    <Tab icon={<Timeline />} label="Formel Check oder sowas" value="4" disabled={!isMetaDataComplete()} />
+                    <Tab icon={<Timeline />} label="Formel Check oder sowas" value="4" />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
