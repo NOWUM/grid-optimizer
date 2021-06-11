@@ -145,7 +145,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             </Grid>
         </Grid>
 
-        <!-- TODO Das muss gegen lifespanOfGrid, lifespanOfPump und yearsOfOperation ersetzt werden-->
+        {/* TODO Das muss gegen lifespanOfGrid, lifespanOfPump und yearsOfOperation ersetzt werden */}
         <Grid container
               direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>

@@ -21,11 +21,11 @@ import {
     NodeType,
     OutputNode as OutputNodeModel,
     Pipe
-} from "./models";
-import {InputNode} from './CustomNodes/InputNode';
-import {IntermediateNode} from "./CustomNodes/IntermediateNode";
-import {OutputNode} from "./CustomNodes/OutputNode";
-import {baseUrl, createGrid} from "./utils/utility";
+} from "../models";
+import {InputNode} from '../CustomNodes/InputNode';
+import {IntermediateNode} from "../CustomNodes/IntermediateNode";
+import {OutputNode} from "../CustomNodes/OutputNode";
+import {baseUrl, createGrid} from "../utils/utility";
 import {notify} from "./Overlays/Notifications";
 
 const style = getComputedStyle(document.body)

@@ -1,12 +1,12 @@
 import {confirmAlert} from "react-confirm-alert";
 import React, {useEffect, useState} from "react";
-import {BaseNode, InputNode, IntermediateNode, NodeType, OutputNode} from "../models";
+import {BaseNode, InputNode, IntermediateNode, NodeType, OutputNode} from "../../models";
 import {Grid, TextField} from "@material-ui/core";
 import {notify} from "./Notifications";
-import {baseUrl} from "../utils/utility";
+import {baseUrl} from "../../utils/utility";
 import {FormSkeleton} from "./FormSkeleton";
-import {CustomSelect} from "../Components/CustomSelect";
-import {LoadProfileSelect} from "../Components/LoadProfileSelect";
+import {CustomSelect} from "../../Components/CustomSelect";
+import {LoadProfileSelect} from "../../Components/LoadProfileSelect";
 
 
 export const showNodeInputDialog = (message: string,

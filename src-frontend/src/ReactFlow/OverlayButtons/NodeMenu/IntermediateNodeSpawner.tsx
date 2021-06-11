@@ -1,9 +1,9 @@
 import React from "react";
 import {NodeSpawner} from "./NodeMenuSpawnerContainer";
 import {Button} from "@material-ui/core";
-import {IntermediateNode, NodeType} from "../models";
+import {IntermediateNode, NodeType} from "../../../models";
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
-import {showNodeIntermediateDialog} from "../Overlays/NodeContextOverlay";
+import {showNodeIntermediateDialog} from "../../Overlays/NodeContextOverlay";
 
 
 export const IntermediateNodeSpawner = ({onNewNode}: NodeSpawner) => {

@@ -2,7 +2,7 @@ import {Handle, Position} from "react-flow-renderer";
 import {Tooltip} from "@material-ui/core";
 import React from "react";
 import {InputNode as InputNodeModel} from "../models";
-import {showNodeInputDialog} from "../Overlays/NodeContextOverlay";
+import {showNodeInputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
 
 
 const customNodeStyles = {

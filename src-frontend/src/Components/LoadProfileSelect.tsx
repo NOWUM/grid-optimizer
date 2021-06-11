@@ -1,7 +1,7 @@
 import {CustomSelect} from "./CustomSelect";
 import React, {useEffect, useState} from "react";
-import {notify} from "../Overlays/Notifications";
-import {fetchLoadProfileOptions} from "../Overlays/NodeContextOverlay";
+import {notify} from "../ReactFlow/Overlays/Notifications";
+import {fetchLoadProfileOptions} from "../ReactFlow/Overlays/NodeContextOverlay";
 
 export const LoadProfileSelect = ({value, onValueChange}: {value: string, onValueChange: (val: string) => void}) => {
 

@@ -77,6 +77,13 @@ export interface HeatDemandResult {
     dailyHeatCurve: number[]
 }
 
+export interface Costs {
+    pipeInvestCost: number, // Investitionskosten Netz
+    pipeOperationCost: number, // Betriebskosten Netz per year
+    pumpInvestCost: number, // Investitionskosten Pumpe
+    pumpOperationCost: number, // Betriebskosten Pumpe per year
+    total: number // Gesamtkosten
+}
 
 export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {
     if (!object) {

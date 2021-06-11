@@ -1,7 +1,7 @@
 import React from "react";
 import {customInputHandleStyle} from "./InputNode";
 import {Handle, Position} from "react-flow-renderer";
-import {showNodeOutputDialog} from "../Overlays/NodeContextOverlay";
+import {showNodeOutputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
 import {OutputNode as OutputNodeModel} from "../models";
 import {Tooltip} from "@material-ui/core";
 
