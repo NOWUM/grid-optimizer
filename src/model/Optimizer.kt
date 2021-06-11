@@ -61,6 +61,6 @@ class Optimizer(
     }
 
     companion object {
-        val DIAMETERS = listOf(20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250).map { it / 1000.0 } // in m
+        val DIAMETERS = listOf(20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250).map { it / 1000.0 } // mm in m
     }
 }

@@ -1,9 +1,8 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.util.WATER_DICHTE
-import de.fhac.ewi.util.massenstrom
+import de.fhac.ewi.util.flowRate
 import de.fhac.ewi.util.pipePressureLoss
-import kotlin.math.pow
+import de.fhac.ewi.util.volumeFlow
 
 data class Pipe(
     val id: String,
@@ -15,17 +14,12 @@ data class Pipe(
     var diameter: Double = 0.0
 
     // TODO Keine Fixen werte für Vorlauf und Rücklauf verwenden. Thats wrong!
-    // Volumenstrom = Massenstrom / Dichte von Wasser
-    // https://www.ingenieur.de/fachmedien/bwk/energieversorgung/dimensionierung-von-fernwaermenetzen/
     val volumeFlow: List<Double>
-        get() = target.connectedThermalEnergyDemand.curve.map { massenstrom(80.0, 60.0, it) / WATER_DICHTE }
+        get() = target.connectedThermalEnergyDemand.curve.map { volumeFlow(80.0, 60.0, it) }
 
     // Strömungsgeschwindigkeit = Volumenstrom / Rohrquerschnittsfläche
     val flowRate: List<Double>
-        get() {
-            val a = (diameter / 2).pow(2) * Math.PI
-            return volumeFlow.map { it / a }
-        }
+        get() = volumeFlow.map { flowRate(diameter, it) }
 
     val pipePressureLoss: List<Double>
         get() = flowRate.map { pipePressureLoss(it, length, diameter) }

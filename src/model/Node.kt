@@ -1,5 +1,7 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.util.neededPumpPower
+
 abstract class Node(val id: String) {
 
     init {
@@ -35,7 +37,8 @@ abstract class Node(val id: String) {
             val powers = connectedPipes.filter { it.source == this }
                 .map { pipe ->
                     pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b }
-                        .zip(pipe.volumeFlow).map { (a, b) -> a * 100_000 * b }
+                        .zip(pipe.volumeFlow)
+                        .map { (pressureLoss, volumeFlow) -> neededPumpPower(pressureLoss, volumeFlow) }
                 }
 
             if (powers.isEmpty()) return List(8760) { 0.0 }
