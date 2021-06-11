@@ -10,7 +10,7 @@ fun Route.profiles(service: LoadProfileService) {
         get("/names") {
             call.respond(service.getAllHProfileNames())
         }
-        get("/profile/{profileName}") {
+        get("/{profileName}/parameters") {
             val profileName =
                 call.parameters["profileName"] ?: throw IllegalArgumentException("No profile name provided.")
             call.respond(service.getHProfile(profileName))
