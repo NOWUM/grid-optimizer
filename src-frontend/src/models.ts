@@ -71,7 +71,10 @@ export interface HeatDemand {
     thermalEnergyDemand: number // kwh per year
 }
 export interface HeatDemandResult {
-    curve: number[]
+    curve: number[],
+    temperature: number[],
+    allokation: number[],
+    dailyHeatCurve: number[]
 }
 
 

@@ -56,6 +56,33 @@ export const FormulaCheck = () => {
                     color: 'rgb(253 126 20)'
                 },
                 name: "Energie Heat Demand [kWh]"
+            },
+            {
+                y: heatDemandResult?.temperature,
+                type: "scattergl",
+                mode: 'lines+markers',
+                marker: {
+                    color: 'rgb(100 126 20)'
+                },
+                name: "Temperature [°C]"
+            },
+            {
+                y: heatDemandResult?.allokation,
+                type: "scattergl",
+                mode: 'lines+markers',
+                marker: {
+                    color: 'rgb(100 50 20)'
+                },
+                name: "Allokation [°C]"
+            },
+            {
+                y: heatDemandResult?.dailyHeatCurve,
+                type: "scattergl",
+                mode: 'lines+markers',
+                marker: {
+                    color: 'rgb(100 126 200)'
+                },
+                name: "Daily Heat Curve"
             }
         ]
     }

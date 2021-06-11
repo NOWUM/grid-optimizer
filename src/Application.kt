@@ -91,7 +91,7 @@ fun Application.module(testing: Boolean = false) {
             grid(get())
             temperature(get())
             profiles(get())
-            heatDemand(get())
+            heatDemand(get(), get())
             version(apiConfig)
         }
 
