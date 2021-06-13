@@ -21,7 +21,8 @@ export const OutputNodeSpawner = ({onNewNode}: NodeSpawner) => {
     const handleClick = () => {
         showNodeOutputDialog("Erzeuge eine neue Entnahmestelle", defaultNode,
             (node) => {
-                console.log(node)
+                node.data = {...node.data, loadProfileName: node.loadProfileName, thermalEnergyDemand: node.thermalEnergyDemand,
+                    pressureLoss: node.pressureLoss,}
                 onNewNode(node)
             },() => {/*Nothing to do here*/})
     }

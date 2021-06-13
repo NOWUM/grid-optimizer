@@ -35,5 +35,23 @@ export const createGrid = (nodes: NodeElements, pipes: Pipe[], temperatureSeries
     return {...nodes, pipes, temperatureSeries}
 }
 
+export const isNumber = (value: any) => {
+    if ((undefined === value) || (null === value)) {
+        return false;
+    }
+    //if (typeof value == 'number') {
+    //    return true;
+    //}
+
+    return !isNaN(value) && value !== "";
+}
+
+
+export const isPositiveNumber = (value: any) => {
+
+
+    return isNumber(value) && value > 0
+}
+
 
 export const baseUrl = `${window.location.protocol.split(':')[0]}://${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`
