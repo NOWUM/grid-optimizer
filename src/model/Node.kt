@@ -22,6 +22,7 @@ abstract class Node(val id: String) {
     open val connectedPressureLoss: List<Double>
         get() {
             // Retrieve losses per connected pipe
+            // TODO Pipe Pressure Loss counts twice because hin und rückweg
             val losses = connectedPipes.filter { it.source == this }
                 .map { pipe -> pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b } }
 
@@ -34,6 +35,7 @@ abstract class Node(val id: String) {
     open val neededPumpPower: List<Double>
         get() {
             // (Druckverlust im Rohr + daran angeschlossener höchster Druckverlust) * 100_000 [Umrechnung Bar zu Pascal]  * Volumenstrom
+            // TODO Pipe Pressure Loss counts twice because hin und rückweg
             val powers = connectedPipes.filter { it.source == this }
                 .map { pipe ->
                     pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b }
