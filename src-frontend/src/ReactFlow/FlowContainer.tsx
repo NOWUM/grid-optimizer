@@ -27,6 +27,8 @@ import {IntermediateNode} from "../CustomNodes/IntermediateNode";
 import {OutputNode} from "../CustomNodes/OutputNode";
 import {baseUrl, createGrid} from "../utils/utility";
 import {notify} from "./Overlays/Notifications";
+import {Tooltip} from "@material-ui/core";
+import {DefaultEdge} from "../Components/DefaultEdge";
 
 const style = getComputedStyle(document.body)
 const corpColor = style.getPropertyValue('--corp-main-color')
@@ -45,6 +47,10 @@ const nodeTypes = {
     OUTPUT_NODE: OutputNode
 };
 
+const edgeTypes = {
+    DEFAULT_EDGE: DefaultEdge
+}
+
 
 interface PopupProps {
     target: any,
@@ -59,7 +65,7 @@ interface FlowContainerProperties {
     temperature: string
 }
 
-enum ResultCode {
+export enum ResultCode {
     OK = 200,
     INTERNAL_SERVER_ERROR = 500
 }
@@ -213,6 +219,8 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
     const handleNodeDragStop = (n: Node) => {
         const type: NodeType = n.type as NodeType;
         let property;
+        const newNode = {...n.data, ...n};
+
         switch (type) {
             case NodeType.INPUT_NODE:
                 property = "inputNodes";
@@ -227,9 +235,9 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 console.log("ERROR UNKNOWN NODE TYPE")
         }
         // @ts-ignore
-        const index = nodeElements[property].findIndex((nEle) => n.id === nEle.id)
+        const index = nodeElements[property].findIndex((nEle) => newNode.id === nEle.id)
         // @ts-ignore
-        nodeElements[property][index] = n;
+        nodeElements[property][index] = newNode;
         setNodeElements(nodeElements)
     }
 
@@ -239,6 +247,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                       onNodeDrag={(e) => e.stopPropagation()}
                       onNodeDragStop={(e, n: Node) => handleNodeDragStop(n)}
                       nodeTypes={nodeTypes}
+                      edgeTypes={edgeTypes}
                       onEdgeContextMenu={onElementClick}
                       deleteKeyCode={46}
                       onClick={(e) => closePopupTarget()}
@@ -248,12 +257,15 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
             gap={24}
             size={1}
         />
+        <Tooltip title={"Das ist ein Test"}>
         <EdgePopover
             target={popupTarget?.target}
             onSplitEdge={() => handleSplitEdge()}
             onEditEdge={() => handleEditEdge()}
             onRemoveEdge={() => handleRemoveEdge()}
+
             targetId={popupTarget?.edge.id!}/>
+        </Tooltip>
     </ReactFlow>;
 
 }

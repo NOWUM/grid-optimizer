@@ -13,7 +13,7 @@ import {
     NodeType,
     OptimizationMetadata,
     OutputNode,
-    Pipe
+    Pipe, PipeType
 } from "./models";
 import {FileDownload} from "./Filemanagement/FileDownload";
 import {Elements} from "react-flow-renderer";
@@ -49,6 +49,7 @@ function App() {
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
     const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
     const [optimizationMetadata, setOptimizationMetadata] = useState<OptimizationMetadata>(defaultOptimizationMetadata)
+
     const [costs, setCosts] = useState<Costs|undefined>({
         pipeInvestCost: 13417.1324, // Investitionskosten Netz
         pipeOperationCost: 213.9, // Betriebskosten Netz per year
@@ -145,7 +146,7 @@ function App() {
                         <DetermineMassFlowRateButton
                             grid={getGrid()}
                             onResult={setMassenstrom}/>
-                        <OptimizeButton/>
+                        <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata}/>
                         <CostView costs={costs}/>
                     </div>
                 </TabPanel>
