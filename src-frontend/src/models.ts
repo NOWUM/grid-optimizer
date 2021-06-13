@@ -20,6 +20,10 @@ export interface InputNode extends BaseNode{
     returnTemperatureTemplate: string // mathematical expression like `x+5` with x as outside temperature
 }
 
+export interface PipeOptimization {
+    diameter?: number;
+}
+
 export interface IntermediateNode extends BaseNode{
     connect_limit: 3
 }
@@ -34,7 +38,7 @@ export enum LoadProfile{
     SLP
 }
 
-export interface Pipe extends Edge{
+export interface Pipe extends Edge, PipeOptimization{
     length: number
 }
 
@@ -72,6 +76,17 @@ export interface OptimizationMetadata {
 export interface OptimizationRequest extends OptimizationMetadata {
     grid: HotWaterGrid;
 }
+
+export interface OptimizationResult {
+    costs: Costs,
+    optimizedPipes: OptimizedPipe[]
+}
+
+export interface OptimizedPipe {
+    pipeId: string,
+    diameter: number
+}
+
 export interface HeatDemand {
     temperatureSeries: string,
     loadProfileName: string,
@@ -105,7 +120,6 @@ export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {
     const inputNodes = object.inputNodes && object.inputNodes.map((p: any) => instanceOfInputNode(p)).every((b: boolean) => b)
     const intermediateNodes = object.intermediateNodes && object.intermediateNodes.map((p: any) => instanceOfIntermediateNode(p)).every((b: boolean) => b)
     const outputNodes = object.outputNodes && object.outputNodes.map((p: any) => instanceOfOutputNode(p)).every((b: boolean) => b)
-    console.log(pipes && inputNodes && intermediateNodes && outputNodes)
     return pipes && inputNodes && intermediateNodes && outputNodes;
 }
 

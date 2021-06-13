@@ -1,4 +1,4 @@
-import {getMarkerEnd} from "react-flow-renderer";
+import {getBezierPath, getMarkerEnd} from "react-flow-renderer";
 import {Tooltip} from "@material-ui/core";
 
 export const DefaultEdge = ({
@@ -16,17 +16,17 @@ export const DefaultEdge = ({
                             }: any) => {
 
     const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
-
+    const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
     return <>
-        <Tooltip title={"Das ist ein Test"}>
             <>
-                <path id={id} style={style} className="react-flow__edge-path" markerEnd={markerEnd}/>
+                <path id={id} style={style} className="react-flow__edge-path" markerEnd={markerEnd} d={edgePath}/>
                 <text>
                     <textPath href={`#${id}`} style={{fontSize: '12px'}} startOffset="50%" textAnchor="middle">
-                        {data.text}
+                         {data?.length? `Länge: ${data.length} \n`: ""}
+                        {console.log(data?.diameter)}
+                        {data?.diameter?`Durchschnitt: ${data?.diameter}`: ""}
                     </textPath>
                 </text>
             </>
-        </Tooltip>
     </>
 }

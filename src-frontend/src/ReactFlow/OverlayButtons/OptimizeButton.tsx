@@ -1,12 +1,18 @@
 import {Button} from "@material-ui/core";
 import React from "react";
-import {notify} from "../Overlays/Notifications";
 import "./optimization-button.css";
-import {HotWaterGrid, OptimizationMetadata, OptimizationRequest} from "../../models";
+import {Costs, HotWaterGrid, OptimizationMetadata, OptimizationRequest, OptimizationResult, Pipe} from "../../models";
 import {baseUrl} from "../../utils/utility";
-import {ResultCode} from "../FlowContainer";
 
-export const OptimizeButton = ({grid, optimizationMetadata}: {grid: HotWaterGrid, optimizationMetadata: OptimizationMetadata}) => {
+interface Properties {
+    grid: HotWaterGrid,
+    optimizationMetadata: OptimizationMetadata,
+    setCosts: (c: Costs) => void,
+    setPipes: (p: Pipe[]) => void
+}
+
+
+export const OptimizeButton = ({grid, optimizationMetadata, setCosts, setPipes}: Properties) => {
 
 
     const optimize = () => {
@@ -20,18 +26,23 @@ export const OptimizeButton = ({grid, optimizationMetadata}: {grid: HotWaterGrid
 
         fetch(`${baseUrl}/api/optimize`, configuration)
             .then(response => {
-                response.text().then((text) => {
-                    if (text) {
-                        notify(text)
-                    }
-                })
-                return response.status
-            }).then((status) => {
-            return status === ResultCode.OK
-        })
+                return response.json();
+            }).then(res => onOptimize(res as OptimizationResult))
             .catch(e => {
-                return false
+                console.error(e)
             });
+    }
+
+    const onOptimize = (res: OptimizationResult) => {
+        setCosts(res.costs)
+
+        const newPipes = grid.pipes.map(p => {
+            const diameter = res.optimizedPipes.find(el => el.pipeId === p.id)?.diameter
+            console.log(diameter)
+            return {...p, diameter, data: {...p.data, diameter}}
+        })
+
+        setPipes(newPipes)
     }
 
 

@@ -1,12 +1,12 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import ReactFlow, {
-    addEdge,
     ArrowHeadType,
     Background,
     BackgroundVariant,
     Edge,
     Elements,
-    removeElements, Node
+    Node,
+    removeElements
 } from 'react-flow-renderer';
 import 'react-flow-renderer/dist/style.css';
 
@@ -27,7 +27,6 @@ import {IntermediateNode} from "../CustomNodes/IntermediateNode";
 import {OutputNode} from "../CustomNodes/OutputNode";
 import {baseUrl, createGrid} from "../utils/utility";
 import {notify} from "./Overlays/Notifications";
-import {Tooltip} from "@material-ui/core";
 import {DefaultEdge} from "../Components/DefaultEdge";
 
 const style = getComputedStyle(document.body)
@@ -35,7 +34,7 @@ const corpColor = style.getPropertyValue('--corp-main-color')
 
 const edgeConfiguration = {
     animated: true,
-    type: 'step',
+    type: 'DEFAULT_EDGE',
     arrowHeadType: ArrowHeadType.ArrowClosed,
     style: {stroke: `rgb(${corpColor})`, strokeWidth: "3px"}
 }
@@ -114,7 +113,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
             pipesToVerify.push(newPipe)
             verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[], temperature)).then((verified: boolean) => {
                     if(verified) {
-                        params= {...params, ...edgeConfiguration, id, length: length1}
+                        params= {...params, ...edgeConfiguration, id, length: length1, data: {length: length1}}
                         const newPipes = [...pipes]
                         newPipes.push(params)
                         setPipes(newPipes)
@@ -183,7 +182,8 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName
             }
         })
-        console.log(updateNode)
+
+        console.log(defaultPipes)
 
         return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
@@ -257,7 +257,6 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
             gap={24}
             size={1}
         />
-        <Tooltip title={"Das ist ein Test"}>
         <EdgePopover
             target={popupTarget?.target}
             onSplitEdge={() => handleSplitEdge()}
@@ -265,7 +264,6 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
             onRemoveEdge={() => handleRemoveEdge()}
 
             targetId={popupTarget?.edge.id!}/>
-        </Tooltip>
     </ReactFlow>;
 
 }

@@ -4,7 +4,8 @@ import {FlowContainer, verifyBackend} from "./ReactFlow/FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
 import {uploadDropboxInit} from "./utils/utility";
 import {
-    BaseNode, Costs,
+    BaseNode,
+    Costs,
     HotWaterGrid,
     InputNode,
     IntermediateNode,
@@ -13,7 +14,7 @@ import {
     NodeType,
     OptimizationMetadata,
     OutputNode,
-    Pipe, PipeType
+    Pipe
 } from "./models";
 import {FileDownload} from "./Filemanagement/FileDownload";
 import {Elements} from "react-flow-renderer";
@@ -50,13 +51,7 @@ function App() {
     const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
     const [optimizationMetadata, setOptimizationMetadata] = useState<OptimizationMetadata>(defaultOptimizationMetadata)
 
-    const [costs, setCosts] = useState<Costs|undefined>({
-        pipeInvestCost: 13417.1324, // Investitionskosten Netz
-        pipeOperationCost: 213.9, // Betriebskosten Netz per year
-        pumpInvestCost: 16497917.1324, // Investitionskosten Pumpe
-        pumpOperationCost: 417.1324, // Betriebskosten Pumpe per year
-        total: 1235188383.19203 // Gesamtkost.en
-    })
+    const [costs, setCosts] = useState<Costs|undefined>(undefined)
 
     const handleKeyDown = (e: KeyboardEvent) => {
 
@@ -146,7 +141,8 @@ function App() {
                         <DetermineMassFlowRateButton
                             grid={getGrid()}
                             onResult={setMassenstrom}/>
-                        <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata}/>
+                        <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
+                                        setPipes={setPipes}/>
                         <CostView costs={costs}/>
                     </div>
                 </TabPanel>
