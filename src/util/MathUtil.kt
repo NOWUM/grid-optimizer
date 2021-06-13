@@ -25,7 +25,7 @@ fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double, c: Double =
  * @param flowOut Double - Rücklauftemperatur in °C
  * @param heatDemand Double - Benötigte Wärmeenergie in kW
  * @param p Double - Dichte des Mediums in kg/m^3
- * @return Double - Volumenstrom in ??
+ * @return Double - Volumenstrom in m^3/s
  */
 fun volumeFlow(flowIn: Double, flowOut: Double, heatDemand: Double, p: Double = WATER_DICHTE): Double =
     massenstrom(flowIn, flowOut, heatDemand) / p
@@ -33,9 +33,9 @@ fun volumeFlow(flowIn: Double, flowOut: Double, heatDemand: Double, p: Double = 
 /**
  * Berechnet die Strömungsgeschwindigkeit auf Basis des Rohrdurchmessers und dem Volumenstrom.
  *
- * @param diameter Double - Rohrdurchmesser in ??
- * @param volumeFlow Double - Volumenstrom in ??
- * @return Double - Strömungsgeschwindigkeit in ??
+ * @param diameter Double - Rohrdurchmesser in m
+ * @param volumeFlow Double - Volumenstrom in m^3/s
+ * @return Double - Strömungsgeschwindigkeit in m/s
  */
 fun flowRate(diameter: Double, volumeFlow: Double): Double {
     return volumeFlow / ((diameter / 2).pow(2) * Math.PI)
@@ -67,8 +67,8 @@ fun pipePressureLoss(
  * Berechnet die benötigte Pumpleistung.
  *
  * @param pressureLoss Double - Druckverlust in Bar
- * @param volumeFlow Double - Volumenstrom in ??
- * @return Double - benötigte Pumpleistung in ??
+ * @param volumeFlow Double - Volumenstrom in m^3/s
+ * @return Double - benötigte Pumpleistung in Watt
  */
 fun neededPumpPower(pressureLoss: Double, volumeFlow: Double): Double =
     pressureLoss * 100_000 * volumeFlow
