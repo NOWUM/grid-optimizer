@@ -1,11 +1,13 @@
 package de.fhac.ewi.util
 
-fun <R> catchAndThrowIllegalArgument(errorMessage: String = "Error parsing input.", block: () -> R): R {
+import de.fhac.ewi.exceptions.IllegalRequestException
+
+fun <R> catchParseError(errorMessage: String = "Error parsing input.", block: () -> R): R {
     return try {
         block()
-    } catch (e: IllegalArgumentException) {
+    } catch (e: IllegalRequestException) {
         throw e
     } catch (e: Exception) {
-        throw IllegalArgumentException("$errorMessage ${e.message}", e)
+        throw IllegalRequestException("$errorMessage ${e.message}", e)
     }
 }

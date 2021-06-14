@@ -42,7 +42,7 @@ class Grid {
 
     fun addPipe(id: String, sourceId: String, targetId: String, length: Double) {
         if (_pipes.any { it.id.equals(id, true) })
-            throw IllegalArgumentException("There is already a pipe with id $id")
+            throw IllegalArgumentException("There is already a pipe with id $id.")
 
         // Retrieve nodes effected by connection
         val source = _nodes.find { it.id == sourceId }
@@ -60,7 +60,7 @@ class Grid {
         // All nodes should have a pipe. Otherwise they are useless and should be deleted
         val pipelessNode = _nodes.firstOrNull { it.connectedChildNodes.size + it.connectedParentNodes.size == 0 }
         if (pipelessNode != null)
-            throw IllegalGridException("Node $pipelessNode has no connection to other nodes.")
+            throw IllegalGridException("Node ${pipelessNode.id} has no connection to other nodes.")
 
         // There must be exactly one input
         val inputNode = _nodes.filterIsInstance<InputNode>().singleOrNull()
@@ -69,7 +69,7 @@ class Grid {
         // inputNode must have a connection to all output nodes
         _nodes.filterIsInstance<OutputNode>().forEach { outputNode ->
             if (!inputNode.isParentOf(outputNode))
-                throw IllegalGridException("$outputNode is not connected to input node $inputNode")
+                throw IllegalGridException("Output node ${outputNode.id} is not connected to input node ${inputNode.id}.")
         }
     }
 }

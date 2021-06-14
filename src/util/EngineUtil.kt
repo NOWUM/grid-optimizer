@@ -10,7 +10,7 @@ private val functions = mutableMapOf<String, DoubleFunction>()
 
 fun String.toDoubleFunction(): DoubleFunction {
     if (!matches(TEMPLATE_PATTERN))
-        throw IllegalArgumentException("Template does not match pattern ${TEMPLATE_PATTERN.pattern}.")
+        throw IllegalArgumentException("Template f(x)=$this does not match pattern ${TEMPLATE_PATTERN.pattern}.")
 
     return functions.getOrPut(this) {
 
