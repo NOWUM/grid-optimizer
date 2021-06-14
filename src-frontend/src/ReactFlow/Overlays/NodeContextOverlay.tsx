@@ -165,7 +165,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
             <Grid container
                   direction="row" item xs={7} spacing={3}>
                 <Grid item xs={12}>
-                    <TextField id="standard-basic" label="Warmwasserbedarf [kWh]" type="number"
+                    <TextField id="standard-basic" label="Wärmebedarf [kWh]" type="number"
                                value={thermalEnergyDemand}
                                onChange={(val) => setThermalEnergyDemand(val.target.value)}
                                placeholder="55.30"/>
