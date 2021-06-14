@@ -7,17 +7,25 @@ import de.fhac.ewi.dto.OptimizedPipeResponse
 import de.fhac.ewi.model.Grid
 import de.fhac.ewi.model.Optimizer
 import de.fhac.ewi.model.PipeType
-import de.fhac.ewi.util.catchAndThrowIllegalArgument
+import de.fhac.ewi.util.catchParseError
 import de.fhac.ewi.util.toDoubleFunction
 
 class OptimizerService {
 
     fun createByOptimizationRequest(request: OptimizationRequest): Optimizer {
         val pipeTypes =
-            catchAndThrowIllegalArgument { request.pipeTypes.map { PipeType(it.diameter / 1000.0, it.costPerMeter) } }
+            request.pipeTypes.map {
+                catchParseError("Could not parse PipeType $it.") {
+                    PipeType(
+                        it.diameter / 1000.0,
+                        it.costPerMeter
+                    )
+                }
+            }
         val pipeOperationCostFunc =
-            catchAndThrowIllegalArgument { request.gridOperatingCostTemplate.toDoubleFunction() }
-        val pumpInvestCostFunc = catchAndThrowIllegalArgument { request.pumpInvestCostTemplate.toDoubleFunction() }
+            catchParseError("Invalid cost function for grid operation cost.") { request.gridOperatingCostTemplate.toDoubleFunction() }
+        val pumpInvestCostFunc =
+            catchParseError("Invalid cost function for pump invest cost") { request.pumpInvestCostTemplate.toDoubleFunction() }
 
         return Optimizer(
             pipeTypes,

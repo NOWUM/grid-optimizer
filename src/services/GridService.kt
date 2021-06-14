@@ -3,7 +3,7 @@ package de.fhac.ewi.services
 import de.fhac.ewi.dto.GridRequest
 import de.fhac.ewi.dto.MassenstromResponse
 import de.fhac.ewi.model.Grid
-import de.fhac.ewi.util.catchAndThrowIllegalArgument
+import de.fhac.ewi.util.catchParseError
 import de.fhac.ewi.util.massenstrom
 import de.fhac.ewi.util.repeatEach
 import de.fhac.ewi.util.toDoubleFunction
@@ -18,9 +18,9 @@ class GridService(
 
         request.inputNodes.forEach {
             val flowFunction =
-                catchAndThrowIllegalArgument("Invalid flow in formula.") { it.flowTemperatureTemplate.toDoubleFunction() }
+                catchParseError("Invalid flow in formula in node ${it.id}.") { it.flowTemperatureTemplate.toDoubleFunction() }
             val returnFunction =
-                catchAndThrowIllegalArgument("Invalid return flow formula.") { it.returnTemperatureTemplate.toDoubleFunction() }
+                catchParseError("Invalid flow out formula in node ${it.id}.") { it.returnTemperatureTemplate.toDoubleFunction() }
             grid.addInputNode(it.id, flowFunction, returnFunction)
         }
         request.intermediateNodes.forEach {

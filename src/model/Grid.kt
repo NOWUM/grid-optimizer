@@ -42,7 +42,7 @@ class Grid {
 
     fun addPipe(id: String, sourceId: String, targetId: String, length: Double) {
         if (_pipes.any { it.id.equals(id, true) })
-            throw IllegalArgumentException("There is already a pipe with id $id")
+            throw IllegalArgumentException("There is already a pipe with id $id.")
 
         // Retrieve nodes effected by connection
         val source = _nodes.find { it.id == sourceId }
