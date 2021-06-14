@@ -57,7 +57,6 @@ export interface MassenstromResponse {
 }
 
 export interface OptimizationMetadata {
-    insulationThickness: number,
 
     pipeTypes: PipeType[],
     gridOperatingCostTemplate: String, // f(gridInvestCost) = y [€/year]

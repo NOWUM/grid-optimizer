@@ -32,7 +32,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         electricityCost,
         electricalEfficiency,
         hydraulicEfficiency,
-        insulationThickness, lifespanOfGrid, // Jahre
+        lifespanOfGrid, // Jahre
         lifespanOfPump,
         yearsOfOperation,
         pipeTypes
@@ -64,7 +64,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             "electricityCost",
             "electricalEfficiency",
             "hydraulicEfficiency",
-            "insulationThickness", "yearsOfOperation", "lifespanOfGrid",
+            "yearsOfOperation", "lifespanOfGrid",
             "lifespanOfPump",]
         return numberProps.includes(prop)
     }
@@ -96,21 +96,6 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
                     <Typography className={"header-form"} color="textSecondary" gutterBottom>
                         Hier kannst du gegebenenfalls die Meta Daten anpassen
                     </Typography>
-                </Grid>
-            </Grid>
-
-            <Grid container
-                  direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
-                <Grid item xs={6}
-                      alignContent="center"
-                      justify="center">
-                    <InputLabel>Isolationsdicke</InputLabel>
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField id="outlined-basic" type="number" variant="outlined" placeholder="127.30"
-                               value={insulationThickness}
-                               onChange={(e) => dispatchChange(e.target.value, "insulationThickness")}/>
-
                 </Grid>
             </Grid>
 

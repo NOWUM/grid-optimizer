@@ -16,7 +16,6 @@ export const defaultOptimizationMetadata: OptimizationMetadata = {
         {diameter: 200, costPerMeter: 1311.0},
         {diameter: 250, costPerMeter: 1755.0},
     ],
-    insulationThickness: 1, // TODO Remove
     gridOperatingCostTemplate: "x*0.001", // f(gridInvestCost) = y [€/year]
     pumpInvestCostTemplate: "300+x*0.05", // f(Leistung) = y [€/kW]
     heatGenerationCost: 0.3, // €/kWh [for calculating heat loss]
