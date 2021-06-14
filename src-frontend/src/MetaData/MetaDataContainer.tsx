@@ -103,6 +103,16 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <Grid item xs={6}>
+                    <InputLabel>Temperaturreihe</InputLabel>
+                </Grid>
+                <Grid item xs={6}>
+                    <TemperatureDropdown temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}/>
+                </Grid>
+            </Grid>
+
+            <Grid container
+                  direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
+                <Grid item xs={6}>
                     <InputLabel>Netzoperationskosten Template (f(Netzinvestitionskosten) = [€/a])</InputLabel>
                 </Grid>
                 <Grid item xs={6}>
@@ -129,7 +139,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <Grid item xs={6}>
-                    <InputLabel>Heizkosten [€/kWh])</InputLabel>
+                    <InputLabel>Kosten Wärmeverlust [€/kWh]</InputLabel>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField id="outlined-basic" type="text" variant="outlined" placeholder="0.12"
@@ -142,7 +152,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <Grid item xs={6}>
-                    <InputLabel>Auslegungszeit des Netzes[a]</InputLabel>
+                    <InputLabel>Auslegungszeit des Netzes [a]</InputLabel>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField id="outlined-basic" type="text" variant="outlined" placeholder="25"
@@ -154,7 +164,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <Grid item xs={6}>
-                    <InputLabel>Auslegungszeit der Pumpe[a]</InputLabel>
+                    <InputLabel>Auslegungszeit der Pumpe [a]</InputLabel>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField id="outlined-basic" type="text" variant="outlined" placeholder="25"
@@ -167,7 +177,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <Grid item xs={6}>
-                    <InputLabel>Auslegungszeit der Anlage[a]</InputLabel>
+                    <InputLabel>Auslegungszeit der Anlage [a]</InputLabel>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField id="outlined-basic" type="text" variant="outlined" placeholder="25"
@@ -194,13 +204,13 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         <Grid {...defaultGridSkeletonProps}>
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
-                <h3>Pumpen</h3>
+                <h3>Parameter für Pumpe</h3>
             </Grid>
 
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <Grid item xs={6}>
-                    <InputLabel>Elektrizitätskosten Pumpstation [ct/kWh]</InputLabel>
+                    <InputLabel>Elektrizitätskosten Pumpstation [€/kWh]</InputLabel>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField id="outlined-basic" type="text" variant="outlined" placeholder="15"
@@ -212,7 +222,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <Grid item xs={6}>
-                    <InputLabel>Elektrische Effizienz (Pumpe)</InputLabel>
+                    <InputLabel>Elektrische Effizienz [Wirkungsgrad]</InputLabel>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField id="outlined-basic" type="text" variant="outlined" placeholder="15"
@@ -224,7 +234,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <Grid item xs={6}>
-                    <InputLabel>Hydraulische Effizienz (Pumpe)</InputLabel>
+                    <InputLabel>Hydraulische Effizienz [Wirkungsgrad]</InputLabel>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField id="outlined-basic" type="text" variant="outlined" placeholder="15"
@@ -234,15 +244,6 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
                 </Grid>
             </Grid>
 
-            <Grid container
-                  direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
-                <Grid item xs={6}>
-                    <InputLabel>Temperaturreihe</InputLabel>
-                </Grid>
-                <Grid item xs={6}>
-                    <TemperatureDropdown temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}/>
-                </Grid>
-            </Grid>
 
         </Grid>
 

@@ -23,6 +23,5 @@ export const VersionNumber = () => {
                 console.log(e)});
     }
 
-    return <div style={{position: "absolute", float: "right", right: "2vw", top: "15vh", justifySelf: "flex-end"}}>
-        Version {version}</div>
+    return <sub style={{fontSize: "10pt"}}>{!!(version)?version:"v?.?.?"}</sub>
 }
