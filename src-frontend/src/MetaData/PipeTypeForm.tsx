@@ -34,7 +34,7 @@ export const PipeTypeForm = ({pipeTypes, setPipeTypes}: { pipeTypes: PipeType[],
         <Grid container
               direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={5}>
-                Durchmesser in Meter
+                Durchmesser in Millimeter
             </Grid>
             <Grid item xs={5}>
                 Kosten pro Meter

@@ -15,7 +15,7 @@ data class OptimizationRequest(
     val lifespanOfPump: Double, // Jahre
     val yearsOfOperation: Double, // Jahre for optimization
     val wacc: Double, // Weighted Average Cost of Capital in %
-    val electricityCost: Double, // ct/kWh [for pump station]
+    val electricityCost: Double, // €/kWh [for pump station]
     val electricalEfficiency: Double, // for pump
     val hydraulicEfficiency: Double, // for pump
 )

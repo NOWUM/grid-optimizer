@@ -11,7 +11,7 @@ class Optimizer(
     val lifespanOfGrid: Double, // Lifespan of grid. Needed for invest cost calculation
     val lifespanOfPump: Double, // Lifespan of pump. Needed for invest cost calculation
     val yearsOfOperation: Double, // Needed for total cost calculation
-    val electricityCost: Double, // ct/kWh [for pump station]
+    val electricityCost: Double, // €/kWh [for pump station]
     val electricalEfficiency: Double, // for pump
     val hydraulicEfficiency: Double, // for pump
 ) {
