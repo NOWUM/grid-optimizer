@@ -125,10 +125,10 @@ function App() {
                 }<AppBar position="static">
                 <h1 style={{userSelect: "none"}}>{getPipe()}Pipify<VersionNumber/></h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-                    <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
+                    <Tab icon={<Timeline />} label="Formel Check" value="4" />
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
+                    <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
                     <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
-                    <Tab icon={<Timeline />} label="Formel Check oder sowas" value="4" />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
