@@ -16,13 +16,13 @@ export const CostView = ({costs}: {costs?: Costs}) => {
         label: "Investitionskosten Leitungen",
         value: costs?.pipeInvestCost
     }, {
-        label: "variable Kosten Leitungen",
+        label: "Betriebskosten Leitungen",
         value: costs?.pipeOperationCost
     }, {
         label: "Investitionskosten Pumpen",
         value: costs?.pumpInvestCost
     },{
-        label: "variable Kosten Pumpen",
+        label: "Betriebskosten Pumpen",
         value: costs?.pumpOperationCost
     },{
         label: "Gesamt",
