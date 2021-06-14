@@ -123,7 +123,7 @@ function App() {
             <TabContext value={tabVal}>
                 {// @ts-ignore
                 }<AppBar position="static">
-                <h1 style={{userSelect: "none"}}>{getPipe()}Pipify</h1>
+                <h1 style={{userSelect: "none"}}>{getPipe()}Pipify<VersionNumber/></h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
                     <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
@@ -136,7 +136,6 @@ function App() {
                         <FlowContainer pipes={pipes} setPipes={setPipes}
                                        nodeElements={nodeElements} setNodeElements={setNodeElements}
                                        temperature={temperatureKey}/>
-                        <VersionNumber/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
                         <DetermineMassFlowRateButton
                             grid={getGrid()}
