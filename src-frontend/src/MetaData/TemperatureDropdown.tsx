@@ -1,6 +1,6 @@
 import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {baseUrl} from "../utils/utility";
-import {defaultGetConfiguration} from "../Overlays/NodeContextOverlay";
+import {defaultGetConfiguration} from "../ReactFlow/Overlays/NodeContextOverlay";
 import {CustomSelect} from "../Components/CustomSelect";
 
 

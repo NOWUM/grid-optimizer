@@ -1,5 +1,7 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.util.neededPumpPower
+
 abstract class Node(val id: String) {
 
     init {
@@ -17,8 +19,35 @@ abstract class Node(val id: String) {
 
 
     // complex attributes
-    open val connectedPressureLoss: Double
-        get() = connectedPipes.filter { it.source == this }.sumOf { it.target.connectedPressureLoss }
+    open val connectedPressureLoss: List<Double>
+        get() {
+            // Retrieve losses per connected pipe
+            // TODO Pipe Pressure Loss counts twice because hin und rückweg
+            val losses = connectedPipes.filter { it.source == this }
+                .map { pipe -> pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b } }
+
+            if (losses.isEmpty()) return List(8760) { 0.0 }
+
+            // calculate maximum pressure loss for each hour
+            return losses.first().indices.map { idx -> losses.maxOf { it[idx] } }
+        }
+
+    open val neededPumpPower: List<Double>
+        get() {
+            // (Druckverlust im Rohr + daran angeschlossener höchster Druckverlust) * 100_000 [Umrechnung Bar zu Pascal]  * Volumenstrom
+            // TODO Pipe Pressure Loss counts twice because hin und rückweg
+            val powers = connectedPipes.filter { it.source == this }
+                .map { pipe ->
+                    pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b }
+                        .zip(pipe.volumeFlow)
+                        .map { (pressureLoss, volumeFlow) -> neededPumpPower(pressureLoss, volumeFlow) }
+                }
+
+            if (powers.isEmpty()) return List(8760) { 0.0 }
+
+            // calculate maximum needed pump power for each hour
+            return powers.first().indices.map { idx -> powers.maxOf { it[idx] } }
+        }
 
     open val connectedThermalEnergyDemand: HeatDemandCurve
         get() = connectedPipes.filter { it.source == this }

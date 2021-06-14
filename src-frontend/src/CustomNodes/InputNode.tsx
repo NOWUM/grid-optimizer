@@ -2,7 +2,7 @@ import {Handle, Position} from "react-flow-renderer";
 import {Tooltip} from "@material-ui/core";
 import React from "react";
 import {InputNode as InputNodeModel} from "../models";
-import {showNodeInputDialog} from "../Overlays/NodeContextOverlay";
+import {showNodeInputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
 
 
 const customNodeStyles = {
@@ -44,7 +44,8 @@ export const InputNode = (node: InputNodeModel) => {
     return (
         <Tooltip title={<>
             Formel Vorlauftemperatur: {node.data.flowTemperatureTemplate}<br/>
-            Formel Rücklauftemperatur: {node.data.returnTemperatureTemplate}
+            Formel Rücklauftemperatur: {node.data.returnTemperatureTemplate} <br/>
+
         </>}>
             <div style={customNodeStyles} onDoubleClick={handleClick}>
                 <Handle

@@ -1,9 +1,10 @@
 import {confirmAlert} from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { Grid, TextField} from "@material-ui/core";
-import React from "react";
+import React, {useState} from "react";
 import {FormSkeleton} from "./FormSkeleton";
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
+import {notify} from "./Notifications";
 
 
 
@@ -38,11 +39,32 @@ const PipeSplitForm = ({message, onConfirm, onAbort, type, id}: {
     type: PipeActionType,
     id: string
 }) => {
-    return <FormSkeleton id={id} message={message} onConfirm={() => {onConfirm(id ?? generateUniqueID(), 1, 1)}} onAbort={onAbort}>
+    const [length1, setLength1] = useState("");
+
+    const getLength1 = (): number => {
+        // @ts-ignore
+        if(!isNaN(length1)){
+            return parseFloat(length1)
+        } else {
+            return 0.0
+        }
+    }
+
+    const handleConfirm = () => {
+        // @ts-ignore
+        if(!isNaN(length1) && length1 > 0.0) {
+            onConfirm(id ?? generateUniqueID(), getLength1(), 1)
+        } else {
+            notify("Länge muss eine positive Zahl sein")
+        }
+    }
+
+    return <FormSkeleton id={id} message={message} onConfirm={() => handleConfirm()} onAbort={onAbort}>
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
-                <TextField id="standard-basic" label="Leitungslänge 1 [m]" type="number" placeholder="127.30"/>
+                <TextField id="standard-basic" label="Leitungslänge 1 [m]" type="number" placeholder="127.30"
+                           value={length1} onChange={(e) => setLength1(e.target.value)}/>
             </Grid>
         </Grid>
         {type === PipeActionType.SPLIT ?

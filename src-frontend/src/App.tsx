@@ -1,10 +1,11 @@
 import React, {Suspense, useEffect, useState} from 'react';
 import './App.css';
-import {FlowContainer, verifyBackend} from "./FlowContainer";
+import {FlowContainer, verifyBackend} from "./ReactFlow/FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
 import {uploadDropboxInit} from "./utils/utility";
 import {
     BaseNode,
+    Costs,
     HotWaterGrid,
     InputNode,
     IntermediateNode,
@@ -23,10 +24,10 @@ import {TabContext, TabList, TabPanel} from "@material-ui/lab";
 import {MetaDataContainer} from "./MetaData/MetaDataContainer";
 import {getPipe} from "./pipe";
 import {VersionNumber} from "./VersionNumber";
-import {NodeMenuSpawnerContainer} from "./NodeMenu/NodeMenuSpawnerContainer";
-import Notifications from "./Overlays/Notifications";
+import {NodeMenuSpawnerContainer} from "./ReactFlow/OverlayButtons/NodeMenu/NodeMenuSpawnerContainer";
+import Notifications from "./ReactFlow/Overlays/Notifications";
 import {OptimizationResults} from "./OptimizationResults";
-import {DetermineMassFlowRateButton} from "./NodeMenu/DetermineMassFlowRateButton";
+import {DetermineMassFlowRateButton} from "./ReactFlow/OverlayButtons/NodeMenu/DetermineMassFlowRateButton";
 import Backdrop from "./Backdrop";
 import {KeyboardKey} from "./Components/ConfirmationButton";
 import {Map, Storage, Timeline} from "@material-ui/icons";
@@ -37,6 +38,8 @@ import {
     defaultTemperatureKey
 } from "./utils/defaults";
 import {FormulaCheck} from "./FormulaCheck";
+import {OptimizeButton} from "./ReactFlow/OverlayButtons/OptimizeButton";
+import {CostView} from "./ReactFlow/OverlayButtons/CostView";
 
 function App() {
 
@@ -47,6 +50,8 @@ function App() {
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
     const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
     const [optimizationMetadata, setOptimizationMetadata] = useState<OptimizationMetadata>(defaultOptimizationMetadata)
+
+    const [costs, setCosts] = useState<Costs|undefined>(undefined)
 
     const handleKeyDown = (e: KeyboardEvent) => {
 
@@ -136,6 +141,9 @@ function App() {
                         <DetermineMassFlowRateButton
                             grid={getGrid()}
                             onResult={setMassenstrom}/>
+                        <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
+                                        setPipes={setPipes}/>
+                        <CostView costs={costs}/>
                     </div>
                 </TabPanel>
                 <TabPanel value="2">

@@ -1,7 +1,7 @@
 import {Button, FormLabel, Grid, Typography} from "@material-ui/core";
 import React, {FunctionComponent} from "react";
-import {ConfirmationButton} from "../Components/ConfirmationButton";
-import {AbortButton} from "../Components/AbortButton";
+import {ConfirmationButton} from "../../Components/ConfirmationButton";
+import {AbortButton} from "../../Components/AbortButton";
 
 interface SkeletonInterface {
     id: string, onConfirm: () => void, onAbort: () => void, message: string, children: any

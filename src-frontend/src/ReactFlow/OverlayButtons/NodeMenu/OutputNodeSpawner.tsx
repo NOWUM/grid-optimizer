@@ -1,8 +1,8 @@
 import React from "react";
 import {Button} from "@material-ui/core";
-import {NodeType, OutputNode} from "../models";
+import {NodeType, OutputNode} from "../../../models";
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
-import {showNodeOutputDialog} from "../Overlays/NodeContextOverlay";
+import {showNodeOutputDialog} from "../../Overlays/NodeContextOverlay";
 import {NodeSpawner} from "./NodeMenuSpawnerContainer";
 
 
@@ -21,7 +21,8 @@ export const OutputNodeSpawner = ({onNewNode}: NodeSpawner) => {
     const handleClick = () => {
         showNodeOutputDialog("Erzeuge eine neue Entnahmestelle", defaultNode,
             (node) => {
-                console.log(node)
+                node.data = {...node.data, loadProfileName: node.loadProfileName, thermalEnergyDemand: node.thermalEnergyDemand,
+                    pressureLoss: node.pressureLoss,}
                 onNewNode(node)
             },() => {/*Nothing to do here*/})
     }

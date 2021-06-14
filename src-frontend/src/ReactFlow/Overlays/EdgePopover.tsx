@@ -1,4 +1,4 @@
-import {Popover} from "@material-ui/core";
+import {Popover, Tooltip} from "@material-ui/core";
 import React from "react";
 import {AddCircleOutline, DeleteForeverOutlined, Edit} from "@material-ui/icons";
 import {showEditPipeDialog, showSplitPipeDialog,} from "./EdgeContextOverlay";
@@ -10,7 +10,7 @@ export const EdgePopover = ({target, onSplitEdge, onEditEdge, targetId, onRemove
                                 onRemoveEdge: () => void
                             },
 ) => {
-    return <Popover
+    return <Tooltip title={"Das ist ein Test"}><Popover
         id={"dawe"}
         open={!!target}
         anchorEl={target}
@@ -40,5 +40,5 @@ export const EdgePopover = ({target, onSplitEdge, onEditEdge, targetId, onRemove
             id={targetId}
         />
         <DeleteForeverOutlined onClick={onRemoveEdge}/>
-    </Popover>
+    </Popover></Tooltip>
 }

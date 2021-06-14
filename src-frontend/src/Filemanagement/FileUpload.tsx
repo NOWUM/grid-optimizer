@@ -2,7 +2,7 @@ import React, {useCallback} from "react";
 import {useDropzone} from 'react-dropzone';
 import "./file-upload.css";
 import {HotWaterGrid, instanceOfHotWaterGrid} from "../models";
-import {notify} from "../Overlays/Notifications";
+import {notify} from "../ReactFlow/Overlays/Notifications";
 
 
 

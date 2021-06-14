@@ -1,12 +1,12 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import ReactFlow, {
-    addEdge,
     ArrowHeadType,
     Background,
     BackgroundVariant,
     Edge,
     Elements,
-    removeElements, Node
+    Node,
+    removeElements
 } from 'react-flow-renderer';
 import 'react-flow-renderer/dist/style.css';
 
@@ -21,19 +21,20 @@ import {
     NodeType,
     OutputNode as OutputNodeModel,
     Pipe
-} from "./models";
-import {InputNode} from './CustomNodes/InputNode';
-import {IntermediateNode} from "./CustomNodes/IntermediateNode";
-import {OutputNode} from "./CustomNodes/OutputNode";
-import {baseUrl, createGrid} from "./utils/utility";
+} from "../models";
+import {InputNode} from '../CustomNodes/InputNode';
+import {IntermediateNode} from "../CustomNodes/IntermediateNode";
+import {OutputNode} from "../CustomNodes/OutputNode";
+import {baseUrl, createGrid} from "../utils/utility";
 import {notify} from "./Overlays/Notifications";
+import {DefaultEdge} from "../Components/DefaultEdge";
 
 const style = getComputedStyle(document.body)
 const corpColor = style.getPropertyValue('--corp-main-color')
 
 const edgeConfiguration = {
     animated: true,
-    type: 'step',
+    type: 'DEFAULT_EDGE',
     arrowHeadType: ArrowHeadType.ArrowClosed,
     style: {stroke: `rgb(${corpColor})`, strokeWidth: "3px"}
 }
@@ -44,6 +45,10 @@ const nodeTypes = {
     INTERMEDIATE_NODE: IntermediateNode,
     OUTPUT_NODE: OutputNode
 };
+
+const edgeTypes = {
+    DEFAULT_EDGE: DefaultEdge
+}
 
 
 interface PopupProps {
@@ -59,7 +64,7 @@ interface FlowContainerProperties {
     temperature: string
 }
 
-enum ResultCode {
+export enum ResultCode {
     OK = 200,
     INTERNAL_SERVER_ERROR = 500
 }
@@ -108,7 +113,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
             pipesToVerify.push(newPipe)
             verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[], temperature)).then((verified: boolean) => {
                     if(verified) {
-                        params= {...params, ...edgeConfiguration, id, length: length1}
+                        params= {...params, ...edgeConfiguration, id, length: length1, data: {length: length1}}
                         const newPipes = [...pipes]
                         newPipes.push(params)
                         setPipes(newPipes)
@@ -177,7 +182,8 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName
             }
         })
-        console.log(updateNode)
+
+        console.log(defaultPipes)
 
         return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
@@ -213,6 +219,8 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
     const handleNodeDragStop = (n: Node) => {
         const type: NodeType = n.type as NodeType;
         let property;
+        const newNode = {...n.data, ...n};
+
         switch (type) {
             case NodeType.INPUT_NODE:
                 property = "inputNodes";
@@ -227,9 +235,9 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 console.log("ERROR UNKNOWN NODE TYPE")
         }
         // @ts-ignore
-        const index = nodeElements[property].findIndex((nEle) => n.id === nEle.id)
+        const index = nodeElements[property].findIndex((nEle) => newNode.id === nEle.id)
         // @ts-ignore
-        nodeElements[property][index] = n;
+        nodeElements[property][index] = newNode;
         setNodeElements(nodeElements)
     }
 
@@ -239,6 +247,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                       onNodeDrag={(e) => e.stopPropagation()}
                       onNodeDragStop={(e, n: Node) => handleNodeDragStop(n)}
                       nodeTypes={nodeTypes}
+                      edgeTypes={edgeTypes}
                       onEdgeContextMenu={onElementClick}
                       deleteKeyCode={46}
                       onClick={(e) => closePopupTarget()}
@@ -253,6 +262,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
             onSplitEdge={() => handleSplitEdge()}
             onEditEdge={() => handleEditEdge()}
             onRemoveEdge={() => handleRemoveEdge()}
+
             targetId={popupTarget?.edge.id!}/>
     </ReactFlow>;
 

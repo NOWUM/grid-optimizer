@@ -1,10 +1,7 @@
 package de.fhac.ewi
 
 import de.fhac.ewi.routes.*
-import de.fhac.ewi.services.GridService
-import de.fhac.ewi.services.HeatDemandService
-import de.fhac.ewi.services.LoadProfileService
-import de.fhac.ewi.services.TemperatureTimeSeriesService
+import de.fhac.ewi.services.*
 import de.fhac.ewi.util.loadHProfiles
 import de.fhac.ewi.util.loadTemperatureTimeSeries
 import io.ktor.application.*
@@ -82,6 +79,7 @@ fun Application.module(testing: Boolean = false) {
             single { LoadProfileService(loadHProfiles()) }
             single { HeatDemandService(get(), get()) }
             single { GridService(get(), get()) }
+            single { OptimizerService() }
         })
     }
 
@@ -89,6 +87,7 @@ fun Application.module(testing: Boolean = false) {
         route("api") {
             // add api endpoints here
             grid(get())
+            optimize(get(), get())
             temperature(get())
             profiles(get())
             heatDemand(get(), get())
