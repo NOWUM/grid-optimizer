@@ -11634,7 +11634,7 @@ react-error-overlay@^6.0.9:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
 
-react-flow-renderer@^9.5.4:
+react-flow-renderer@^9.6.0:
   version "9.6.0"
   resolved "https://registry.yarnpkg.com/react-flow-renderer/-/react-flow-renderer-9.6.0.tgz#b056cbb11ac429d3e19082e3d28aeef6d0323d31"
   integrity sha512-uV0uVxaBJl++B0VGKVMr5dKaPfiRpq1IpicwTPY4xZYFrmKTipdGAoCM/SlH02UDcI886SSypdvrh4UXQA4xnQ==
