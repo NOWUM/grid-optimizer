@@ -200,7 +200,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <Grid item xs={6}>
-                    <InputLabel>Elektrizitätskosten Pumpstation [ct/kWh]</InputLabel>
+                    <InputLabel>Elektrizitätskosten Pumpstation [€/kWh]</InputLabel>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField id="outlined-basic" type="text" variant="outlined" placeholder="15"
