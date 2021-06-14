@@ -47,7 +47,7 @@ class OptimizerService {
         return OptimizationResponse(
             optimizer.calculateCosts(grid),
             grid.pipes.map { OptimizedPipeResponse(it.id, it.type.diameter) },
-            grid.nodes.map { OptimizedNodeResponse(it.id) }
+            grid.nodes.map { OptimizedNodeResponse(it.id, it.connectedThermalEnergyDemand.curve) }
         )
     }
 }
