@@ -8,35 +8,29 @@ import {notify} from "./Notifications";
 
 
 
-export enum PipeActionType {
-    EDIT,
-    SPLIT
-}
-
 
 export const showPipeDialog = (message: string,
-                               onConfirm: (id: string, length1: number, length2: number) => void,
+                               onConfirm: (id: string, length1: number, coverageHeight: number) => void,
                                onAbort: () => void,
-                               type: PipeActionType, id: string) => {
+                                id: string) => {
 
     confirmAlert({
-        customUI: ({onClose}) => <PipeSplitForm message={message} onConfirm={(id: string, length1: number, length2: number) => {
-            onConfirm(id, length1, length2)
+        customUI: ({onClose}) => <PipeEditForm message={message} onConfirm={(id: string, length1: number, coverageHeight: number) => {
+            onConfirm(id, length1, coverageHeight)
             onClose()
         }} onAbort={() => {
             onAbort()
             onClose()
-        }} type={type} id={id}
+        }}  id={id}
         />
     })
 }
 
 
-const PipeSplitForm = ({message, onConfirm, onAbort, type, id}: {
+const PipeEditForm = ({message, onConfirm, onAbort, id}: {
     message: string
-    onConfirm: (id: string, length1: number, length2: number) => void,
+    onConfirm: (id: string, length1: number, coverageHeight: number) => void,
     onAbort: () => void,
-    type: PipeActionType,
     id: string
 }) => {
     const [length1, setLength1] = useState("");
@@ -50,12 +44,25 @@ const PipeSplitForm = ({message, onConfirm, onAbort, type, id}: {
         }
     }
 
+    const [coverageHeight, setCoverageHeight] = useState("");
+
+    const getCoverageHeight = (): number => {
+        // @ts-ignore
+        if(!isNaN(coverageHeight)){
+            return parseFloat(coverageHeight)
+        } else {
+            return 0.0
+        }
+    }
+
     const handleConfirm = () => {
         // @ts-ignore
-        if(!isNaN(length1) && length1 > 0.0) {
-            onConfirm(id ?? generateUniqueID(), getLength1(), 1)
+        if(isNaN(length1) || length1 <= 0.0) {
+            notify("Länge muss eine positive Zahl sein!")
+        } else if (isNaN(Number(coverageHeight)) || Number(coverageHeight) < 0.0) {
+            notify("Überdeckungshöhe muss eine positive Zahl sein!")
         } else {
-            notify("Länge muss eine positive Zahl sein")
+            onConfirm(id ?? generateUniqueID(), getLength1(), getCoverageHeight())
         }
     }
 
@@ -63,35 +70,24 @@ const PipeSplitForm = ({message, onConfirm, onAbort, type, id}: {
         <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={12}>
-                <TextField id="standard-basic" label="Leitungslänge 1 [m]" type="number" placeholder="127.30"
+                <TextField id="standard-basic" label="Leitungslänge [m]" type="number" placeholder="127.30"
                            value={length1} onChange={(e) => setLength1(e.target.value)}/>
             </Grid>
+            <Grid item xs={12}>
+                <TextField id="standard-basic" label="Überdeckungshöhe [m]" type="number" placeholder="127.30"
+                           value={coverageHeight} onChange={(e) => setCoverageHeight(e.target.value)}/>
+            </Grid>
         </Grid>
-        {type === PipeActionType.SPLIT ?
-            <Grid container
-                  direction="row" item xs={7} spacing={3}>
-                <Grid item xs={12}>
-                    <TextField id="standard-basic" label="Leitungslänge 2 [m]" type="number" placeholder="127.30"/>
-                </Grid>
-            </Grid> : <></>
-        }
     </FormSkeleton>
 }
 
 export const showEditPipeDialog = (message: string,
-                                   onConfirm: (id: string, length1: number) => void,
+                                   onConfirm: (id: string, length1: number, coverageHeight: number) => void,
                                    onAbort: () => void,
                                    id: string) => {
 
-    showPipeDialog(message, onConfirm, onAbort, PipeActionType.EDIT, id)
+    showPipeDialog(message, onConfirm, onAbort, id)
 }
 
-export const showSplitPipeDialog = (message: string,
-                                    onConfirm: (id: string, length1: number, length2: number) => void,
-                                    onAbort: () => void,
-                                    id: string) => {
-
-    showPipeDialog(message, onConfirm, onAbort, PipeActionType.SPLIT, id)
-}
 
 

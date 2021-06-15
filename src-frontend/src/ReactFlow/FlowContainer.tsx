@@ -102,18 +102,18 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         console.log(params);
         params.animated = true;
 
-        showEditPipeDialog("Füge ein neues Rohr hinzu", (id, length1) => {
+        showEditPipeDialog("Füge ein neues Rohr hinzu", (id, length1, coverageHeight) => {
             const pipesToVerify = [...pipes]
             const newPipe = {
                 source: params.source,
                 target: params.target,
-                id, length: length1
+                id, length: length1, coverageHeight: coverageHeight
             }
 
             pipesToVerify.push(newPipe)
             verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[], temperature)).then((verified: boolean) => {
                     if(verified) {
-                        params= {...params, ...edgeConfiguration, id, length: length1, data: {length: length1}}
+                        params= {...params, ...edgeConfiguration, id, length: length1, coverageHeight: coverageHeight, data: {length: length1, coverageHeight: coverageHeight }}
                         const newPipes = [...pipes]
                         newPipes.push(params)
                         setPipes(newPipes)
