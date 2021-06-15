@@ -108,7 +108,9 @@ export interface Costs {
 
 export interface PipeType {
     diameter: number, // in m
-    costPerMeter: number // in €
+    costPerMeter: number, // in €
+    isolationThickness: number, // in mm
+    distanceBetweenPipes: number // in mm
 }
 
 export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {
