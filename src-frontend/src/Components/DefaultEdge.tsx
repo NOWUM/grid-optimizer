@@ -69,8 +69,8 @@ export const DefaultEdge = ({
 
     const getLabel = () => {
         return <>
-            {data?.length ? `Länge: ${data.length}m; ` : ""}<br/>
-            {data?.diameter ? `Durchmesser: ${data?.diameter}m` : ""}
+            <tspan>{data?.length ? `Länge: ${data.length}m; ` : ""}</tspan>
+            <tspan>{data?.diameter ? `Durchmesser: ${data?.diameter}m` : ""}</tspan>
         </>
     }
 
