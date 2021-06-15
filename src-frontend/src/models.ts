@@ -39,7 +39,8 @@ export enum LoadProfile{
 }
 
 export interface Pipe extends Edge, PipeOptimization{
-    length: number
+    length: number,
+    coverageHeight: number
 }
 
 export enum NodeType {
@@ -108,7 +109,9 @@ export interface Costs {
 
 export interface PipeType {
     diameter: number, // in m
-    costPerMeter: number // in €
+    costPerMeter: number, // in €
+    isolationThickness: number, // in mm
+    distanceBetweenPipes: number // in mm
 }
 
 export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {
@@ -127,10 +130,11 @@ export const instanceOfPipe = (pipe: any): pipe is Pipe => {
         return false
     }
     const length = instanceOfNumber(pipe.length)
+    const coverageHeight = instanceOfNumber(pipe.coverageHeight)
     const source = instanceOfString(pipe.source)
     const target = instanceOfString(pipe.target)
     const id = instanceOfString(pipe.id)
-    return length && source && target && id;
+    return length && coverageHeight && source && target && id;
 }
 
 export const instanceOfPosition = (position: any): position is Position => {

@@ -53,10 +53,12 @@ class Optimizer(
         val pumpInvestCost = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency)
         val pumpOperationCost = grid.input.neededPumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
 
+        val heatLossCost = grid.pipes.sumOf { it.pipeHeatLoss.sum() } / 1_000 * heatGenerationCost
+
         val investCost = pipeInvestCost * ceil(yearsOfOperation / lifespanOfGrid) + pumpInvestCost * ceil(yearsOfOperation / lifespanOfPump)
-        val operationCostPerYear = pipeOperationCost + pumpOperationCost + 0 // TODO heat loss
+        val operationCostPerYear = pipeOperationCost + pumpOperationCost + heatLossCost
 
         val total = investCost + operationCostPerYear * yearsOfOperation
-        return Costs(pipeInvestCost, pipeOperationCost, pumpInvestCost, pumpOperationCost, total)
+        return Costs(pipeInvestCost, pipeOperationCost, pumpInvestCost, pumpOperationCost, heatLossCost, total)
     }
 }

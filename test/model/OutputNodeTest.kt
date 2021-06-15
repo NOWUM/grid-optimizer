@@ -45,22 +45,22 @@ class OutputNodeTest {
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnChildConnection() {
         val out = OutputNode("1", SIMPLE_HEAT_DEMAND, 1.0)
-        val pipe = Pipe("pipe1", out, IntermediateNode("2"), 10.0)
+        val pipe = Pipe("pipe1", out, IntermediateNode("2"), 10.0, 0.25)
         pipe.source.connectChild(pipe)
     }
 
     @Test
     fun shouldAcceptOneParentConnection() {
         val out = OutputNode("1", SIMPLE_HEAT_DEMAND, 1.0)
-        val pipe = Pipe("pipe1", IntermediateNode("2"), out, 10.0)
+        val pipe = Pipe("pipe1", IntermediateNode("2"), out, 10.0, 0.25)
         pipe.source.connectChild(pipe)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailWithTwoParentConnections() {
         val out = OutputNode("1", SIMPLE_HEAT_DEMAND, 1.0)
-        val pipe = Pipe("pipe1", IntermediateNode("2"), out, 10.0)
-        val pipe2 = Pipe("pipe1", IntermediateNode("3"), out, 10.0)
+        val pipe = Pipe("pipe1", IntermediateNode("2"), out, 10.0, 0.25)
+        val pipe2 = Pipe("pipe1", IntermediateNode("3"), out, 10.0, 0.25)
         pipe.source.connectChild(pipe)
         pipe2.source.connectChild(pipe2)
     }
