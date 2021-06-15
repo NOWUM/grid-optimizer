@@ -17,7 +17,7 @@ fun String.toDoubleFunction(): DoubleFunction {
         val functionName = "doubleFun${functions.size}"
 
         // Inserts the function
-        engine.eval("function $functionName(x) { return $this; }");
+        engine.eval("function $functionName(x) { return parseFloat($this); }");
 
         { x: Double -> engine.eval("$functionName($x);") as Double }
     }
