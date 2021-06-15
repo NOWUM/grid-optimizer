@@ -1,5 +1,6 @@
 package de.fhac.ewi.util
 
+import kotlin.math.ln
 import kotlin.math.pow
 
 const val WATER_DICHTE = 997.0
@@ -72,6 +73,42 @@ fun pipePressureLoss(
  */
 fun neededPumpPower(pressureLoss: Double, volumeFlow: Double): Double =
     pressureLoss * 100_000 * volumeFlow
+
+/**
+ * Berechnet den Wärmeverlust in einem Rohr.
+ *
+ * @param flowIn Double - Vorlauftemperatur in °C
+ * @param flowOut Double - Rücklauftemperatur in °C
+ * @param temperature Double - Bodentemperatur in °C
+ * @param diameter Double - Durchmesser Rohrleitung in m
+ * @param isolationThickness Double - Dicke Isolierung in m
+ * @param pipeLayingDepth Double - Mittlere Überdeckungshöhe der vergrabenen Rohrleitungen in m
+ * @param distance Double - Abstand zwischen Vorlauf und Rücklauf Leitung in m
+ * @param length Double - Länge der Leitung in m
+ * @param lambdaPipe Double - Wärmeleitfähigkeit Dämmmaterial in W / (m*K)
+ * @param lambdaGround Double - Wärmeleitfähigkeit Boden in W / (m*K)
+ * @return Double Wärmeverluststrom in W
+ */
+fun pipeHeatLoss(
+    flowIn: Double,
+    flowOut: Double,
+    temperature: Double,
+    diameter: Double,
+    isolationThickness: Double,
+    pipeLayingDepth: Double,
+    distance: Double,
+    length: Double,
+    lambdaPipe: Double = 0.03,
+    lambdaGround: Double = 1.2
+): Double {
+    val innerRadius = diameter / 2
+    val outerRadius = innerRadius + isolationThickness
+    val numerator = 4 * Math.PI * length * ((flowIn - flowOut) / 2 - temperature)
+    val denominator = 1 / lambdaPipe * ln(outerRadius / innerRadius)
+    + 1 / lambdaGround * ln( 4 * (outerRadius + pipeLayingDepth) / outerRadius)
+    + 1 / lambdaGround * ln( ((2 * (outerRadius + pipeLayingDepth) / (distance + 2 * outerRadius)).pow(2) + 1).pow(0.5))
+    return numerator / denominator
+}
 
 
 /**
