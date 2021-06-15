@@ -31,7 +31,7 @@ class GridService(
             grid.addOutputNode(it.id, curve, it.pressureLoss)
         }
         request.pipes.forEach {
-            grid.addPipe(it.id, it.source, it.target, it.length)
+            grid.addPipe(it.id, it.source, it.target, it.length, it.pipeLayingDepth)
         }
 
         return grid

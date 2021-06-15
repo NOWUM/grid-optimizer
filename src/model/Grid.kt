@@ -40,7 +40,7 @@ class Grid {
         addNode(IntermediateNode(id))
     }
 
-    fun addPipe(id: String, sourceId: String, targetId: String, length: Double) {
+    fun addPipe(id: String, sourceId: String, targetId: String, length: Double, pipeLayingDepth: Double) {
         if (_pipes.any { it.id.equals(id, true) })
             throw IllegalArgumentException("There is already a pipe with id $id.")
 
@@ -51,7 +51,7 @@ class Grid {
         val target = _nodes.find { it.id == targetId }
             ?: throw IllegalArgumentException("Node for source $targetId not found.")
 
-        val pipe = Pipe(id, source, target, length)
+        val pipe = Pipe(id, source, target, length, pipeLayingDepth)
         source.connectChild(pipe)
         _pipes += pipe
     }

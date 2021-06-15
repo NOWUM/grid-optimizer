@@ -8,7 +8,8 @@ data class Pipe(
     val id: String,
     val source: Node,
     val target: Node,
-    val length: Double
+    val length: Double, // in m
+    val pipeLayingDepth: Double // in m
 ) {
 
     var type: PipeType = PipeType.UNDEFINED
@@ -33,6 +34,9 @@ data class Pipe(
 
         if (length <= 0.0)
             throw IllegalArgumentException("Length of pipe can not be negative or zero.")
+
+        if (pipeLayingDepth < 0.0)
+            throw IllegalArgumentException("Length of pipe can not be negative.")
     }
 
 }

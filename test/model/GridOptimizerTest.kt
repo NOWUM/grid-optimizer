@@ -53,27 +53,29 @@ class GridOptimizerTest {
         grid.addOutputNode("3", heatDemand, 1.0)
         val heatDemand2 = heatDemandService.createCurve(60_000.0, "EFH", "Schemm 2018")
         grid.addOutputNode("4", heatDemand2, 1.0)
-        grid.addPipe("P1", "1", "2", 100.0)
-        grid.addPipe("P2", "2", "3", 50.0)
-        grid.addPipe("P3", "2", "4", 250.0)
+        grid.addPipe("P1", "1", "2", 100.0, 0.6)
+        grid.addPipe("P2", "2", "3", 50.0, 0.6)
+        grid.addPipe("P3", "2", "4", 250.0, 0.6)
         return grid
     }
 
     private fun createStreetPipes(): List<PipeType> {
         // Quelle https://www.ingenieur.de/fachmedien/bwk/energieversorgung/dimensionierung-von-fernwaermenetzen/
+        // Dämmdicke: https://www.ikz.de/uploads/media/50-55_Daemmstandards.pdf
+        // Seite 91 https://www.energie-zentralschweiz.ch/fileadmin/user_upload/Downloads/Planungshilfen/Planungshandbuch_Fernwarrme_V1.0x.pdf
         return listOf(
-            PipeType(0.020, 391.0),
-            PipeType(0.025, 396.0),
-            PipeType(0.032, 422.0),
-            PipeType(0.040, 437.0),
-            PipeType(0.050, 495.0),
-            PipeType(0.065, 537.0),
-            PipeType(0.080, 616.0),
-            PipeType(0.100, 790.0),
-            PipeType(0.125, 912.0),
-            PipeType(0.150, 1101.0),
-            PipeType(0.200, 1311.0),
-            PipeType(0.250, 1755.0)
+            PipeType(0.020, 391.0, 0.04, 0.2),
+            PipeType(0.025, 396.0, 0.04, 0.2),
+            PipeType(0.032, 422.0, 0.04, 0.2),
+            PipeType(0.040, 437.0, 0.04, 0.2),
+            PipeType(0.050, 495.0, 0.04, 0.2),
+            PipeType(0.065, 537.0, 0.04, 0.2),
+            PipeType(0.080, 616.0, 0.04, 0.2),
+            PipeType(0.100, 790.0, 0.04, 0.2),
+            PipeType(0.125, 912.0, 0.04, 0.2),
+            PipeType(0.150, 1101.0, 0.04, 0.2),
+            PipeType(0.200, 1311.0, 0.04, 0.2),
+            PipeType(0.250, 1755.0, 0.04, 0.2)
         )
     }
 }
