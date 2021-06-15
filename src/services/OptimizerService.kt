@@ -35,6 +35,7 @@ class OptimizerService {
             request.lifespanOfGrid,
             request.lifespanOfPump,
             request.yearsOfOperation,
+            request.wacc,
             request.electricityCost,
             request.electricalEfficiency,
             request.hydraulicEfficiency
