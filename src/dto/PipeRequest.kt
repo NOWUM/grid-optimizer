@@ -6,7 +6,7 @@ data class PipeRequest(
     val target: String,
 
     val length: Double, // in m
-    val pipeLayingDepth: Double // in m
+    val coverageHeight: Double // in m
 ) {
     override fun toString() = "Pipe#$id [$source] -> [$target]"
 }
