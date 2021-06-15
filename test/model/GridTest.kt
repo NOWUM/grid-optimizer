@@ -7,6 +7,7 @@ class GridTest {
 
 
     private val SIMPLE_HEAT_DEMAND = HeatDemandCurve(List(8760) { 1.0 })
+    private val GROUND_TEMP_SERIES = TemperatureTimeSeries("dummy", List(365){10.0})
 
     @Test
     fun createEmptyGrid() {
@@ -16,27 +17,27 @@ class GridTest {
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnInputNodeWithEmptyId() {
         val grid = Grid()
-        grid.addInputNode("", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test
     fun addInputNode() {
         val grid = Grid()
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnTwoInputNodesWithSameId() {
         val grid = Grid()
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnTwoInputNodesWithDifferentId() {
         val grid = Grid()
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
-        grid.addInputNode("2", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("2", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -165,7 +166,7 @@ class GridTest {
     @Test
     fun acceptValidGrid() {
         val grid = Grid()
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
         grid.addIntermediateNode("2")
         grid.addOutputNode("3", SIMPLE_HEAT_DEMAND, 1.0)
         grid.addPipe("P1", "1", "2", 10.0, 0.25)

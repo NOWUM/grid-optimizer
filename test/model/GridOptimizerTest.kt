@@ -47,7 +47,7 @@ class GridOptimizerTest {
 
     private fun createSimpleGrid(): Grid {
         val grid = Grid()
-        grid.addInputNode("1", "80".toDoubleFunction(), "60".toDoubleFunction())
+        grid.addInputNode("1", timeSeriesService.getSeries("Schemm 2018"), "80".toDoubleFunction(), "60".toDoubleFunction())
         grid.addIntermediateNode("2")
         val heatDemand = heatDemandService.createCurve(50_000.0, "EFH", "Schemm 2018")
         grid.addOutputNode("3", heatDemand, 1.0)

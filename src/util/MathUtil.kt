@@ -79,7 +79,7 @@ fun neededPumpPower(pressureLoss: Double, volumeFlow: Double): Double =
  *
  * @param flowIn Double - Vorlauftemperatur in °C
  * @param flowOut Double - Rücklauftemperatur in °C
- * @param temperature Double - Bodentemperatur in °C
+ * @param ground Double - Bodentemperatur in °C
  * @param diameter Double - Durchmesser Rohrleitung in m
  * @param isolationThickness Double - Dicke Isolierung in m
  * @param coverageHeight Double - Mittlere Überdeckungshöhe der vergrabenen Rohrleitungen in m
@@ -92,7 +92,7 @@ fun neededPumpPower(pressureLoss: Double, volumeFlow: Double): Double =
 fun pipeHeatLoss(
     flowIn: Double,
     flowOut: Double,
-    temperature: Double,
+    ground: Double,
     diameter: Double,
     isolationThickness: Double,
     coverageHeight: Double,
@@ -103,7 +103,7 @@ fun pipeHeatLoss(
 ): Double {
     val innerRadius = diameter / 2
     val outerRadius = innerRadius + isolationThickness
-    val numerator = 4 * Math.PI * length * ((flowIn - flowOut) / 2 - temperature)
+    val numerator = 4 * Math.PI * length * ((flowIn - flowOut) / 2 - ground)
     val denominator = 1 / lambdaPipe * ln(outerRadius / innerRadius)
     + 1 / lambdaGround * ln( 4 * (outerRadius + coverageHeight) / outerRadius)
     + 1 / lambdaGround * ln( ((2 * (outerRadius + coverageHeight) / (distance + 2 * outerRadius)).pow(2) + 1).pow(0.5))

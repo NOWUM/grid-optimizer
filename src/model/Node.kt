@@ -54,10 +54,13 @@ abstract class Node(val id: String) {
             .fold(HeatDemandCurve.ZERO) { r, p -> r + p.target.connectedThermalEnergyDemand }
 
     open val flowInTemperature: List<Double>
-        get() = emptyList()
+        get() = connectedPipes.single { it.target == this }.source.flowInTemperature // TODO Wärmeverlust der Pipe berücksichtigen
 
     open val flowOutTemperature: List<Double>
-        get() = emptyList()
+        get() = connectedPipes.single { it.target == this }.source.flowOutTemperature // TODO Wärmeverlust der Pipe berücksichtigen
+
+    open val groundTemperature: List<Double>
+        get() = connectedPipes.single { it.target == this }.source.groundTemperature
 
     fun isParentOf(target: Node): Boolean =
         target in connectedChildNodes || connectedChildNodes.any { it.isParentOf(target) }
