@@ -10,7 +10,6 @@ class Optimizer(
     val heatGenerationCost: Double, // costs for generating heat losses
     val lifespanOfGrid: Double, // Lifespan of grid. Needed for invest cost calculation
     val lifespanOfPump: Double, // Lifespan of pump. Needed for invest cost calculation
-    val yearsOfOperation: Double, // Needed for total cost calculation
     val wacc: Double, // Zinsen
     val electricityCost: Double, // €/kWh [for pump station]
     val electricalEfficiency: Double, // for pump

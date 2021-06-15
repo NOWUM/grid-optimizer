@@ -27,7 +27,6 @@ class GridOptimizerTest {
             0.05, // unused (Kosten Erzeugung Wärmeverluste)
             40.0, // years for grid
             10.0, // years for pump
-            5.0, // years for including operation costs
             1.75, // Zinsen in %
             0.3, // for pump operation per kWh
             0.9, // for pump

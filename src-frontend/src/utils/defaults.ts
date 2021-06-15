@@ -21,7 +21,6 @@ export const defaultOptimizationMetadata: OptimizationMetadata = {
     heatGenerationCost: 0.3, // €/kWh [for calculating heat loss]
     lifespanOfGrid: 25.0, // Jahre
     lifespanOfPump: 10.0,
-    yearsOfOperation: 20.0,
     wacc: 12.0, // Weighted Average Cost of Capital in %
     electricityCost: 0.3, // €/kWh [for pump station]
     electricalEfficiency: 0.9, // for pump

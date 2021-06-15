@@ -64,7 +64,6 @@ export interface OptimizationMetadata {
     heatGenerationCost: number, // €/kWh [for calculating heat loss]
     lifespanOfGrid: number, // Jahre
     lifespanOfPump: number, // Jahre
-    yearsOfOperation: number, // Jahre for optimization
     wacc: number, // Weighted Average Cost of Capital in %
     electricityCost: number, // ct/kWh [for pump station]
     electricalEfficiency: number, // for pump

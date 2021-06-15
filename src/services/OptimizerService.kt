@@ -34,7 +34,6 @@ class OptimizerService {
             request.heatGenerationCost,
             request.lifespanOfGrid,
             request.lifespanOfPump,
-            request.yearsOfOperation,
             request.wacc,
             request.electricityCost,
             request.electricalEfficiency,
