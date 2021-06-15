@@ -3,18 +3,18 @@ import {GridSpacing} from "@material-ui/core";
 
 export const defaultOptimizationMetadata: OptimizationMetadata = {
     pipeTypes: [
-        {diameter: 20, costPerMeter: 391.0},
-        {diameter: 25, costPerMeter: 396.0},
-        {diameter: 32, costPerMeter: 422.0},
-        {diameter: 40, costPerMeter: 437.0},
-        {diameter: 50, costPerMeter: 495.0},
-        {diameter: 65, costPerMeter: 537.0},
-        {diameter: 80, costPerMeter: 616.0},
-        {diameter: 100, costPerMeter: 790.0},
-        {diameter: 125, costPerMeter: 912.0},
-        {diameter: 150, costPerMeter: 1101.0},
-        {diameter: 200, costPerMeter: 1311.0},
-        {diameter: 250, costPerMeter: 1755.0},
+        {diameter: 20, costPerMeter: 391.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 25, costPerMeter: 396.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 32, costPerMeter: 422.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 40, costPerMeter: 437.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 50, costPerMeter: 495.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 65, costPerMeter: 537.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 80, costPerMeter: 616.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 100, costPerMeter: 790.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 125, costPerMeter: 912.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 150, costPerMeter: 1101.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 200, costPerMeter: 1311.0, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 250, costPerMeter: 1755.0, isolationThickness: 40, distanceBetweenPipes: 200},
     ],
     gridOperatingCostTemplate: "x*0.001", // f(gridInvestCost) = y [€/year]
     pumpInvestCostTemplate: "300+x*0.05", // f(Leistung) = y [€/kW]

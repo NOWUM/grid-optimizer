@@ -58,13 +58,15 @@ class Optimizer(
         val pumpInvestCostAnnuity = pumpInvestCostTotal * pumpAnnuityFactor
         val pumpOperationCost = grid.input.neededPumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
 
+        val heatLossCost = grid.pipes.sumOf { it.pipeHeatLoss.sum() } / 1_000 * heatGenerationCost
+
         val investCostAnnuity = pipeInvestCostAnnuity + pumpInvestCostAnnuity
-        val operationCostPerYear = pipeOperationCost + pumpOperationCost + 0 // TODO heat loss
+        val operationCostPerYear = pipeOperationCost + pumpOperationCost + heatLossCost
 
         val total = investCostAnnuity + operationCostPerYear
         return Costs(pipeInvestCostTotal, pipeInvestCostAnnuity, pipeOperationCost,
             pumpInvestCostTotal, pumpInvestCostAnnuity, pumpOperationCost,
-            total)
+           heatLossCost, total)
     }
 
     private fun calculateAnnuityFactor(lifespan: Double) : Double =

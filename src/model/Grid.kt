@@ -2,6 +2,7 @@ package de.fhac.ewi.model
 
 import de.fhac.ewi.exceptions.IllegalGridException
 import de.fhac.ewi.util.DoubleFunction
+import de.fhac.ewi.util.repeatEach
 
 class Grid {
 
@@ -25,11 +26,11 @@ class Grid {
         _nodes += node
     }
 
-    fun addInputNode(id: String, flowTemperature: DoubleFunction, returnTemperature: DoubleFunction) {
+    fun addInputNode(id: String, groundSeries: TemperatureTimeSeries, flowTemperature: DoubleFunction, returnTemperature: DoubleFunction) {
         if (_nodes.filterIsInstance<InputNode>().count() == 1)
             throw IllegalArgumentException("This grid has already an input node. Only one input node is supported at the moment.")
 
-        addNode(InputNode(id, flowTemperature, returnTemperature))
+        addNode(InputNode(id, groundSeries.temperatures.repeatEach(24), flowTemperature, returnTemperature))
     }
 
     fun addOutputNode(id: String, thermalEnergyDemand: HeatDemandCurve, pressureLoss: Double) {
@@ -40,7 +41,7 @@ class Grid {
         addNode(IntermediateNode(id))
     }
 
-    fun addPipe(id: String, sourceId: String, targetId: String, length: Double) {
+    fun addPipe(id: String, sourceId: String, targetId: String, length: Double, pipeLayingDepth: Double) {
         if (_pipes.any { it.id.equals(id, true) })
             throw IllegalArgumentException("There is already a pipe with id $id.")
 
@@ -51,7 +52,7 @@ class Grid {
         val target = _nodes.find { it.id == targetId }
             ?: throw IllegalArgumentException("Node for source $targetId not found.")
 
-        val pipe = Pipe(id, source, target, length)
+        val pipe = Pipe(id, source, target, length, pipeLayingDepth)
         source.connectChild(pipe)
         _pipes += pipe
     }

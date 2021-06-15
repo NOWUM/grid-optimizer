@@ -18,7 +18,9 @@ class OptimizerService {
                 catchParseError("Could not parse PipeType $it.") {
                     PipeType(
                         it.diameter / 1000.0,
-                        it.costPerMeter
+                        it.costPerMeter,
+                        it.isolationThickness / 1000.0,
+                        it.distanceBetweenPipes / 1000.0
                     )
                 }
             }

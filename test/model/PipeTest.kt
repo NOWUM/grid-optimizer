@@ -6,27 +6,32 @@ class PipeTest {
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnPipeWithEmptyId() {
-        Pipe("", IntermediateNode("#1"), IntermediateNode("#2"), 0.0)
+        Pipe("", IntermediateNode("#1"), IntermediateNode("#2"), 0.0, 0.25)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnPipeWithNegativeLength() {
-        Pipe("P1", IntermediateNode("#1"), IntermediateNode("#2"), -10.0)
+        Pipe("P1", IntermediateNode("#1"), IntermediateNode("#2"), -10.0, 0.25)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnPipeWithZeroLength() {
-        Pipe("P1", IntermediateNode("#1"), IntermediateNode("#2"), 0.0)
+        Pipe("P1", IntermediateNode("#1"), IntermediateNode("#2"), 0.0, 0.25)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnPipeWithNegativePipeLayingDepth() {
+        Pipe("P1", IntermediateNode("#1"), IntermediateNode("#2"), 10.0, -0.25)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnPipeWithSameSourceAndTarget() {
         val node = IntermediateNode("#1")
-        Pipe("P1", node, node, 0.0)
+        Pipe("P1", node, node, 0.0, 0.25)
     }
 
     @Test
     fun createPipe() {
-        Pipe("P1", IntermediateNode("#1"), IntermediateNode("#2"), 42.0)
+        Pipe("P1", IntermediateNode("#1"), IntermediateNode("#2"), 42.0, 0.25)
     }
 }
