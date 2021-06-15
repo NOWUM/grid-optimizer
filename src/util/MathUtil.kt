@@ -103,7 +103,7 @@ fun pipeHeatLoss(
 ): Double {
     val innerRadius = diameter / 2
     val outerRadius = innerRadius + isolationThickness
-    val numerator = 4 * Math.PI * length * ((flowIn - flowOut) / 2 - ground)
+    val numerator = 4 * Math.PI * length * ((flowIn + flowOut) / 2 - ground)
     val denominator = 1 / lambdaPipe * ln(outerRadius / innerRadius)
     + 1 / lambdaGround * ln( 4 * (outerRadius + coverageHeight) / outerRadius)
     + 1 / lambdaGround * ln( ((2 * (outerRadius + coverageHeight) / (distance + 2 * outerRadius)).pow(2) + 1).pow(0.5))
