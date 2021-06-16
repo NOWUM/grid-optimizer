@@ -117,6 +117,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
     const [pressureLoss, setPressureLoss] = useState<string>(`${node.pressureLoss}`)
     const [loadProfileName, setLoadProfileName] = useState(node.loadProfileName)
     const [selectOpen, setSelectOpen] = useState(false)
+    const [replicas, setReplicas] = useState<string>(`${node.pressureLoss}` ?? "")
 
 
     const submitNewNode = () => {
@@ -130,6 +131,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
                 position: {x: node.position?.x ?? node.xPos, y: node.position?.y ?? node.yPos},
                 type: node.type,
                 id: node.id,
+                replicas: replicas === "" ? undefined: Number.parseInt(replicas),
                 loadProfileName
             }
             onConfirm(newNode)
@@ -184,8 +186,21 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
             </Grid>
         </Grid>
 
+            <Grid container
+                  direction="row" item xs={7} spacing={3}>
+                <Grid item xs={12}>
+                    <TextField id="standard-basic" label="Replika Anschlüsse" type="number" placeholder="1"
+                               helperText={"Anzahl Häuser"}
+                               value={replicas}
+                               onChange={(val) =>{
+                                   setReplicas(val.target.value)
+                               }}/>
+                </Grid>
+            </Grid>
 
-        <Grid container
+
+
+            <Grid container
               direction="row" item xs={7} spacing={3}>
             <Grid item xs={4}>
                 Standardlastprofil

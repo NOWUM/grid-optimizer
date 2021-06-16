@@ -18,6 +18,7 @@ export const OutputNode = (node: OutputNodeModel) => {
         newNode.thermalEnergyDemand = newNode.data.thermalEnergyDemand
         newNode.pressureLoss = newNode.data.pressureLoss
         newNode.loadProfileName = newNode.data.loadProfileName
+        newNode.replicas= newNode.data.replicas
         return newNode
     }
 
@@ -29,7 +30,8 @@ export const OutputNode = (node: OutputNodeModel) => {
     return (<Tooltip title={<>
             Wärmebedarf: {node.data.thermalEnergyDemand} kWh<br/>
             Druckverlust: {node.data.pressureLoss} Bar <br />
-            Lastprofil: {node.data.loadProfileName}
+            Lastprofil: {node.data.loadProfileName} <br />
+            Replicas: {node.data.replicas}
     </>}>
             <div style={customNodeStyles} onDoubleClick={handleClick}>
                 <Handle type="target" position={Position.Top} style={{...customInputHandleStyle}}/>

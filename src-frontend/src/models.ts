@@ -31,7 +31,8 @@ export interface IntermediateNode extends BaseNode{
 export interface OutputNode extends BaseNode {
     thermalEnergyDemand: number, // kwh per year
     pressureLoss: number, // Bar,
-    loadProfileName: string
+    loadProfileName: string,
+    replicas?: number
 }
 
 export enum LoadProfile{
