@@ -24,23 +24,25 @@ class Optimizer(
         grid.pipes.forEach { it.type = PipeType.UNDEFINED }
 
         // until everything is optimized
-        optimizer@ while (true) {
+        var anyPipeUpdated: Boolean
+        optimizer@ do {
+            anyPipeUpdated = false
             // check for every pipe, if another diameter would be better in total costs
-            for (pipe in grid.pipes) {
+            pipeCheck@ for (pipe in grid.pipes) {
                 for (type in pipeTypes) {
                     val lastType = pipe.type
                     pipe.type = type
                     val newCost = calculateCosts(grid).total
                     if (newCost < currentCost) {
                         currentCost = newCost
-                        continue@optimizer
+                        anyPipeUpdated = true
+                        continue@pipeCheck
                     } else {
                         pipe.type = lastType
                     }
                 }
             }
-            break
-        }
+        } while (anyPipeUpdated)
 
         return currentCost
     }
