@@ -19,7 +19,7 @@ fun String.toDoubleFunction(): DoubleFunction {
         // Inserts the function
         engine.eval("function $functionName(x) { return parseFloat($this); }");
 
-        { x: Double -> engine.eval("$functionName($x);") as Double }
+        { x: Double -> engine.eval("$functionName($x);").toString().toDouble() }
     }
 }
 
