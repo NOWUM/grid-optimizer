@@ -1,5 +1,6 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.util.mapParallel
 import de.fhac.ewi.util.neededPumpPower
 
 abstract class Node(val id: String) {
@@ -24,7 +25,7 @@ abstract class Node(val id: String) {
             // Retrieve losses per connected pipe
             // TODO Pipe Pressure Loss counts twice because hin und rückweg
             val losses = connectedPipes.filter { it.source == this }
-                .map { pipe -> pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b } }
+                .map { pipe -> pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).mapParallel { (a, b) -> a + b } }
 
             if (losses.isEmpty()) return List(8760) { 0.0 }
 
@@ -38,9 +39,9 @@ abstract class Node(val id: String) {
             // TODO Pipe Pressure Loss counts twice because hin und rückweg
             val powers = connectedPipes.filter { it.source == this }
                 .map { pipe ->
-                    pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b }
+                    pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).mapParallel { (a, b) -> a + b }
                         .zip(pipe.volumeFlow)
-                        .map { (pressureLoss, volumeFlow) -> neededPumpPower(pressureLoss, volumeFlow) }
+                        .mapParallel { (pressureLoss, volumeFlow) -> neededPumpPower(pressureLoss, volumeFlow) }
                 }
 
             if (powers.isEmpty()) return List(8760) { 0.0 }
