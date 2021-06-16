@@ -38,7 +38,7 @@ class GridService(
                 repeat(it.replicas - 1) { number ->
                     val newId = "${it.id}-$number"
                     grid.addOutputNode(newId, curve, it.pressureLoss)
-                    copyPipesForNode.getOrDefault(it.id, mutableListOf()) += newId
+                    copyPipesForNode.getOrPut(it.id) { mutableListOf() } += newId
                 }
             }
         }
