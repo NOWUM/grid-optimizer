@@ -177,9 +177,9 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         })
 
         outputNodes.forEach((n) => {
-            const {thermalEnergyDemand, pressureLoss, loadProfileName} = (n as OutputNodeModel)
+            const {thermalEnergyDemand, pressureLoss, loadProfileName, replicas} = (n as OutputNodeModel)
             n.data = {
-                ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName
+                ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName, replicas
             }
         })
 

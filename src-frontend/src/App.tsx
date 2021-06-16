@@ -89,8 +89,14 @@ function App() {
         setPipes([])
     }
 
+    const deepCopyNodeElements = (): NodeElements => {
+        return {inputNodes:[...nodeElements.inputNodes],
+            intermediateNodes: [...nodeElements.intermediateNodes],
+            outputNodes: [...nodeElements.outputNodes]}
+    }
+
     const handleNewNode = (newNode: BaseNode) => {
-        const newNodeElements = {...nodeElements};
+        const newNodeElements = deepCopyNodeElements();
         switch (newNode.type) {
             case NodeType.INPUT_NODE: newNodeElements.inputNodes.push(newNode as InputNode)
                 break;
