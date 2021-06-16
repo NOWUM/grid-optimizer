@@ -5,7 +5,7 @@ import de.fhac.ewi.util.requireNoNaNs
 /**
  * Beinhaltet für jede Stunde im Jahr den Energiebedarf.
  *
- * @property curve List<Double>
+ * @property curve List<Double> - Wh per hour in year
  * @property total Double
  * @constructor
  */

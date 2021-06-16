@@ -10,7 +10,7 @@ const val WATER_DICHTE = 997.0
  *
  * @param flowIn Double - Vorlauftemperatur in °C
  * @param flowOut Double - Rücklauftemperatur in °C
- * @param heatDemand Double - Benötigte Wärmeenergie in kW
+ * @param heatDemand Double - Benötigte Wärmeenergie in Wh
  * @param c Double - spezifische Wärmekapazität (default Wert für Wasser) in kJ/kgK
  * @return Double - Massenstrom in kg/s
  */
