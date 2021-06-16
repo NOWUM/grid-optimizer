@@ -117,7 +117,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
     const [pressureLoss, setPressureLoss] = useState<string>(`${node.pressureLoss}`)
     const [loadProfileName, setLoadProfileName] = useState(node.loadProfileName)
     const [selectOpen, setSelectOpen] = useState(false)
-    const [replicas, setReplicas] = useState<string>(`${node.pressureLoss}` ?? "")
+    const [replicas, setReplicas] = useState<string>(`${node.replicas}` ?? "")
 
 
     const submitNewNode = () => {
