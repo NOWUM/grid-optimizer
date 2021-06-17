@@ -99,29 +99,31 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
 
     // @ts-ignore
     const onConnect = (params) => {
-        console.log(params);
         params.animated = true;
-
-        showEditPipeDialog("Füge ein neues Rohr hinzu", (id, length1, coverageHeight) => {
-            const pipesToVerify = [...pipes]
-            const newPipe = {
-                source: params.source,
-                target: params.target,
-                id, length: length1, coverageHeight: coverageHeight
-            }
-
-            pipesToVerify.push(newPipe)
-            verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[], temperature)).then((verified: boolean) => {
-                    if(verified) {
-                        params= {...params, ...edgeConfiguration, id, length: length1, coverageHeight: coverageHeight, data: {length: length1, coverageHeight: coverageHeight }}
-                        const newPipes = [...pipes]
-                        newPipes.push(params)
-                        setPipes(newPipes)
-                    }
-                }
-            )
-        }, () => console.log("Nothing to do here"), params.id)
+        showEditPipeDialog("Füge ein neues Rohr hinzu",
+            (id, length1, coverageHeight) => {onConfirmPipe(params, id, length1, coverageHeight)},
+            () => console.log("Nothing to do here"), params.id, undefined, undefined)
     };
+
+    const onConfirmPipe = (params: any, id: string, length: number, coverageHeight: number) => {
+        const pipesToVerify = [...pipes]
+        const newPipe = {
+            source: params.source,
+            target: params.target,
+            id, length, coverageHeight
+        }
+
+        pipesToVerify.push(newPipe)
+        verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[], temperature)).then((verified: boolean) => {
+                if(verified) {
+                    params= {...params, ...edgeConfiguration, id, length, coverageHeight, data: {length, coverageHeight }}
+                    const newPipes = [...pipes]
+                    newPipes.push(params)
+                    setPipes(newPipes)
+                }
+            }
+        )
+    }
 
     // @ts-ignore
     const onElementsRemove = (elementsToRemove) => setPipes((els) => removeElements(elementsToRemove, els));
@@ -143,8 +145,14 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         console.log(popupTarget)
     }
 
-    const handleEditEdge = () => {
-        console.log(popupTarget)
+    const handleEditEdge = (id: string, length: number, coverageHeight: number) => {
+        const newPipes = pipes.map(p => {
+            if(p.id === id) {
+                return {...p, length, coverageHeight, data: {...p.data, length, coverageHeight}}
+            }
+        })
+
+        setPipes(newPipes as Elements<Pipe>)
     }
 
     const handleRemoveEdge = () => {
@@ -260,10 +268,9 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         <EdgePopover
             target={popupTarget?.target}
             onSplitEdge={() => handleSplitEdge()}
-            onEditEdge={() => handleEditEdge()}
+            onEditEdge={handleEditEdge}
             onRemoveEdge={() => handleRemoveEdge()}
-
-            targetId={popupTarget?.edge.id!}/>
+            pipe={pipes.find(p => p.id === popupTarget?.edge.id!)! as Pipe} />
     </ReactFlow>;
 
 }
