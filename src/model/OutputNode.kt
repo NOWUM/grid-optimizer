@@ -2,7 +2,7 @@ package de.fhac.ewi.model
 
 class OutputNode(
     id: String,
-    val thermalEnergyDemand: HeatDemandCurve, // kwh per day in year year
+    val thermalEnergyDemand: HeatDemandCurve, // Wh per hour in year year
     val pressureLoss: Double // Bar
 ) : Node(id) {
 

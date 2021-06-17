@@ -31,7 +31,7 @@ class GridService(
             grid.addIntermediateNode(it.id)
         }
         request.outputNodes.forEach {
-            val curve = demandService.createCurve(it.thermalEnergyDemand, it.loadProfileName, request.temperatureSeries)
+            val curve = demandService.createCurve(it.thermalEnergyDemand * 1000, it.loadProfileName, request.temperatureSeries)
             grid.addOutputNode(it.id, curve, it.pressureLoss)
 
             if (it.replicas != null && it.replicas > 1) {
