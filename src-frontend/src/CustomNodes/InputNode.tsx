@@ -3,6 +3,7 @@ import {Tooltip} from "@material-ui/core";
 import React from "react";
 import {InputNode as InputNodeModel} from "../models";
 import {showNodeInputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
+import {verifyBackend} from "../ReactFlow/FlowContainer";
 
 
 const customNodeStyles = {
@@ -36,9 +37,17 @@ export const InputNode = (node: InputNodeModel) => {
 
     const handleClick = () => {
         showNodeInputDialog("Bearbeiten sie diesen Einspeisepunkt", getInputNode(),
-            (newNode) => {
-            console.log(newNode)
-            node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
+            handleConfirm, () => {/*Nothing to do here*/
+            })
+    }
+
+    const handleConfirm = (newNode: InputNodeModel) => {
+        console.log(newNode)
+        verifyBackend(node.data.grid).then(b => {
+            if(b){
+                node.data.updateNode(newNode)
+            }
+        })
     }
 
     return (

@@ -61,7 +61,7 @@ interface FlowContainerProperties {
     setPipes: Dispatch<SetStateAction<Elements<Pipe>>>,
     nodeElements: NodeElements,
     setNodeElements: Dispatch<SetStateAction<NodeElements>>,
-    temperature: string
+    temperatureSeries: string
 }
 
 export enum ResultCode {
@@ -93,7 +93,7 @@ export const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
             return false});
 }
 
-export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, temperature}: FlowContainerProperties) => {
+export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, temperatureSeries}: FlowContainerProperties) => {
 
     const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
 
@@ -114,7 +114,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         }
 
         pipesToVerify.push(newPipe)
-        verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[], temperature)).then((verified: boolean) => {
+        verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[], temperatureSeries)).then((verified: boolean) => {
                 if(verified) {
                     params= {...params, ...edgeConfiguration, id, length, coverageHeight, data: {length, coverageHeight }}
                     const newPipes = [...pipes]
@@ -176,7 +176,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         inputNodes.forEach((n) => {
             const {flowTemperatureTemplate, returnTemperatureTemplate} = (n as InputNodeModel)
             n.data = {
-                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode
+                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode, grid: {pipes, ...nodeElements, temperatureSeries}
             }
         })
 
@@ -187,7 +187,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         outputNodes.forEach((n) => {
             const {thermalEnergyDemand, pressureLoss, loadProfileName, replicas} = (n as OutputNodeModel)
             n.data = {
-                ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName, replicas
+                ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName, replicas, grid: {pipes, ...nodeElements, temperatureSeries}
             }
         })
 
