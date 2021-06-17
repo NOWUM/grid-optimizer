@@ -139,13 +139,10 @@ function App() {
             </AppBar>
                 <TabPanel value="1">
                     <div className="react-flow-container">
-                        <FlowContainer pipes={pipes} setPipes={setPipes}
-                                       nodeElements={nodeElements} setNodeElements={setNodeElements}
-                                       temperature={temperatureKey}/>
+                        <FlowContainer pipes={pipes} setPipes={setPipes} nodeElements={nodeElements}
+                                       setNodeElements={setNodeElements} temperatureSeries={temperatureKey}/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
-                        <DetermineMassFlowRateButton
-                            grid={getGrid()}
-                            onResult={setMassenstrom}/>
+                        <DetermineMassFlowRateButton grid={getGrid()} onResult={setMassenstrom}/>
                         <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
                                         setPipes={setPipes}/>
                         <CostView costs={costs}/>
