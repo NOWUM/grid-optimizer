@@ -1,5 +1,6 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.util.mapIndicesParallel
 import de.fhac.ewi.util.mapParallel
 import de.fhac.ewi.util.neededPumpPower
 
@@ -30,7 +31,7 @@ abstract class Node(val id: String) {
             if (losses.isEmpty()) return List(8760) { 0.0 }
 
             // calculate maximum pressure loss for each hour
-            return losses.first().indices.map { idx -> losses.maxOf { it[idx] } }
+            return losses.first().mapIndicesParallel { idx -> losses.maxOf { it[idx] } }
         }
 
     open val neededPumpPower: List<Double>
@@ -47,7 +48,7 @@ abstract class Node(val id: String) {
             if (powers.isEmpty()) return List(8760) { 0.0 }
 
             // calculate maximum needed pump power for each hour
-            return powers.first().indices.map { idx -> powers.maxOf { it[idx] } }
+            return powers.first().mapIndicesParallel { idx -> powers.maxOf { it[idx] } }
         }
 
     open val connectedThermalEnergyDemand: HeatDemandCurve
