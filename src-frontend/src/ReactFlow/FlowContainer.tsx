@@ -176,7 +176,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         inputNodes.forEach((n) => {
             const {flowTemperatureTemplate, returnTemperatureTemplate} = (n as InputNodeModel)
             n.data = {
-                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode, grid: {pipes, ...nodeElements, temperatureSeries}
+                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode
             }
         })
 
@@ -187,7 +187,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         outputNodes.forEach((n) => {
             const {thermalEnergyDemand, pressureLoss, loadProfileName, replicas} = (n as OutputNodeModel)
             n.data = {
-                ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName, replicas, grid: {pipes, ...nodeElements, temperatureSeries}
+                ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName, replicas
             }
         })
 
@@ -221,7 +221,12 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 return newNode
             } return n
         })
-        setNodeElements(newNodeElements)
+
+        verifyBackend({pipes: pipes as Pipe[], ...nodeElements, temperatureSeries}).then(b => {
+            if(b){
+                setNodeElements(newNodeElements)
+            }
+        })
     }
 
     const handleNodeDragStop = (n: Node) => {

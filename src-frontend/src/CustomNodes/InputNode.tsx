@@ -43,11 +43,7 @@ export const InputNode = (node: InputNodeModel) => {
 
     const handleConfirm = (newNode: InputNodeModel) => {
         console.log(newNode)
-        verifyBackend(node.data.grid).then(b => {
-            if(b){
-                node.data.updateNode(newNode)
-            }
-        })
+        node.data.updateNode(newNode)
     }
 
     return (

@@ -4,7 +4,6 @@ import {Handle, Position} from "react-flow-renderer";
 import {showNodeOutputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
 import {OutputNode as OutputNodeModel} from "../models";
 import {Tooltip} from "@material-ui/core";
-import {verifyBackend} from "../ReactFlow/FlowContainer";
 
 const customNodeStyles = {
     background: 'red',
@@ -30,11 +29,7 @@ export const OutputNode = (node: OutputNodeModel) => {
     }
 
     const handleConfirm = (newNode: OutputNodeModel) => {
-        verifyBackend(node.data.grid).then(b => {
-            if (b) {
-                node.data.updateNode(newNode)
-            }
-        })
+         node.data.updateNode(newNode)
     }
 
     return (<Tooltip title={<>
