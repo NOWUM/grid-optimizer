@@ -17,7 +17,7 @@ export const defaultOptimizationMetadata: OptimizationMetadata = {
         {diameter: 250, costPerMeter: 1755.0, isolationThickness: 40, distanceBetweenPipes: 200},
     ],
     gridOperatingCostTemplate: "x*0.001", // f(gridInvestCost) = y [€/year]
-    pumpInvestCostTemplate: "300+x*0.05", // f(Leistung) = y [€/kW]
+    pumpInvestCostTemplate: "500+x/1000*500", // f(Leistung) = y [€/kW]
     heatGenerationCost: 0.3, // €/kWh [for calculating heat loss]
     lifespanOfGrid: 25.0, // Jahre
     lifespanOfPump: 10.0,
