@@ -60,6 +60,8 @@ function App() {
         }
     }
 
+    useEffect(() => console.log(pipes))
+
     useEffect(() => {
         document.addEventListener('keydown', handleKeyDown, false);
         return () => {
@@ -164,10 +166,13 @@ function App() {
 
             </TabContext>
             {renderUpload ?
-                <FileUpload loadGrid={(hwg) => {
-                    setRenderUpload(false)
-                    insertGrid(hwg)
-                }}/> : <></>
+                <FileUpload
+                    cancel={() => setRenderUpload(false)}
+                    loadGrid={(hwg) => {
+                        setRenderUpload(false)
+                        insertGrid(hwg)
+                    }}
+                /> : <></>
             }
 
             {/* @ts-ignore*/}

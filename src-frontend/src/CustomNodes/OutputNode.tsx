@@ -23,9 +23,9 @@ export const OutputNode = (node: OutputNodeModel) => {
     }
 
     const handleClick = () => {
+        console.log(node.data.onDelete)
         showNodeOutputDialog("Bearbeiten sie diese Entnahmestelle", getOutputNode(),
-            handleConfirm, () => {/*Nothing to do here*/
-            })
+            handleConfirm, () => {/*Nothing to do here*/}, () => node.data.onDelete(node.data.id ?? node.id))
     }
 
     const handleConfirm = (newNode: OutputNodeModel) => {

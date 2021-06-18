@@ -1,36 +1,43 @@
 import {confirmAlert} from "react-confirm-alert";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {BaseNode, InputNode, IntermediateNode, NodeType, OutputNode} from "../../models";
 import {Grid, TextField} from "@material-ui/core";
 import {notify} from "./Notifications";
 import {baseUrl} from "../../utils/utility";
 import {FormSkeleton} from "./FormSkeleton";
-import {CustomSelect} from "../../Components/CustomSelect";
 import {LoadProfileSelect} from "../../Components/LoadProfileSelect";
 
+export interface ShowNodeBaseProps {
+    message: string,
+    onAbort: () => void,
+    onDelete: () => void
+}
 
 export const showNodeInputDialog = (message: string,
                                     node: InputNode,
                                     onConfirm: (node: InputNode) => void,
-                                    onAbort: () => void) => {
+                                    onAbort: () => void,
+                                    onDelete?: () => void) => {
 
-    showNodeDialog(message, (n) => onConfirm(n as InputNode), onAbort, node)
-}
-
-export const showNodeOutputDialog = (message: string,
-                                     node: OutputNode,
-                                     onConfirm: (node: OutputNode) => void,
-                                     onAbort: () => void) => {
-
-    showNodeDialog(message, (n) => onConfirm(n as OutputNode), onAbort, node)
+    showNodeDialog(message, (n) => onConfirm(n as InputNode), onAbort, node, onDelete)
 }
 
 export const showNodeIntermediateDialog = (message: string,
                                            node: IntermediateNode,
                                            onConfirm: (node: IntermediateNode) => void,
-                                           onAbort: () => void) => {
+                                           onAbort: () => void,
+                                           onDelete?: () => void) => {
 
-    showNodeDialog(message, (n) => onConfirm(n as IntermediateNode), onAbort, node)
+    showNodeDialog(message, (n) => onConfirm(n as IntermediateNode), onAbort, node, onDelete)
+}
+
+export const showNodeOutputDialog = (message: string,
+                                     node: OutputNode,
+                                     onConfirm: (node: OutputNode) => void,
+                                     onAbort: () => void,
+                                     onDelete?: () => void) => {
+
+    showNodeDialog(message, (n) => onConfirm(n as OutputNode), onAbort, node, onDelete)
 }
 
 export const defaultGetConfiguration = {
@@ -41,7 +48,7 @@ export const defaultGetConfiguration = {
 
 export const showNodeDialog = (message: string,
                                onConfirm: (node: BaseNode) => void,
-                               onAbort: () => void, node: BaseNode) => {
+                               onAbort: () => void, node: BaseNode, onDelete?: () => void) => {
 
     let component: { (arg0: () => void): boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined; (onClose: () => void): JSX.Element; (onClose: () => void): JSX.Element; (onClose: () => void): JSX.Element; }
     switch (node.type) {
@@ -55,17 +62,28 @@ export const showNodeDialog = (message: string,
                                                                     onAbort()
                                                                     onClose()
                                                                 }} node={node as InputNode}
+                                                                onDelete={onDelete ?
+                                                                    () => {
+                                                                        onDelete()
+                                                                        onClose()
+                                                                    }: undefined}
             />
             break;
         case NodeType.INTERMEDIATE_NODE: component = (onClose: () => void) => <IntermediateNodeForm message={message}
-                                                        onConfirm={(newNode: IntermediateNode) => {
-                                                            onConfirm(newNode)
-                                                            onClose()
-                                                        }}
-                                                        onAbort={() => {
-                                                            onAbort()
-                                                            onClose()
-                                                        }} node={node as IntermediateNode}
+                                                                                                    onConfirm={(newNode: IntermediateNode) => {
+                                                                                                        onConfirm(newNode)
+                                                                                                        onClose()
+                                                                                                    }}
+                                                                                                    onAbort={() => {
+                                                                                                        onAbort()
+                                                                                                        onClose()
+                                                                                                    }}
+                                                                                                    node={node as IntermediateNode}
+                                                                                                    onDelete={onDelete ?
+                                                                                                        () => {
+                                                                                                            onDelete()
+                                                                                                            onClose()
+                                                                                                        }: undefined}
         />
             break;
         case NodeType.OUTPUT_NODE:
@@ -78,6 +96,12 @@ export const showNodeDialog = (message: string,
                                                                      onAbort()
                                                                      onClose()
                                                                  }} node={node as OutputNode}
+                                                                 onDelete={onDelete ?
+                                                                     () => {
+                                                                         onDelete()
+                                                                         onClose()
+                                                                     }: undefined
+                                                                 }
             />
             break;
         default:
@@ -105,18 +129,18 @@ export const fetchLoadProfileOptions = () => {
         });
 }
 
-const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
+const OutputNodeForm = ({message, onConfirm, onAbort, node, onDelete}: {
     message: string
     onConfirm: (node: OutputNode) => void,
     onAbort: () => void,
-    node: OutputNode
+    node: OutputNode,
+    onDelete?: () => void
 }) => {
 
     const [label, setLabel] = useState(node.data.label)
     const [thermalEnergyDemand, setThermalEnergyDemand] = useState<string>(`${node.thermalEnergyDemand}`)
     const [pressureLoss, setPressureLoss] = useState<string>(`${node.pressureLoss}`)
     const [loadProfileName, setLoadProfileName] = useState(node.loadProfileName)
-    const [selectOpen, setSelectOpen] = useState(false)
     const [replicas, setReplicas] = useState<string>(`${node.replicas}` ?? "")
 
 
@@ -152,7 +176,7 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
         return !isNaN(val)
     }
 
-    return <FormSkeleton id={node.id} message={message} onConfirm={submitNewNode} onAbort={onAbort}>
+    return <FormSkeleton id={node.id} message={message} onConfirm={submitNewNode} onAbort={onAbort} onDelete={onDelete}>
         <>
             <Grid container
                   direction="row" item xs={7} spacing={3}>
@@ -215,11 +239,12 @@ const OutputNodeForm = ({message, onConfirm, onAbort, node}: {
 }
 
 
-const InputNodeForm = ({message, onConfirm, onAbort, node}: {
+const InputNodeForm = ({message, onConfirm, onAbort, node, onDelete}: {
     message: string
     onConfirm: (node: InputNode) => void,
     onAbort: () => void,
-    node: InputNode
+    node: InputNode,
+    onDelete?: () => void
 }) => {
 
     const [label, setLabel] = useState(node.data.label)
@@ -249,7 +274,7 @@ const InputNodeForm = ({message, onConfirm, onAbort, node}: {
         return true;
     }
 
-    return <FormSkeleton id={node.id} message={message} onAbort={onAbort} onConfirm={submitNewNode}>
+    return <FormSkeleton id={node.id} message={message} onAbort={onAbort} onConfirm={submitNewNode} onDelete={onDelete}>
 
         <Grid container
               direction="row" item xs={7} spacing={3}>
@@ -288,11 +313,12 @@ const InputNodeForm = ({message, onConfirm, onAbort, node}: {
 }
 
 
-const IntermediateNodeForm = ({message, onConfirm, onAbort, node}: {
+const IntermediateNodeForm = ({message, onConfirm, onAbort, node, onDelete}: {
     message: string
     onConfirm: (node: IntermediateNode) => void,
     onAbort: () => void,
-    node: IntermediateNode
+    node: IntermediateNode,
+    onDelete?: () => void
 }) => {
 
     const [label, setLabel] = useState(node.data.label)
@@ -309,7 +335,7 @@ const IntermediateNodeForm = ({message, onConfirm, onAbort, node}: {
         onConfirm(newNode)
     }
 
-    return <FormSkeleton id={node.id} message={message} onConfirm={submitNewNode} onAbort={onAbort}>
+    return <FormSkeleton id={node.id} message={message} onConfirm={submitNewNode} onAbort={onAbort} onDelete={onDelete}>
 
         <Grid container
               direction="row" item xs={7} spacing={3}>

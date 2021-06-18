@@ -14,7 +14,6 @@ export const NodeMenuSpawnerContainer = ({onNewNode}: NodeSpawner) => {
         <InputNodeSpawner onNewNode={(baseNode: BaseNode) => onNewNode(baseNode)}/>
         <IntermediateNodeSpawner onNewNode={(baseNode: BaseNode) => onNewNode(baseNode)}/>
         <OutputNodeSpawner onNewNode={(baseNode: BaseNode) => {
-            console.log(baseNode)
             onNewNode(baseNode)}}/>
     </div>
 }

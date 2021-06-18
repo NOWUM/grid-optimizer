@@ -38,7 +38,7 @@ export const InputNode = (node: InputNodeModel) => {
     const handleClick = () => {
         showNodeInputDialog("Bearbeiten sie diesen Einspeisepunkt", getInputNode(),
             handleConfirm, () => {/*Nothing to do here*/
-            })
+            }, () => node.data.onDelete(node.data.id ?? node.id))
     }
 
     const handleConfirm = (newNode: InputNodeModel) => {
