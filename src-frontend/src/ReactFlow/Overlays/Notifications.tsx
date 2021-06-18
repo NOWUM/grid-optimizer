@@ -31,7 +31,6 @@ interface Properties {
 }
 
 interface IState {
-    top: number,
     msg: string
 }
 
@@ -43,7 +42,6 @@ export default class Notifications extends React.Component<Properties, IState> {
         super(props);
 
         this.state = {
-            top: -100,
             msg: ''
         }
 
@@ -56,7 +54,7 @@ export default class Notifications extends React.Component<Properties, IState> {
     onShow = (msg: string) => {
         if (this.timeout) {
             clearTimeout(this.timeout);
-            this.setState({top: -100}, () => {
+            this.setState({msg: ''}, () => {
                 this.timeout = setTimeout(() => {
                     this.showNotification(msg)
                 }, 200)
@@ -69,11 +67,10 @@ export default class Notifications extends React.Component<Properties, IState> {
 
     showNotification = (msg: string) => {
         this.setState({
-            top: 10,
-            msg
+            msg: msg
         }, () => {
             this.timeout = setTimeout(() => {
-                this.setState({top: -100});
+                this.setState({msg: ''});
             }, 7000)
         });
     }
@@ -82,7 +79,7 @@ export default class Notifications extends React.Component<Properties, IState> {
     render() {
         return (
             <React.Fragment>
-                <Container className={"custom-toast"} top={this.state.top}> {this.state.msg} </Container>
+                { this.state.msg != '' ?  <Container className={"custom-toast"} style={{position: 'absolute', left: '50vw', top: '13vh', transform: 'translate(-50%, -50%)', background: "#fa7566"}} top={10}> {this.state.msg} </Container> : null }
             </React.Fragment>
         )
     }
