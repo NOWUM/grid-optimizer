@@ -18,19 +18,26 @@ export const OutputNode = (node: OutputNodeModel) => {
         newNode.thermalEnergyDemand = newNode.data.thermalEnergyDemand
         newNode.pressureLoss = newNode.data.pressureLoss
         newNode.loadProfileName = newNode.data.loadProfileName
+        newNode.replicas = newNode.data.replicas
         return newNode
     }
 
     const handleClick = () => {
+        console.log(node.data.onDelete)
         showNodeOutputDialog("Bearbeiten sie diese Entnahmestelle", getOutputNode(),
-            (newNode) => {node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
+            handleConfirm, () => {/*Nothing to do here*/}, () => node.data.onDelete(node.data.id ?? node.id))
+    }
+
+    const handleConfirm = (newNode: OutputNodeModel) => {
+         node.data.updateNode(newNode)
     }
 
     return (<Tooltip title={<>
             Wärmebedarf: {node.data.thermalEnergyDemand} kWh<br/>
-            Druckverlust: {node.data.pressureLoss} Bar <br />
-            Lastprofil: {node.data.loadProfileName}
-    </>}>
+            Druckverlust: {node.data.pressureLoss} Bar <br/>
+            Lastprofil: {node.data.loadProfileName} <br/>
+            Replicas: {node.data.replicas}
+        </>}>
             <div style={customNodeStyles} onDoubleClick={handleClick}>
                 <Handle type="target" position={Position.Top} style={{...customInputHandleStyle}}/>
                 <div>{node?.data.label}</div>

@@ -90,8 +90,14 @@ function App() {
         setPipes([])
     }
 
+    const deepCopyNodeElements = (): NodeElements => {
+        return {inputNodes:[...nodeElements.inputNodes],
+            intermediateNodes: [...nodeElements.intermediateNodes],
+            outputNodes: [...nodeElements.outputNodes]}
+    }
+
     const handleNewNode = (newNode: BaseNode) => {
-        const newNodeElements = {...nodeElements};
+        const newNodeElements = deepCopyNodeElements();
         switch (newNode.type) {
             case NodeType.INPUT_NODE: newNodeElements.inputNodes.push(newNode as InputNode)
                 break;
@@ -137,13 +143,10 @@ function App() {
             </AppBar>
                 <TabPanel value="1">
                     <div className="react-flow-container">
-                        <FlowContainer pipes={pipes} setPipes={setPipes}
-                                       nodeElements={nodeElements} setNodeElements={setNodeElements}
-                                       temperature={temperatureKey}/>
+                        <FlowContainer pipes={pipes} setPipes={setPipes} nodeElements={nodeElements}
+                                       setNodeElements={setNodeElements} temperatureSeries={temperatureKey}/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
-                        <DetermineMassFlowRateButton
-                            grid={getGrid()}
-                            onResult={setMassenstrom}/>
+                        <DetermineMassFlowRateButton grid={getGrid()} onResult={setMassenstrom}/>
                         <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
                                         setPipes={setPipes} setNodeElements={setNodeElements}/>
                         <CostView costs={costs}/>
@@ -168,10 +171,13 @@ function App() {
 
             </TabContext>
             {renderUpload ?
-                <FileUpload loadGrid={(hwg) => {
-                    setRenderUpload(false)
-                    insertGrid(hwg)
-                }}/> : <></>
+                <FileUpload
+                    cancel={() => setRenderUpload(false)}
+                    loadGrid={(hwg) => {
+                        setRenderUpload(false)
+                        insertGrid(hwg)
+                    }}
+                /> : <></>
             }
 
             {/* @ts-ignore*/}

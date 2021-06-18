@@ -2,10 +2,17 @@ import {Button, FormLabel, Grid, Typography} from "@material-ui/core";
 import React, {FunctionComponent} from "react";
 import {ConfirmationButton} from "../../Components/ConfirmationButton";
 import {AbortButton} from "../../Components/AbortButton";
+import {DeleteButton} from "../../Components/DeleteButton";
 
 interface SkeletonInterface {
-    id: string, onConfirm: () => void, onAbort: () => void, message: string, children: any
+    id: string,
+    onConfirm: () => void,
+    onAbort: () => void,
+    message: string,
+    children: any;
+    onDelete?: () => void
 }
+
 
 export const FormSkeleton: FunctionComponent<SkeletonInterface> = (props) => {
     return <Grid
@@ -41,6 +48,11 @@ export const FormSkeleton: FunctionComponent<SkeletonInterface> = (props) => {
             <Grid item xs={6}>
                 <AbortButton onAbort={props.onAbort} label={"Abbrechen"}/>
             </Grid>
+            {props.onDelete?
+                <Grid item xs={6}>
+                    <DeleteButton onDelete={props.onDelete} label={"Löschen"}/>
+                </Grid>: <></>
+            }
         </Grid>
     </Grid>
 }

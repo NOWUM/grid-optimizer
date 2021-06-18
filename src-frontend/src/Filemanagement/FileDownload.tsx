@@ -40,8 +40,8 @@ export const FileDownload = ({grid, setRenderUpload}:
     };
 
     return <div className={"file-download-container"} id={"#download"}>
-        <div onClick={() => {handleClick(); }}>
-            <CloudDownload style={{fontSize: "3vw"}} />
+        <div >
+            <CloudDownload style={{fontSize: "3vw"}} onClick={() => {handleClick(); }}/>
 
             <CloudUpload style={{fontSize: "3vw"}} onClick={() => setRenderUpload(true)} />
         </div>

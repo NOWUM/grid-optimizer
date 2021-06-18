@@ -18,15 +18,15 @@ class IntermediateNodeTest {
     @Test
     fun shouldAllowChildConnection() {
         val inter = IntermediateNode("1")
-        val pipe = Pipe("pipe1", inter, IntermediateNode("2"), 10.0)
+        val pipe = Pipe("pipe1", inter, IntermediateNode("2"), 10.0, 0.25)
         pipe.source.connectChild(pipe)
     }
 
     @Test
     fun shouldAllowMultipleChildConnections() {
         val inter = IntermediateNode("1")
-        val pipe = Pipe("pipe1", inter, IntermediateNode("2"), 10.0)
-        val pipe2 = Pipe("pipe2", inter, IntermediateNode("3"), 10.0)
+        val pipe = Pipe("pipe1", inter, IntermediateNode("2"), 10.0, 0.25)
+        val pipe2 = Pipe("pipe2", inter, IntermediateNode("3"), 10.0, 0.25)
         pipe.source.connectChild(pipe)
         pipe2.source.connectChild(pipe2)
     }
@@ -34,15 +34,15 @@ class IntermediateNodeTest {
     @Test
     fun shouldAcceptOneParentConnection() {
         val inter = IntermediateNode("1")
-        val pipe = Pipe("pipe1", IntermediateNode("2"), inter, 10.0)
+        val pipe = Pipe("pipe1", IntermediateNode("2"), inter, 10.0, 0.25)
         pipe.source.connectChild(pipe)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailWithTwoParentConnections() {
         val inter = IntermediateNode("1")
-        val pipe = Pipe("pipe1", IntermediateNode("2"), inter, 10.0)
-        val pipe2 = Pipe("pipe1", IntermediateNode("3"), inter, 10.0)
+        val pipe = Pipe("pipe1", IntermediateNode("2"), inter, 10.0, 0.25)
+        val pipe2 = Pipe("pipe1", IntermediateNode("3"), inter, 10.0, 0.25)
         pipe.source.connectChild(pipe)
         pipe2.source.connectChild(pipe2)
     }

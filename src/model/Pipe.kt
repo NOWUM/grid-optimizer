@@ -1,28 +1,37 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.util.flowRate
-import de.fhac.ewi.util.pipePressureLoss
-import de.fhac.ewi.util.volumeFlow
+import de.fhac.ewi.util.*
 
 data class Pipe(
     val id: String,
     val source: Node,
     val target: Node,
-    val length: Double
+    val length: Double, // in m
+    val coverageHeight: Double // in m
 ) {
 
     var type: PipeType = PipeType.UNDEFINED
 
-    // TODO Keine Fixen werte für Vorlauf und Rücklauf verwenden. Thats wrong!
     val volumeFlow: List<Double>
-        get() = target.connectedThermalEnergyDemand.curve.map { volumeFlow(80.0, 60.0, it) }
+        get() = target.connectedThermalEnergyDemand.curve.mapIndexed { idx, energyDemand ->
+            volumeFlow(source.flowInTemperature[idx], source.flowOutTemperature[idx], energyDemand)
+        }
 
     // Strömungsgeschwindigkeit = Volumenstrom / Rohrquerschnittsfläche
     val flowRate: List<Double>
-        get() = volumeFlow.map { flowRate(type.diameter, it) }
+        get() = volumeFlow.mapParallel { flowRate(type.diameter, it) }
 
     val pipePressureLoss: List<Double>
-        get() = flowRate.map { pipePressureLoss(it, length, type.diameter) }
+        get() = flowRate.mapParallel { pipePressureLoss(it, length, type.diameter) }
+
+    val pipeHeatLoss: List<Double>
+        get() {
+            val flowIn = source.flowInTemperature
+            val flowOut = source.flowOutTemperature
+            val ground = source.groundTemperature
+            return flowIn.mapIndicesParallel { idx -> pipeHeatLoss(flowIn[idx], flowOut[idx], ground[idx],
+                type.diameter, type.isolationThickness, coverageHeight, type.distanceBetweenPipes, length) }
+        }
 
     init {
         if (id.isBlank())
@@ -33,6 +42,9 @@ data class Pipe(
 
         if (length <= 0.0)
             throw IllegalArgumentException("Length of pipe can not be negative or zero.")
+
+        if (coverageHeight < 0.0)
+            throw IllegalArgumentException("Coverage height can not be negative.")
     }
 
 }

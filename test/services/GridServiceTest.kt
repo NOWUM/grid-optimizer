@@ -5,7 +5,7 @@ import org.junit.Test
 
 class GridServiceTest {
 
-    @Test
+    @Test(expected = IllegalArgumentException::class)
     fun createGridByEmptyRequest() {
         val service = GridService(
             HeatDemandService(TemperatureTimeSeriesService(emptyList()), LoadProfileService(emptyList())),

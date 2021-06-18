@@ -23,24 +23,31 @@ class Optimizer(
         // Reset all diameters
         grid.pipes.forEach { it.type = PipeType.UNDEFINED }
 
+        var pipeChecks = 0
+
         // until everything is optimized
-        optimizer@ while (true) {
+        var anyPipeUpdated: Boolean
+        optimizer@ do {
+            anyPipeUpdated = false
             // check for every pipe, if another diameter would be better in total costs
-            for (pipe in grid.pipes) {
+            pipeCheck@ for (pipe in grid.pipes) {
                 for (type in pipeTypes) {
+                    pipeChecks++
                     val lastType = pipe.type
                     pipe.type = type
                     val newCost = calculateCosts(grid).total
                     if (newCost < currentCost) {
                         currentCost = newCost
-                        continue@optimizer
+                        anyPipeUpdated = true
+                        continue@pipeCheck
                     } else {
                         pipe.type = lastType
                     }
                 }
             }
-            break
-        }
+        } while (anyPipeUpdated)
+
+        println("Checked $pipeChecks times for perfect pipe type.")
 
         return currentCost
     }
@@ -53,10 +60,12 @@ class Optimizer(
         val pumpInvestCost = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency)
         val pumpOperationCost = grid.input.neededPumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
 
+        val heatLossCost = grid.pipes.sumOf { it.pipeHeatLoss.sum() } / 1_000 * heatGenerationCost
+
         val investCost = pipeInvestCost * ceil(yearsOfOperation / lifespanOfGrid) + pumpInvestCost * ceil(yearsOfOperation / lifespanOfPump)
-        val operationCostPerYear = pipeOperationCost + pumpOperationCost + 0 // TODO heat loss
+        val operationCostPerYear = pipeOperationCost + pumpOperationCost + heatLossCost
 
         val total = investCost + operationCostPerYear * yearsOfOperation
-        return Costs(pipeInvestCost, pipeOperationCost, pumpInvestCost, pumpOperationCost, total)
+        return Costs(pipeInvestCost, pipeOperationCost, pumpInvestCost, pumpOperationCost, heatLossCost, total)
     }
 }

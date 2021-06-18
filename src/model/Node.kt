@@ -1,5 +1,7 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.util.mapIndicesParallel
+import de.fhac.ewi.util.mapParallel
 import de.fhac.ewi.util.neededPumpPower
 
 abstract class Node(val id: String) {
@@ -24,12 +26,12 @@ abstract class Node(val id: String) {
             // Retrieve losses per connected pipe
             // TODO Pipe Pressure Loss counts twice because hin und rückweg
             val losses = connectedPipes.filter { it.source == this }
-                .map { pipe -> pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b } }
+                .map { pipe -> pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).mapParallel { (a, b) -> a + b } }
 
             if (losses.isEmpty()) return List(8760) { 0.0 }
 
             // calculate maximum pressure loss for each hour
-            return losses.first().indices.map { idx -> losses.maxOf { it[idx] } }
+            return losses.first().mapIndicesParallel { idx -> losses.maxOf { it[idx] } }
         }
 
     open val neededPumpPower: List<Double>
@@ -38,20 +40,29 @@ abstract class Node(val id: String) {
             // TODO Pipe Pressure Loss counts twice because hin und rückweg
             val powers = connectedPipes.filter { it.source == this }
                 .map { pipe ->
-                    pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).map { (a, b) -> a + b }
+                    pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).mapParallel { (a, b) -> a + b }
                         .zip(pipe.volumeFlow)
-                        .map { (pressureLoss, volumeFlow) -> neededPumpPower(pressureLoss, volumeFlow) }
+                        .mapParallel { (pressureLoss, volumeFlow) -> neededPumpPower(pressureLoss, volumeFlow) }
                 }
 
             if (powers.isEmpty()) return List(8760) { 0.0 }
 
             // calculate maximum needed pump power for each hour
-            return powers.first().indices.map { idx -> powers.maxOf { it[idx] } }
+            return powers.first().mapIndicesParallel { idx -> powers.maxOf { it[idx] } }
         }
 
     open val connectedThermalEnergyDemand: HeatDemandCurve
         get() = connectedPipes.filter { it.source == this }
             .fold(HeatDemandCurve.ZERO) { r, p -> r + p.target.connectedThermalEnergyDemand }
+
+    open val flowInTemperature: List<Double>
+        get() = connectedPipes.single { it.target == this }.source.flowInTemperature // TODO Wärmeverlust der Pipe berücksichtigen
+
+    open val flowOutTemperature: List<Double>
+        get() = connectedPipes.single { it.target == this }.source.flowOutTemperature // TODO Wärmeverlust der Pipe berücksichtigen
+
+    open val groundTemperature: List<Double>
+        get() = connectedPipes.single { it.target == this }.source.groundTemperature
 
     fun isParentOf(target: Node): Boolean =
         target in connectedChildNodes || connectedChildNodes.any { it.isParentOf(target) }

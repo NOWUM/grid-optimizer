@@ -7,6 +7,7 @@ class GridTest {
 
 
     private val SIMPLE_HEAT_DEMAND = HeatDemandCurve(List(8760) { 1.0 })
+    private val GROUND_TEMP_SERIES = TemperatureTimeSeries("dummy", List(365){10.0})
 
     @Test
     fun createEmptyGrid() {
@@ -16,27 +17,27 @@ class GridTest {
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnInputNodeWithEmptyId() {
         val grid = Grid()
-        grid.addInputNode("", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test
     fun addInputNode() {
         val grid = Grid()
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnTwoInputNodesWithSameId() {
         val grid = Grid()
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnTwoInputNodesWithDifferentId() {
         val grid = Grid()
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
-        grid.addInputNode("2", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("2", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -96,8 +97,8 @@ class GridTest {
         val grid = Grid()
         grid.addIntermediateNode("1")
         grid.addIntermediateNode("2")
-        grid.addPipe("P1", "1", "2", 10.0)
-        grid.addPipe("P2", "2", "1", 10.0)
+        grid.addPipe("P1", "1", "2", 10.0, 0.25)
+        grid.addPipe("P2", "2", "1", 10.0, 0.25)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -106,8 +107,8 @@ class GridTest {
         grid.addIntermediateNode("1")
         grid.addIntermediateNode("2")
         grid.addIntermediateNode("3")
-        grid.addPipe("P1", "1", "2", 10.0)
-        grid.addPipe("P1", "2", "3", 10.0)
+        grid.addPipe("P1", "1", "2", 10.0, 0.25)
+        grid.addPipe("P1", "2", "3", 10.0, 0.25)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -115,15 +116,40 @@ class GridTest {
         val grid = Grid()
         grid.addIntermediateNode("1")
         grid.addIntermediateNode("2")
-        grid.addPipe("P1", "1", "2", 10.0)
-        grid.addPipe("P2", "1", "2", 10.0)
+        grid.addPipe("P1", "1", "2", 10.0, 0.25)
+        grid.addPipe("P2", "1", "2", 10.0, 0.25)
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun shouldFailOnPipeConnectingNodeWithItself() {
         val grid = Grid()
         grid.addIntermediateNode("1")
-        grid.addPipe("P1", "1", "1", 10.0)
+        grid.addPipe("P1", "1", "1", 10.0, 0.25)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnPipeWithZeroLength() {
+        val grid = Grid()
+        grid.addIntermediateNode("1")
+        grid.addIntermediateNode("2")
+        grid.addPipe("P1", "1", "2", 0.0, 0.25)
+    }
+
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnPipeWithNegativeLength() {
+        val grid = Grid()
+        grid.addIntermediateNode("1")
+        grid.addIntermediateNode("2")
+        grid.addPipe("P1", "1", "2", -20.0, 0.25)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun shouldFailOnPipeWithNegativePipeLayingDepth() {
+        val grid = Grid()
+        grid.addIntermediateNode("1")
+        grid.addIntermediateNode("2")
+        grid.addPipe("P1", "1", "2", 10.0, -0.25)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -132,19 +158,19 @@ class GridTest {
         grid.addIntermediateNode("1")
         grid.addIntermediateNode("2")
         grid.addIntermediateNode("3")
-        grid.addPipe("P1", "1", "2", 10.0)
-        grid.addPipe("P2", "2", "3", 10.0)
-        grid.addPipe("P3", "3", "1", 10.0)
+        grid.addPipe("P1", "1", "2", 10.0, 0.25)
+        grid.addPipe("P2", "2", "3", 10.0, 0.25)
+        grid.addPipe("P3", "3", "1", 10.0, 0.25)
     }
 
     @Test
     fun acceptValidGrid() {
         val grid = Grid()
-        grid.addInputNode("1", "42".toDoubleFunction(), "42".toDoubleFunction())
+        grid.addInputNode("1", GROUND_TEMP_SERIES, "42".toDoubleFunction(), "42".toDoubleFunction())
         grid.addIntermediateNode("2")
         grid.addOutputNode("3", SIMPLE_HEAT_DEMAND, 1.0)
-        grid.addPipe("P1", "1", "2", 10.0)
-        grid.addPipe("P2", "2", "3", 10.0)
+        grid.addPipe("P1", "1", "2", 10.0, 0.25)
+        grid.addPipe("P2", "2", "3", 10.0, 0.25)
         grid.validate()
     }
 }
