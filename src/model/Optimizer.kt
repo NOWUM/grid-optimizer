@@ -41,7 +41,6 @@ class Optimizer(
                     if (newCost < currentCost) {
                         currentCost = newCost
                         anyPipeUpdated = true
-                        continue@pipeCheck
                     } else {
                         pipe.type = lastType
                     }
