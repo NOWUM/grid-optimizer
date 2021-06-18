@@ -3,7 +3,8 @@ import {Button} from "@material-ui/core";
 
 export enum KeyboardKey {
     ENTER = "Enter",
-    ESC = "Escape"
+    ESC = "Escape",
+    DEL = "Delete"
 }
 
 export const handleKeyDown = (e: KeyboardEvent, key: KeyboardKey, onKeyDown: () => void) => {

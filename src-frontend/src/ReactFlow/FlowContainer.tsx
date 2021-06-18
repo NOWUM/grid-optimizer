@@ -5,6 +5,7 @@ import ReactFlow, {
     BackgroundVariant,
     Edge,
     Elements,
+    FlowElement,
     Node,
     removeElements
 } from 'react-flow-renderer';
@@ -17,9 +18,12 @@ import {
     BaseNode,
     HotWaterGrid,
     InputNode as InputNodeModel,
+    InputNode as InputNodeProp,
+    IntermediateNode as IntermediateNodeProp,
     NodeElements,
     NodeType,
     OutputNode as OutputNodeModel,
+    OutputNode as OutputNodeProp,
     Pipe
 } from "../models";
 import {InputNode} from '../CustomNodes/InputNode';
@@ -165,10 +169,27 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         })
     }
 
+    const handleDeleteNode = (id: string) => {
+        const remainingPipes = (pipes as Pipe[]).filter(
+            (p: FlowElement<Pipe>) => (p as Pipe).sourceHandle !== id && (p as Pipe).targetHandle !== id)
+        setPipes([...remainingPipes])
+        setNodeElements({
+            inputNodes: (getRemainingNodes(nodeElements.inputNodes, id) as InputNodeProp[]),
+            outputNodes: (getRemainingNodes(nodeElements.outputNodes, id) as OutputNodeProp[]),
+            intermediateNodes: (getRemainingNodes(nodeElements.intermediateNodes, id) as IntermediateNodeProp[])
+        })
+
+    }
+
+    const getRemainingNodes = (nodes: BaseNode[], id: string) => {
+        return [...nodes.filter(n => n.id !== id)]
+    }
+
     const getElementsForFlow = (): Elements => {
         const inputNodes = addTypeToNodes(nodeElements.inputNodes, NodeType.INPUT_NODE)
         const intermediateNodes = addTypeToNodes(nodeElements.intermediateNodes, NodeType.INTERMEDIATE_NODE)
         const outputNodes = addTypeToNodes(nodeElements.outputNodes, NodeType.OUTPUT_NODE)
+        // console.log(pipes)
         const defaultPipes = pipes.map((el) => {
             return {...el, ...edgeConfiguration}
         })
@@ -176,18 +197,24 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         inputNodes.forEach((n) => {
             const {flowTemperatureTemplate, returnTemperatureTemplate} = (n as InputNodeModel)
             n.data = {
-                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode
+                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode, onDelete: handleDeleteNode
             }
         })
 
         intermediateNodes.forEach((n) => {
-            n.data = {...n.data, updateNode}
+            n.data = {...n.data, updateNode, onDelete: handleDeleteNode}
         })
 
         outputNodes.forEach((n) => {
             const {thermalEnergyDemand, pressureLoss, loadProfileName, replicas} = (n as OutputNodeModel)
             n.data = {
-                ...n.data, thermalEnergyDemand, pressureLoss, updateNode, loadProfileName, replicas
+                ...n.data,
+                thermalEnergyDemand,
+                pressureLoss,
+                updateNode,
+                loadProfileName,
+                replicas,
+                onDelete: handleDeleteNode
             }
         })
 
