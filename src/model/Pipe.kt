@@ -38,13 +38,13 @@ data class Pipe(
             throw IllegalArgumentException("Id of pipe must be filled.")
 
         if (source == target)
-            throw IllegalArgumentException("Source and target node of pipe can not be the same.")
+            throw IllegalArgumentException("Source and target node of pipe $id can not be the same.")
 
         if (length <= 0.0)
-            throw IllegalArgumentException("Length of pipe can not be negative or zero.")
+            throw IllegalArgumentException("Length of pipe $id can not be negative or zero.")
 
         if (coverageHeight < 0.0)
-            throw IllegalArgumentException("Coverage height can not be negative.")
+            throw IllegalArgumentException("Coverage height of pipe $id can not be negative.")
     }
 
 }
