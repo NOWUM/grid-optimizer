@@ -25,9 +25,9 @@ class GridOptimizerTest {
             { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
             { pumpPower -> 500.0 + pumpPower / 1000 * 500}, // invest cost for pump based on pump power
             0.05, // unused (Kosten Erzeugung Wärmeverluste)
-            25.0, // years for grid
+            40.0, // years for grid
             10.0, // years for pump
-            5.0, // years for including operation costs
+            1.75, // Zinsen in %
             0.3, // for pump operation per kWh
             0.9, // for pump
             0.60 // for pump
@@ -37,9 +37,9 @@ class GridOptimizerTest {
 
         val costs = optimizer.calculateCosts(grid)
 
-        println("> Grid costs u ${costs.total.round(2)} €")
-        println(">> ${grid.pipes.sumOf { it.length }} m of pipes cost ${costs.pipeInvestCost.round(2)} €.")
-        println(">> Pump with power of ${grid.neededPumpPower.round(3)} ? cost ${costs.pumpInvestCost.round(2)} €.")
+        println("> Grid costs u ${costs.totalPerYear.round(2)} €")
+        println(">> ${grid.pipes.sumOf { it.length }} m of pipes cost ${costs.pipeInvestCostTotal.round(2)} €.")
+        println(">> Pump with power of ${grid.neededPumpPower.round(3)} Watt for maximum pressure loss of ${grid.input.connectedPressureLoss.maxOrNull()?.round(3)} Bar cost ${costs.pumpInvestCostTotal.round(2)} €.")
         println(">> Heat loss of ${grid.pipes.sumOf { it.pipeHeatLoss.sum() / 1000.0 }.round(3)} kW cost ${costs.heatLossCost.round(2)} €.")
         grid.pipes.forEach { println("${it.id} should have a diameter of ${it.type.diameter}") }
         println(costs)

@@ -12,7 +12,10 @@ export interface HotWaterGrid extends NodeElements{
 
 export interface BaseNode extends Node{
     id: string,
-    type: NodeType
+    type: NodeType,
+    optimizedThermalEnergyDemand?: number[],
+    connectedPressureLoss?: number[],
+    neededPumpPower?: number[]
 }
 
 export interface InputNode extends BaseNode{
@@ -28,7 +31,7 @@ export interface IntermediateNode extends BaseNode{
     connect_limit: 3
 }
 
-export interface OutputNode extends BaseNode {
+export interface OutputNode extends BaseNode{
     thermalEnergyDemand: number, // kwh per year
     pressureLoss: number, // Bar,
     loadProfileName: string,
@@ -66,7 +69,6 @@ export interface OptimizationMetadata {
     heatGenerationCost: number, // €/kWh [for calculating heat loss]
     lifespanOfGrid: number, // Jahre
     lifespanOfPump: number, // Jahre
-    yearsOfOperation: number, // Jahre for optimization
     wacc: number, // Weighted Average Cost of Capital in %
     electricityCost: number, // ct/kWh [for pump station]
     electricalEfficiency: number, // for pump
@@ -80,12 +82,20 @@ export interface OptimizationRequest extends OptimizationMetadata {
 
 export interface OptimizationResult {
     costs: Costs,
-    optimizedPipes: OptimizedPipe[]
+    optimizedPipes: OptimizedPipe[],
+    optimizedNodes: OptimizedNode[],
 }
 
 export interface OptimizedPipe {
     pipeId: string,
     diameter: number
+}
+
+export interface OptimizedNode {
+    nodeId: string,
+    thermalEnergyDemand: number[],
+    connectedPressureLoss: number[],
+    neededPumpPower: number[]
 }
 
 export interface HeatDemand {
@@ -101,11 +111,14 @@ export interface HeatDemandResult {
 }
 
 export interface Costs {
-    pipeInvestCost: number, // Investitionskosten Netz
+    pipeInvestCostTotal: number, // Investitionskosten Netz
+    pipeInvestCostAnnuity: number, // Investitionskosten Netz pro Jahr
     pipeOperationCost: number, // Betriebskosten Netz per year
-    pumpInvestCost: number, // Investitionskosten Pumpe
+    pumpInvestCostTotal: number, // Investitionskosten Pumpe
+    pumpInvestCostAnnuity: number, // Investitionskosten Pumpe pro Jahr
     pumpOperationCost: number, // Betriebskosten Pumpe per year
-    total: number // Gesamtkosten
+    heatLossCost: number, // Wärmeverlustkosten per year
+    totalPerYear: number // Gesamtkosten
 }
 
 export interface PipeType {

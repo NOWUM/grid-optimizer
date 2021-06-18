@@ -1,10 +1,12 @@
 package de.fhac.ewi.model
 
 data class Costs(
-    val pipeInvestCost: Double, // Investitionskosten Netz
+    val pipeInvestCostTotal: Double, // Investitionskosten Netz total
+    val pipeInvestCostAnnuity: Double, // Investitionskosten Netz per year
     val pipeOperationCost: Double, // Betriebskosten Netz per year
-    val pumpInvestCost: Double, // Investitionskosten Pumpe
+    val pumpInvestCostTotal: Double, // Investitionskosten Pumpe total
+    val pumpInvestCostAnnuity: Double, // Investitionskosten Pumpe per year
     val pumpOperationCost: Double, // Betriebskosten Pumpe per year
     val heatLossCost: Double, // Wärmeverlust Rohre per year
-    val total: Double // Gesamtkosten
+    val totalPerYear: Double // Gesamtkosten per year
 )

@@ -34,7 +34,6 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         hydraulicEfficiency,
         lifespanOfGrid, // Jahre
         lifespanOfPump,
-        yearsOfOperation,
         pipeTypes
     } = optimizationMetadata;
 
@@ -64,7 +63,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
             "electricityCost",
             "electricalEfficiency",
             "hydraulicEfficiency",
-            "yearsOfOperation", "lifespanOfGrid",
+            "lifespanOfGrid",
             "lifespanOfPump",]
         return numberProps.includes(prop)
     }
@@ -174,18 +173,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
                 </Grid>
             </Grid>
 
-            <Grid container
-                  direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
-                <Grid item xs={6}>
-                    <InputLabel>Auslegungszeit der Anlage [a]</InputLabel>
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField id="outlined-basic" type="text" variant="outlined" placeholder="25"
-                               value={yearsOfOperation}
-                               onChange={(e) => dispatchChange(e.target.value, "yearsOfOperation")}/>
 
-            </Grid>
-        </Grid>
 
         <Grid container
               direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>

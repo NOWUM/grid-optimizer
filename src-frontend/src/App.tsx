@@ -12,7 +12,7 @@ import {
     MassenstromResponse,
     NodeElements,
     NodeType,
-    OptimizationMetadata,
+    OptimizationMetadata, OptimizationResult,
     OutputNode,
     Pipe
 } from "./models";
@@ -40,6 +40,7 @@ import {
 import {FormulaCheck} from "./FormulaCheck";
 import {OptimizeButton} from "./ReactFlow/OverlayButtons/OptimizeButton";
 import {CostView} from "./ReactFlow/OverlayButtons/CostView";
+import {OptimizationNodeDetails} from "./OptimizationNode/OptimizationNodeDetails";
 
 function App() {
 
@@ -126,6 +127,8 @@ function App() {
 
     const isMaxMassenstromComplete = () => massenstrom.temperatures.length !== 0
 
+    const isCostsComplete = () => !!costs
+
     return (
         <div className="App">
             <TabContext value={tabVal}>
@@ -137,6 +140,7 @@ function App() {
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
                     <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
                     <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
+                    <Tab icon={<Timeline />} label="Node Detail" value="5" disabled={!isCostsComplete()} />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
@@ -146,7 +150,7 @@ function App() {
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
                         <DetermineMassFlowRateButton grid={getGrid()} onResult={setMassenstrom}/>
                         <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
-                                        setPipes={setPipes}/>
+                                        setPipes={setPipes} setNodeElements={setNodeElements}/>
                         <CostView costs={costs}/>
                     </div>
                 </TabPanel>
@@ -162,6 +166,9 @@ function App() {
                 </TabPanel>
                 <TabPanel value={"4"}>
                     <FormulaCheck />
+                </TabPanel>
+                <TabPanel value={"5"}>
+                    <OptimizationNodeDetails nodeElements={nodeElements} />
                 </TabPanel>
 
             </TabContext>
