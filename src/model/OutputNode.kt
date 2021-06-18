@@ -19,5 +19,5 @@ class OutputNode(
     override val connectedThermalEnergyDemand: HeatDemandCurve = thermalEnergyDemand
 
     override fun connectChild(pipe: Pipe) =
-        throw IllegalArgumentException("Output can't have child nodes. (invalid $pipe)")
+        throw IllegalArgumentException("Output node $id can't have child nodes. Pipe ${pipe.id} invalid.")
 }

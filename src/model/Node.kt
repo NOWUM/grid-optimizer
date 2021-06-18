@@ -71,13 +71,13 @@ abstract class Node(val id: String) {
 
     open fun connectChild(pipe: Pipe) {
         if (pipe.source != this)
-            throw IllegalArgumentException("Source of $pipe does not match $this.")
+            throw IllegalArgumentException("Source of ${pipe.id} does not match ${this.id}.")
 
         if (isParentOf(pipe.target))
-            throw IllegalArgumentException("$this is already parent of ${pipe.target}")
+            throw IllegalArgumentException("${this.id} is already parent of ${pipe.target.id}")
 
         if (!pipe.target.canReceiveInputFrom(this))
-            throw IllegalArgumentException("${pipe.target} can not receive input from $this.")
+            throw IllegalArgumentException("${pipe.target.id} can not receive input from ${this.id}.")
 
         connectedPipes += pipe
         pipe.target.connectedPipes += pipe

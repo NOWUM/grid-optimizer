@@ -11,7 +11,7 @@ class InputNode(
 ) : Node(id) {
 
     override fun canReceiveInputFrom(source: Node): Boolean =
-        throw IllegalArgumentException("Input node ($this) can not receive input.")
+        throw IllegalArgumentException("Input node ${this.id} can not receive input.")
 
     override val flowInTemperature: List<Double> by lazy { groundTemperature.parallelStream().map(flowTemperature).toList() }
 
