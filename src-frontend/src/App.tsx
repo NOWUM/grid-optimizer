@@ -12,7 +12,7 @@ import {
     MassenstromResponse,
     NodeElements,
     NodeType,
-    OptimizationMetadata,
+    OptimizationMetadata, OptimizationResult,
     OutputNode,
     Pipe
 } from "./models";
@@ -40,6 +40,7 @@ import {
 import {FormulaCheck} from "./FormulaCheck";
 import {OptimizeButton} from "./ReactFlow/OverlayButtons/OptimizeButton";
 import {CostView} from "./ReactFlow/OverlayButtons/CostView";
+import {OptimizationNodeDetails} from "./OptimizationNode/OptimizationNodeDetails";
 
 function App() {
 
@@ -89,8 +90,14 @@ function App() {
         setPipes([])
     }
 
+    const deepCopyNodeElements = (): NodeElements => {
+        return {inputNodes:[...nodeElements.inputNodes],
+            intermediateNodes: [...nodeElements.intermediateNodes],
+            outputNodes: [...nodeElements.outputNodes]}
+    }
+
     const handleNewNode = (newNode: BaseNode) => {
-        const newNodeElements = {...nodeElements};
+        const newNodeElements = deepCopyNodeElements();
         switch (newNode.type) {
             case NodeType.INPUT_NODE: newNodeElements.inputNodes.push(newNode as InputNode)
                 break;
@@ -118,6 +125,8 @@ function App() {
 
     const isMaxMassenstromComplete = () => massenstrom.temperatures.length !== 0
 
+    const isCostsComplete = () => !!costs
+
     return (
         <div className="App">
             <TabContext value={tabVal}>
@@ -129,19 +138,17 @@ function App() {
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
                     <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
                     <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
+                    <Tab icon={<Timeline />} label="Node Detail" value="5" disabled={!isCostsComplete()} />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
                     <div className="react-flow-container">
-                        <FlowContainer pipes={pipes} setPipes={setPipes}
-                                       nodeElements={nodeElements} setNodeElements={setNodeElements}
-                                       temperature={temperatureKey}/>
+                        <FlowContainer pipes={pipes} setPipes={setPipes} nodeElements={nodeElements}
+                                       setNodeElements={setNodeElements} temperatureSeries={temperatureKey}/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
-                        <DetermineMassFlowRateButton
-                            grid={getGrid()}
-                            onResult={setMassenstrom}/>
+                        <DetermineMassFlowRateButton grid={getGrid()} onResult={setMassenstrom}/>
                         <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
-                                        setPipes={setPipes}/>
+                                        setPipes={setPipes} setNodeElements={setNodeElements}/>
                         <CostView costs={costs}/>
                     </div>
                 </TabPanel>
@@ -158,13 +165,19 @@ function App() {
                 <TabPanel value={"4"}>
                     <FormulaCheck />
                 </TabPanel>
+                <TabPanel value={"5"}>
+                    <OptimizationNodeDetails nodeElements={nodeElements} />
+                </TabPanel>
 
             </TabContext>
             {renderUpload ?
-                <FileUpload loadGrid={(hwg) => {
-                    setRenderUpload(false)
-                    insertGrid(hwg)
-                }}/> : <></>
+                <FileUpload
+                    cancel={() => setRenderUpload(false)}
+                    loadGrid={(hwg) => {
+                        setRenderUpload(false)
+                        insertGrid(hwg)
+                    }}
+                /> : <></>
             }
 
             {/* @ts-ignore*/}

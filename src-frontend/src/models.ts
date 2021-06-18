@@ -12,7 +12,8 @@ export interface HotWaterGrid extends NodeElements{
 
 export interface BaseNode extends Node{
     id: string,
-    type: NodeType
+    type: NodeType,
+    optimizedThermalEnergyDemand?: number[]
 }
 
 export interface InputNode extends BaseNode{
@@ -28,10 +29,11 @@ export interface IntermediateNode extends BaseNode{
     connect_limit: 3
 }
 
-export interface OutputNode extends BaseNode {
+export interface OutputNode extends BaseNode{
     thermalEnergyDemand: number, // kwh per year
     pressureLoss: number, // Bar,
-    loadProfileName: string
+    loadProfileName: string,
+    replicas?: number
 }
 
 export enum LoadProfile{
@@ -78,12 +80,18 @@ export interface OptimizationRequest extends OptimizationMetadata {
 
 export interface OptimizationResult {
     costs: Costs,
-    optimizedPipes: OptimizedPipe[]
+    optimizedPipes: OptimizedPipe[],
+    optimizedNodes: OptimizedNode[],
 }
 
 export interface OptimizedPipe {
     pipeId: string,
     diameter: number
+}
+
+export interface OptimizedNode {
+    nodeId: string,
+    thermalEnergyDemand: number[]
 }
 
 export interface HeatDemand {

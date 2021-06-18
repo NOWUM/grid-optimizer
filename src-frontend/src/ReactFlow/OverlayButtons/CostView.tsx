@@ -10,7 +10,7 @@ export const CostView = ({costs}: {costs?: Costs}) => {
         return <></>
     }
 
-    const moneyFormatter = (val: number) => `${val.toFixed(2)}€`
+    const moneyFormatter = (val: number) => `${val?.toFixed(2) ?? "0.00"}€`
 
     const costsData = [{
         label: "Investitionskosten Leitungen",

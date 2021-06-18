@@ -1,39 +1,43 @@
 import {confirmAlert} from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { Grid, TextField} from "@material-ui/core";
+import {Grid, TextField} from "@material-ui/core";
 import React, {useState} from "react";
 import {FormSkeleton} from "./FormSkeleton";
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import {notify} from "./Notifications";
 
 
-
-
 export const showPipeDialog = (message: string,
                                onConfirm: (id: string, length1: number, coverageHeight: number) => void,
                                onAbort: () => void,
-                                id: string) => {
+                               id: string, length?: number, coverageHeight?: number,) => {
 
     confirmAlert({
-        customUI: ({onClose}) => <PipeEditForm message={message} onConfirm={(id: string, length1: number, coverageHeight: number) => {
-            onConfirm(id, length1, coverageHeight)
-            onClose()
-        }} onAbort={() => {
-            onAbort()
-            onClose()
-        }}  id={id}
+        customUI: ({onClose}) => <PipeEditForm message={message}
+                                               onConfirm={(id: string, length1: number, coverageHeight: number) => {
+                                                   onConfirm(id, length1, coverageHeight)
+                                                   onClose()
+                                               }}
+                                               onAbort={() => {
+                                                   onAbort()
+                                                   onClose()
+                                               }} id={id}
+                                               propLength={length}
+                                               propCoverageHeight={coverageHeight}
         />
     })
 }
 
 
-const PipeEditForm = ({message, onConfirm, onAbort, id}: {
+const PipeEditForm = ({message, onConfirm, onAbort, id, propLength, propCoverageHeight }: {
     message: string
     onConfirm: (id: string, length1: number, coverageHeight: number) => void,
     onAbort: () => void,
-    id: string
+    id: string,
+    propLength?: number,
+    propCoverageHeight?: number,
 }) => {
-    const [length1, setLength1] = useState("");
+    const [length1, setLength1] = useState(`${propLength}` ?? "");
 
     const getLength1 = (): number => {
         // @ts-ignore
@@ -44,7 +48,7 @@ const PipeEditForm = ({message, onConfirm, onAbort, id}: {
         }
     }
 
-    const [coverageHeight, setCoverageHeight] = useState("");
+    const [coverageHeight, setCoverageHeight] = useState(`${propCoverageHeight}` ?? "");
 
     const getCoverageHeight = (): number => {
         // @ts-ignore
@@ -84,9 +88,9 @@ const PipeEditForm = ({message, onConfirm, onAbort, id}: {
 export const showEditPipeDialog = (message: string,
                                    onConfirm: (id: string, length1: number, coverageHeight: number) => void,
                                    onAbort: () => void,
-                                   id: string) => {
+                                   id: string, length?: number, coverageHeight?: number,) => {
 
-    showPipeDialog(message, onConfirm, onAbort, id)
+    showPipeDialog(message, onConfirm, onAbort, id, length, coverageHeight)
 }
 
 
