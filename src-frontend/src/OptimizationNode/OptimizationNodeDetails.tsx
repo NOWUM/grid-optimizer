@@ -29,28 +29,54 @@ export const OptimizationAccordion = ({nodes}: { nodes: BaseNode[] }) => {
                     {n.data?.label} ({n.id})
                 </AccordionSummary>
                 <AccordionDetails>
-                    {getGraph(n.optimizedThermalEnergyDemand!)}
+                    {getGraph(n.optimizedThermalEnergyDemand!, n.connectedPressureLoss!, n.neededPumpPower!)}
                 </AccordionDetails>
 
             </Accordion>
         </>
     }
 
-    const getGraph = (oted: number[]) => {
-        const plotData = [
+    const getGraph = (oted: number[], pressureLoss: number[], pumpPower: number[]) => {
+        const plotDataHeat = [
             {
                 y: oted,
                 type: "scattergl",
                 mode: 'lines+markers',
                 marker: {color: 'red'},
-                name: "Energie Heat Demand [kWh]"
+                name: "Angeschlossener Wärmebedarf [Wh]"
+            }]
+        const plotDataPressure = [
+            {
+                y: pressureLoss,
+                type: "scattergl",
+                mode: 'lines+markers',
+                marker: {color: 'red'},
+                name: "Druckverluste [Bar]"
             }]
 
-        return <div><Plot
-            data={plotData}
+        const plotDataPumpPower = [
+            {
+                y: pumpPower,
+                type: "scattergl",
+                mode: 'lines+markers',
+                marker: {color: 'red'},
+                name: "Benötigte Pumpleistung [Wh]"
+            }]
+
+        return <div style={{justifyContent: 'center', flexDirection: 'row', display: 'flex'}}>
+            <Plot
+            data={plotDataHeat}
             style={{width: '100%', height: '100%'}}
-            layout={{autosize: true, title: 'Maximaler Massenstrom', xaxis: {title: 'Stunde im Jahr'}}}
-        /></div>
+            layout={{autosize: true, title: 'Angeschlossener Wärmebedarf [Wh]', xaxis: {title: 'Stunde im Jahr'}}}/>
+            <Plot
+                data={plotDataPressure}
+                style={{width: '100%', height: '100%'}}
+                layout={{autosize: true, title: 'Druckverluste [Bar]', xaxis: {title: 'Stunde im Jahr'}}}/>
+            <Plot
+                data={plotDataPumpPower}
+                style={{width: '100%', height: '100%'}}
+                layout={{autosize: true, title: 'Benötigte Pumpleistung [Wh]', xaxis: {title: 'Stunde im Jahr'}}}/>
+        </div>
     }
 
     return <>{nodes.filter(n => n.optimizedThermalEnergyDemand)

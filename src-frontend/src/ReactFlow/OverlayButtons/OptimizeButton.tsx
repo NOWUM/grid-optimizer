@@ -73,7 +73,10 @@ export const OptimizeButton = ({grid, optimizationMetadata, setCosts, setPipes, 
     const mapResultToNodeElement = (n: BaseNode[], optNodes: OptimizedNode[]) => {
         return n.map(n => {
             const resultNode: (OptimizedNode | undefined) = optNodes.find(r => r.nodeId === n.id);
-            return {...n, optimizedThermalEnergyDemand: resultNode?.thermalEnergyDemand}
+            return {...n,
+                optimizedThermalEnergyDemand: resultNode?.thermalEnergyDemand,
+                connectedPressureLoss: resultNode?.connectedPressureLoss,
+                neededPumpPower: resultNode?.neededPumpPower}
         })
     }
 

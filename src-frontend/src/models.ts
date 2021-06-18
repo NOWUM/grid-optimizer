@@ -13,7 +13,9 @@ export interface HotWaterGrid extends NodeElements{
 export interface BaseNode extends Node{
     id: string,
     type: NodeType,
-    optimizedThermalEnergyDemand?: number[]
+    optimizedThermalEnergyDemand?: number[],
+    connectedPressureLoss?: number[],
+    neededPumpPower?: number[]
 }
 
 export interface InputNode extends BaseNode{
@@ -91,7 +93,9 @@ export interface OptimizedPipe {
 
 export interface OptimizedNode {
     nodeId: string,
-    thermalEnergyDemand: number[]
+    thermalEnergyDemand: number[],
+    connectedPressureLoss: number[],
+    neededPumpPower: number[]
 }
 
 export interface HeatDemand {
