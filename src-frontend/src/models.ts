@@ -111,11 +111,14 @@ export interface HeatDemandResult {
 }
 
 export interface Costs {
-    pipeInvestCost: number, // Investitionskosten Netz
+    pipeInvestCostTotal: number, // Investitionskosten Netz
+    pipeInvestCostAnnuity: number, // Investitionskosten Netz pro Jahr
     pipeOperationCost: number, // Betriebskosten Netz per year
-    pumpInvestCost: number, // Investitionskosten Pumpe
+    pumpInvestCostTotal: number, // Investitionskosten Pumpe
+    pumpInvestCostAnnuity: number, // Investitionskosten Pumpe pro Jahr
     pumpOperationCost: number, // Betriebskosten Pumpe per year
-    total: number // Gesamtkosten
+    heatLossCost: number, // Wärmeverlustkosten per year
+    totalPerYear: number // Gesamtkosten
 }
 
 export interface PipeType {

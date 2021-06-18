@@ -13,20 +13,29 @@ export const CostView = ({costs}: {costs?: Costs}) => {
     const moneyFormatter = (val: number) => `${val?.toFixed(2) ?? "0.00"}€`
 
     const costsData = [{
-        label: "Investitionskosten Leitungen",
-        value: costs?.pipeInvestCost
+        label: "Investitionskosten Leitungen (Gesamt)",
+        value: costs?.pipeInvestCostTotal
+    }, {
+        label: "Investitionskosten Leitungen (Annuität)",
+        value: costs?.pipeInvestCostAnnuity
     }, {
         label: "Betriebskosten Leitungen",
         value: costs?.pipeOperationCost
     }, {
-        label: "Investitionskosten Pumpen",
-        value: costs?.pumpInvestCost
-    },{
+        label: "Investitionskosten Pumpe (Gesamt)",
+        value: costs?.pumpInvestCostTotal
+    }, {
+        label: "Investitionskosten Pumpe (Annuität)",
+        value: costs?.pumpInvestCostAnnuity
+    }, {
         label: "Betriebskosten Pumpen",
         value: costs?.pumpOperationCost
-    },{
-        label: "Gesamt",
-        value: costs?.total
+    }, {
+        label: "Betriebskosten Wärmeverlust",
+        value: costs?.heatLossCost
+    }, {
+        label: "Gesamtkosten pro Jahr",
+        value: costs?.totalPerYear
     }]
 
     const getCostElement = (label: string, value: number) => {
