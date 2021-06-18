@@ -10,7 +10,6 @@ export const AbortButton = ({label, onAbort}: {label: string, onAbort: () => voi
         return () => {
             document.removeEventListener('keydown',
                 (e) => handleKeyDown(e, KeyboardKey.ESC, onAbort), false);
-            console.log("Remove Esc")
         }
     }, [])
 

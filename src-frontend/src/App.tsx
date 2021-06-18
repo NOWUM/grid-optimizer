@@ -60,6 +60,8 @@ function App() {
         }
     }
 
+    useEffect(() => console.log(pipes))
+
     useEffect(() => {
         document.addEventListener('keydown', handleKeyDown, false);
         return () => {

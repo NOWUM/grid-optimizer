@@ -10,7 +10,6 @@ export const DeleteButton = ({label, onDelete}: {label: string, onDelete: () => 
         return () => {
             document.removeEventListener('keydown',
                 (e) => handleKeyDown(e, KeyboardKey.ESC, onDelete), false);
-            console.log("Remove Esc")
         }
     }, [])
 

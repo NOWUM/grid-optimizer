@@ -129,8 +129,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         )
     }
 
-    // @ts-ignore
-    const onElementsRemove = (elementsToRemove) => setPipes((els) => removeElements(elementsToRemove, els));
+    const onElementsRemove = (elementsToRemove: any) => setPipes((els) => removeElements(elementsToRemove, els));
 
     const onElementClick = (event: any, edge: Edge) => {
         // showEdgeDialog("Gib bitte ein paar Rohrdaten an", () => console.log("confirm"), () => console.log())
@@ -171,7 +170,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
 
     const handleDeleteNode = (id: string) => {
         const remainingPipes = (pipes as Pipe[]).filter(
-            (p: FlowElement<Pipe>) => (p as Pipe).sourceHandle !== id && (p as Pipe).targetHandle !== id)
+            (p: FlowElement<Pipe>) => (p as Pipe).source !== id && (p as Pipe).target !== id)
         setPipes([...remainingPipes])
         setNodeElements({
             inputNodes: (getRemainingNodes(nodeElements.inputNodes, id) as InputNodeProp[]),
@@ -186,6 +185,9 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
     }
 
     const getElementsForFlow = (): Elements => {
+
+        console.log(nodeElements)
+        console.log(pipes)
         const inputNodes = addTypeToNodes(nodeElements.inputNodes, NodeType.INPUT_NODE)
         const intermediateNodes = addTypeToNodes(nodeElements.intermediateNodes, NodeType.INTERMEDIATE_NODE)
         const outputNodes = addTypeToNodes(nodeElements.outputNodes, NodeType.OUTPUT_NODE)
@@ -239,6 +241,9 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 notify("Node to be updated cant be found")
                 return;
         }
+
+        console.log(nodeElements)
+        console.log(pipes)
 
 
         const newNodeElements = {...nodeElements}

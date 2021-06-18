@@ -22,7 +22,6 @@ export const ConfirmationButton = ({label, onConfirm}: { label: string, onConfir
         return () => {
             document.removeEventListener('keydown',
                 (e) => handleKeyDown(e, KeyboardKey.ENTER, onConfirm), false);
-            console.log("Remove Enter")
         }
     }, [])
 
