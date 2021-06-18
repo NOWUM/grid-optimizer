@@ -51,9 +51,10 @@ abstract class Node(val id: String) {
             return powers.first().mapIndicesParallel { idx -> powers.maxOf { it[idx] } }
         }
 
+    // Gesamter Wärmebedarf + Verluste in Rohrleitungen in Watt auf das Jahr aufgeteilt
     open val connectedThermalEnergyDemand: HeatDemandCurve
         get() = connectedPipes.filter { it.source == this }
-            .fold(HeatDemandCurve.ZERO) { r, p -> r + p.target.connectedThermalEnergyDemand }
+            .fold(HeatDemandCurve.ZERO) { r, p -> r + p.target.connectedThermalEnergyDemand + p.pipeHeatLoss }
 
     open val flowInTemperature: List<Double>
         get() = connectedPipes.single { it.target == this }.source.flowInTemperature // TODO Wärmeverlust der Pipe berücksichtigen

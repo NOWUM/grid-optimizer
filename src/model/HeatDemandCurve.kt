@@ -18,6 +18,7 @@ class HeatDemandCurve(val curve: List<Double>) {
     operator fun get(index: Int) = curve[index]
 
     operator fun plus(other: HeatDemandCurve) = HeatDemandCurve(curve.mapIndicesParallel { curve[it] + other.curve[it] })
+    operator fun plus(other: List<Double>) = HeatDemandCurve(curve.mapIndicesParallel { curve[it] + other[it] })
 
     companion object {
         val ZERO = HeatDemandCurve(List(8760) { 0.0 })
