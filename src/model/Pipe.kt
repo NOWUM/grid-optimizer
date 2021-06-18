@@ -21,8 +21,9 @@ data class Pipe(
     val flowRate: List<Double>
         get() = volumeFlow.mapParallel { flowRate(type.diameter, it) }
 
+    // Druckverluste in Bar. *2 für Hin und Rückleitung.
     val pipePressureLoss: List<Double>
-        get() = flowRate.mapParallel { pipePressureLoss(it, length, type.diameter) }
+        get() = flowRate.mapParallel { pipePressureLoss(it, length, type.diameter) * 2 }
 
     val pipeHeatLoss: List<Double>
         get() {
