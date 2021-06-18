@@ -4,14 +4,14 @@ import {Button} from "@material-ui/core";
 
 export const DeleteButton = ({label, onDelete}: {label: string, onDelete: () => void}) => {
 
-    useEffect(() => {
-        document.addEventListener('keydown',
-            (e) => handleKeyDown(e, KeyboardKey.DEL, onDelete), false);
-        return () => {
-            document.removeEventListener('keydown',
-                (e) => handleKeyDown(e, KeyboardKey.ESC, onDelete), false);
-        }
-    }, [])
+    // useEffect(() => {
+    //     document.addEventListener('keydown',
+    //         (e) => handleKeyDown(e, KeyboardKey.DEL, onDelete), false);
+    //     return () => {
+    //         document.removeEventListener('keydown',
+    //             (e) => handleKeyDown(e, KeyboardKey.ESC, onDelete), false);
+    //     }
+    // }, [])
 
     return <Button onClick={onDelete}>
         {label}

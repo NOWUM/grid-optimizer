@@ -16,14 +16,14 @@ export const handleKeyDown = (e: KeyboardEvent, key: KeyboardKey, onKeyDown: () 
 
 export const ConfirmationButton = ({label, onConfirm}: { label: string, onConfirm: () => void }) => {
 
-    useEffect(() => {
-        document.addEventListener('keydown',
-            (e) => handleKeyDown(e, KeyboardKey.ENTER, onConfirm), false);
-        return () => {
-            document.removeEventListener('keydown',
-                (e) => handleKeyDown(e, KeyboardKey.ENTER, onConfirm), false);
-        }
-    }, [])
+    // useEffect(() => {
+    //     document.addEventListener('keydown',
+    //         (e) => handleKeyDown(e, KeyboardKey.ENTER, onConfirm), false);
+    //     return () => {
+    //         document.removeEventListener('keydown',
+    //             (e) => handleKeyDown(e, KeyboardKey.ENTER, onConfirm), false);
+    //     }
+    // }, [])
 
     return <Button onClick={onConfirm}>
         {label}
