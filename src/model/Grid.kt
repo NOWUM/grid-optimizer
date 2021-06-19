@@ -16,7 +16,7 @@ class Grid {
     val input: InputNode by lazy { _nodes.filterIsInstance<InputNode>().single() }
 
     val neededPumpPower: Double
-        get() = input.neededPumpPower.maxOrNull()
+        get() = input.pumpPower.maxOrNull()
             ?: throw IllegalStateException("Needed pump power could not retrieved from grid.")
 
     private fun addNode(node: Node) {

@@ -1,0 +1,25 @@
+package de.fhac.ewi.util
+
+import de.fhac.ewi.model.Pipe
+import de.fhac.ewi.model.delegate.CalculableDelegate
+import de.fhac.ewi.model.delegate.PipeBasedCalculableDelegate
+import de.fhac.ewi.model.delegate.SubscribableDelegate
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty0
+import kotlin.reflect.jvm.isAccessible
+
+
+inline fun <reified R> KProperty0<*>.delegateAs(): R? {
+    isAccessible = true
+    return getDelegate() as? R
+}
+
+fun KProperty0<*>.subscribeIfChanged(onChange: () -> Unit) {
+    println("try subscribe for $this to delegate ${delegateAs<ReadWriteProperty<*, *>>()}")
+    delegateAs<SubscribableDelegate<*, *>>()?.subscribe(onChange)
+}
+
+fun KProperty0<*>.addPipeIfNeeded(pipe: Pipe) {
+    delegateAs<PipeBasedCalculableDelegate<*>>()?.addChild(pipe)
+}

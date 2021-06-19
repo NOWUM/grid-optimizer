@@ -58,9 +58,9 @@ class OptimizerService {
             grid.nodes.map {
                 OptimizedNodeResponse(
                     it.id,
-                    it.connectedThermalEnergyDemand.curve,
-                    it.connectedPressureLoss,
-                    it.neededPumpPower
+                    it.energyDemand,
+                    it.pressureLoss,
+                    it.pumpPower
                 )
             }
         )
