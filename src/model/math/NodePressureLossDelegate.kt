@@ -20,4 +20,6 @@ class NodePressureLossDelegate<T>: PipeBasedCalculableDelegate<T>() {
         pipe::totalPressureLoss.subscribeIfChanged(this::updateValue)
     }
 
+    // Needed to prevent exception due circular call
+    override fun lazyInitialValue() = DoubleArray(8760)
 }
