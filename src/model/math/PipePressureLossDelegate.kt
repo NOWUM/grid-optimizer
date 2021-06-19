@@ -1,13 +1,18 @@
 package de.fhac.ewi.model.math
 
 import de.fhac.ewi.model.Pipe
-import de.fhac.ewi.model.PipeType
 import de.fhac.ewi.model.delegate.CalculableDelegate
-import de.fhac.ewi.util.flowRate
 import de.fhac.ewi.util.pipePressureLoss
 import de.fhac.ewi.util.subscribeIfChanged
 
-
+/**
+ * ### Druckverlust in Rohrleitung
+ * ... setzt sich aus der Strömungsgeschwindigkeit, dem Durchmesser und Länge der Rohrleitung zusammen.
+ *
+ * @param T - For Delegate
+ * @property pipe Pipe - Rohrleitung des Delegates
+ * @constructor
+ */
 class PipePressureLossDelegate<T>(private val pipe: Pipe) :
     CalculableDelegate<T>() {
 

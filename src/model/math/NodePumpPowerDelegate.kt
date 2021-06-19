@@ -5,8 +5,10 @@ import de.fhac.ewi.model.delegate.PipeBasedCalculableDelegate
 import de.fhac.ewi.util.subscribeIfChanged
 
 /**
+ * ### Benötigte Pumpleistung in einem Knoten
+ * ... ist die höchste benötigte Pumpleistung aller angeschlossenen Rohrleitungen.
  *
- * TODO Kommentar neu generieren
+ * @param T - For Delegate
  */
 class NodePumpPowerDelegate<T>: PipeBasedCalculableDelegate<T>() {
 

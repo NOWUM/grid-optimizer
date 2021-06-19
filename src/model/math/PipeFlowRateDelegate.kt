@@ -5,7 +5,14 @@ import de.fhac.ewi.model.delegate.CalculableDelegate
 import de.fhac.ewi.util.flowRate
 import de.fhac.ewi.util.subscribeIfChanged
 
-
+/**
+ * ### Strömungsgeschwindigkeit in Rohrleitung
+ * ... setzt sich aus dem Volumenstrom und dem Durchmesser der Rohrleitung zusammen.
+ *
+ * @param T - For Delegate
+ * @property pipe Pipe - Rohrleitung des Delegates
+ * @constructor
+ */
 class PipeFlowRateDelegate<T>(private val pipe: Pipe) :
     CalculableDelegate<T>() {
 

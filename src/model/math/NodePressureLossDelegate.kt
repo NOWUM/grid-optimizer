@@ -5,8 +5,10 @@ import de.fhac.ewi.model.delegate.PipeBasedCalculableDelegate
 import de.fhac.ewi.util.subscribeIfChanged
 
 /**
+ * ### Druckverlust in einem Knoten
+ * ... ist der höchste Druckverlust aller angeschlossenen Rohrleitungen.
  *
- * TODO Kommentar neu generieren
+ * @param T - For Delegate
  */
 class NodePressureLossDelegate<T>: PipeBasedCalculableDelegate<T>() {
 

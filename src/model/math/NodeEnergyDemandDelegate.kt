@@ -1,16 +1,16 @@
 package de.fhac.ewi.model.math
 
 import de.fhac.ewi.model.Pipe
-import de.fhac.ewi.model.delegate.CalculableDelegate
 import de.fhac.ewi.model.delegate.PipeBasedCalculableDelegate
 import de.fhac.ewi.util.subscribeIfChanged
 
 /**
- * Der Energiebedarf in einem Knotenpunkt setzt sich aus der Summe des Energiebedarfs der angeschlossenen Leitungen zusammen.
+ * ### Energiebedarf in einem Knoten
+ * ... setzt sich aus der Summe des Energiebedarfs aller angeschlossenen Rohre zusammen.
  *
- * Sollte es sich um einen OutputNode handeln, hat dieser einen direkten Energiebedarf. Dieser ist nicht über den Delegate abgebildet.
+ * Besonderheit: Bei einem OutputNode ist der Energiebedarf der zuvor angegeben wurde.
  *
- * TODO Kommentar neu generieren
+ * @param T - For Delegate
  */
 class NodeEnergyDemandDelegate<T>: PipeBasedCalculableDelegate<T>() {
 

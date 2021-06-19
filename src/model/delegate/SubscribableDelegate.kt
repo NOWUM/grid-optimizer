@@ -3,6 +3,15 @@ package de.fhac.ewi.model.delegate
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
+/**
+ * Self implemented Observable that allows multiple subscriptions.
+ *
+ * @param T - Keine Ahnung
+ * @param V : Any - Datentyp
+ * @property value V - Variable die den Wert speichert
+ * @property subscribers MutableList<Function0<Unit>> - Subscriber, die bei Änderung benachrichtigt werden
+ * @constructor
+ */
 open class SubscribableDelegate<T, V : Any>(initialValue: V? = null) : ReadWriteProperty<T, V> {
 
     private lateinit var value: V

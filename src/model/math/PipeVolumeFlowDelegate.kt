@@ -5,14 +5,16 @@ import de.fhac.ewi.model.delegate.CalculableDelegate
 import de.fhac.ewi.util.subscribeIfChanged
 import de.fhac.ewi.util.volumeFlow
 
+
 /**
- * TODO
+ * ### Volumenstrom in Rohrleitung
+ * ... setzt sich aus dem Temperaturunterschied zwischen Vorlauf und Rücklauf und dem Energiebedarf des angeschlossenen Knotenpunkts zusammen.
+ * TODO Oder aus dem Energiebedarf der Rohrleitung selber?
  *
- * TODO Wird der Volumenstrom mit dem Ausgangsmassenstrom oder dem eingangsmassenstrom berechnet?
- * @param T
- * @property flowIn DoubleArray
- * @property flowOut DoubleArray
- * @property target Node
+ * @param T - For Delegate
+ * @property flowIn DoubleArray - Vorlauf
+ * @property flowOut DoubleArray - Rücklauf
+ * @property target Node - Angeschlossener Knotenpunkt
  * @constructor
  */
 class PipeVolumeFlowDelegate<T>(val flowIn: DoubleArray, val flowOut: DoubleArray, val target: Node) :

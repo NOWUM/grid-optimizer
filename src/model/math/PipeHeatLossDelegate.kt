@@ -6,6 +6,16 @@ import de.fhac.ewi.model.delegate.CalculableDelegate
 import de.fhac.ewi.util.pipeHeatLoss
 import de.fhac.ewi.util.subscribeIfChanged
 
+/**
+ * ### Wärmeverlust in Rohrleitung
+ * ... setzt sich aus der Temperaturdifferenz und der Beschaffenheit der Rohrleitung zusammen.
+ *
+ * @param T - For Delegate
+ * @property flowIn DoubleArray - Vorlauf
+ * @property flowOut DoubleArray - Rücklauf
+ * @property pipe Pipe - Rohrleitung des Delegates
+ * @constructor
+ */
 class PipeHeatLossDelegate<T>(
     private val flowIn: DoubleArray, // static
     private val flowOut: DoubleArray,  // static

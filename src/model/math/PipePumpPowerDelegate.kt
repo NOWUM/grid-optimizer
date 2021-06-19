@@ -8,7 +8,14 @@ import de.fhac.ewi.util.neededPumpPower
 import de.fhac.ewi.util.pipePressureLoss
 import de.fhac.ewi.util.subscribeIfChanged
 
-
+/**
+ * ### Benötigte Pumpleistung in Rohrleitung
+ * ... setzt sich aus dem Druckverlust und dem Volumenstrom der Rohrleitung zusammen.
+ *
+ * @param T - For Delegate
+ * @property pipe Pipe - Rohrleitung des Delegates
+ * @constructor
+ */
 class PipePumpPowerDelegate<T>(private val pipe: Pipe) :
     CalculableDelegate<T>() {
 
