@@ -16,8 +16,7 @@ import de.fhac.ewi.util.subscribeIfChanged
  * @property pipe Pipe - Rohrleitung des Delegates
  * @constructor
  */
-class PipePumpPowerDelegate<T>(private val pipe: Pipe) :
-    CalculableDelegate<T>() {
+class PipePumpPowerDelegate<T>(private val pipe: Pipe) :    CalculableDelegate<T>() {
 
     init {
         pipe::totalPressureLoss.subscribeIfChanged(this::updateValue)

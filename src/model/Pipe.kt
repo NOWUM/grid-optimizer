@@ -13,19 +13,11 @@ data class Pipe(
 
     var type by SubscribableDelegate(PipeType.UNDEFINED)
 
-    val heatLoss by PipeHeatLossDelegate(
-        source.flowInTemperature.toDoubleArray(),
-        source.flowOutTemperature.toDoubleArray(),
-        this
-    ) // TODO remove toDoubleArray
+    val heatLoss by PipeHeatLossDelegate(this)
 
     val energyDemand by PipeEnergyDemandDelegate(this)
 
-    val volumeFlow by PipeVolumeFlowDelegate(
-        source.flowInTemperature.toDoubleArray(),
-        source.flowOutTemperature.toDoubleArray(),
-        target
-    )
+    val volumeFlow by PipeVolumeFlowDelegate(this)
 
     // Strömungsgeschwindigkeit = Volumenstrom / Rohrquerschnittsfläche
     val flowRate by PipeFlowRateDelegate(this)

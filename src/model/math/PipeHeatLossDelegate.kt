@@ -1,7 +1,6 @@
 package de.fhac.ewi.model.math
 
 import de.fhac.ewi.model.Pipe
-import de.fhac.ewi.model.PipeType
 import de.fhac.ewi.model.delegate.CalculableDelegate
 import de.fhac.ewi.util.pipeHeatLoss
 import de.fhac.ewi.util.subscribeIfChanged
@@ -11,16 +10,13 @@ import de.fhac.ewi.util.subscribeIfChanged
  * ... setzt sich aus der Temperaturdifferenz und der Beschaffenheit der Rohrleitung zusammen.
  *
  * @param T - For Delegate
- * @property flowIn DoubleArray - Vorlauf
- * @property flowOut DoubleArray - Rücklauf
  * @property pipe Pipe - Rohrleitung des Delegates
  * @constructor
  */
-class PipeHeatLossDelegate<T>(
-    private val flowIn: DoubleArray, // static
-    private val flowOut: DoubleArray,  // static
-    private val pipe: Pipe
-) : CalculableDelegate<T>() {
+class PipeHeatLossDelegate<T>(private val pipe: Pipe) : CalculableDelegate<T>() {
+
+    private val flowIn: DoubleArray by lazy { pipe.source.flowInTemperature.toDoubleArray() } // static
+    private val flowOut: DoubleArray by lazy { pipe.source.flowOutTemperature.toDoubleArray() } // static
 
     init {
         pipe::type.subscribeIfChanged(this::updateValue)
