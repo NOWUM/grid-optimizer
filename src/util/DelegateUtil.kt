@@ -16,7 +16,6 @@ inline fun <reified R> KProperty0<*>.delegateAs(): R? {
 }
 
 fun KProperty0<*>.subscribeIfChanged(onChange: () -> Unit) {
-    println("try subscribe for $this to delegate ${delegateAs<ReadWriteProperty<*, *>>()}")
     delegateAs<SubscribableDelegate<*, *>>()?.subscribe(onChange)
 }
 
