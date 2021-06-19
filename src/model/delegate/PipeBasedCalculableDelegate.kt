@@ -19,6 +19,10 @@ abstract class PipeBasedCalculableDelegate<T>() : CalculableDelegate<T>() {
 
     override fun recalculateIndexed(index: Int) = recalculateIndexed(index, connectedPipes)
 
+    // Needed to prevent exception due circular call
+    override fun lazyInitialValue() = DoubleArray(8760)
+
     abstract fun recalculateIndexed(index: Int, pipes: List<Pipe>): Double
     abstract fun onPipeConnect(pipe: Pipe)
+
 }
