@@ -65,6 +65,7 @@ fun Application.module(testing: Boolean = false) {
 
         // Catch Exceptions and provide better responses then 500
         exception<Throwable> { cause ->
+            cause.printStackTrace()
             call.respond(HttpStatusCode.InternalServerError, "Oops! An internal error occurred: ${cause.message}")
         }
     }
