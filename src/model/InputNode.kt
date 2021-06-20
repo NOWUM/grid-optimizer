@@ -16,4 +16,6 @@ class InputNode(
     override val flowInTemperature: List<Double> by lazy { groundTemperature.parallelStream().map(flowTemperature).toList() }
 
     override val flowOutTemperature: List<Double> by lazy { groundTemperature.parallelStream().map(returnTemperature).toList() }
+
+    override val pathToSource: Array<Pipe> = emptyArray()
 }
