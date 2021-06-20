@@ -15,9 +15,18 @@ class Grid {
 
     val input: InputNode by lazy { _nodes.filterIsInstance<InputNode>().single() }
 
+    // Returns maximum of needed pump power in W
     val neededPumpPower: Double
         get() = input.pumpPower.maxOrNull()
             ?: throw IllegalStateException("Needed pump power could not retrieved from grid.")
+
+    // Returns energy demand of all outputs in Wh
+    val totalOutputEnergy: Double
+        get() = nodes.filterIsInstance<OutputNode>().sumOf { it.energyDemand.sum() }
+
+    // Returns total heat loss in all pipes in Wh
+    val totalHeatLoss: Double
+        get() = pipes.sumOf { it.heatLoss.sum() }
 
     private fun addNode(node: Node) {
         if (_nodes.any { it.id.equals(node.id, true) })
