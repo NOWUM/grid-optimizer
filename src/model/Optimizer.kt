@@ -1,80 +1,85 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.util.DoubleFunction
-import kotlin.math.pow
+class Optimizer(private val grid: Grid, private val investParams: InvestmentParameter) {
 
-class Optimizer(
-    val pipeTypes: List<PipeType>, // invest costs (1x) for a one meter pipe as f(diameter) = €
-    val pipeOperationCostFunc: DoubleFunction, // annual operation cost for a grid as f(sum of pipeInvestCost) = €
-    val pumpInvestCostFunc: DoubleFunction, // invest costs (1x) for a pump as f(Leistung in Watt) = €
-    val heatGenerationCost: Double, // costs for generating heat losses
-    val lifespanOfGrid: Double, // Lifespan of grid. Needed for invest cost calculation
-    val lifespanOfPump: Double, // Lifespan of pump. Needed for invest cost calculation
-    val wacc: Double, // Zinsen
-    val electricityCost: Double, // €/kWh [for pump station]
-    val electricalEfficiency: Double, // for pump
-    val hydraulicEfficiency: Double, // for pump
-) {
+    lateinit var gridCosts: Costs
+        private set
 
-    val pipeAnnuityFactor = calculateAnnuityFactor(lifespanOfGrid)
-    val pumpAnnuityFactor = calculateAnnuityFactor(lifespanOfPump)
+    var numberOfTypeChecks: Int = 0
+        private set
 
-    fun optimize(grid: Grid): Double {
-        var currentCost = Double.MAX_VALUE
+    var numberOfUpdates: Int = 0
+        private set
 
-        // Reset all diameters
-        grid.pipes.forEach { it.type = pipeTypes.first() }
+    fun optimize() {
+        // Reset variables
+        numberOfTypeChecks = 0
+        numberOfUpdates = 0
 
-        var pipeChecks = 0
+        // Set all pipes to first possible type
+        grid.pipes.forEach { it.type = investParams.pipeTypes.first() }
+        gridCosts = investParams.calculateCosts(grid)
 
-        // until everything is optimized
+        optimizePipesInCriticalPath()
+
+        optimizePipesFromOutputToSource()
+
+        optimizeAllPipes()
+    }
+
+    /**
+     * Optimize all pipes in
+     */
+    private fun optimizePipesInCriticalPath() {
+        // TODO Find node at the end of critical path (maximum pressure loss in total?)
+        // TODO Optimize path from that to source
+        val criticalPath = grid.input.criticalChildNode.pathToSource
+
+        for (pipe in criticalPath)
+            optimizePipe(pipe)
+    }
+
+    /**
+     * Starting from all output nodes optimize path to source (one go).
+     */
+    private fun optimizePipesFromOutputToSource() {
+        // TODO Filter all output nodes and calculate path to source for each
+        grid.nodes.filterIsInstance<OutputNode>().forEach { node ->
+            for (pipe in node.pathToSource)
+                optimizePipe(pipe) // TODO Immer nur gleiche/dickere Leitungen probieren?
+        }
+    }
+
+    /**
+     * Check every type on every pipe until no further update is made.
+     */
+    private fun optimizeAllPipes() {
         var anyPipeUpdated: Boolean
         optimizer@ do {
             anyPipeUpdated = false
-            // check for every pipe, if another diameter would be better in total costs
-            pipeCheck@ for (pipe in grid.pipes) {
-                for (type in pipeTypes) {
-                    pipeChecks++
-                    val lastType = pipe.type
-                    pipe.type = type
-                    val newCost = calculateCosts(grid).totalPerYear
-                    if (newCost < currentCost) {
-                        currentCost = newCost
-                        anyPipeUpdated = true
-                    } else {
-                        pipe.type = lastType
-                    }
-                }
+            for (pipe in grid.pipes) {
+                if (optimizePipe(pipe))
+                    anyPipeUpdated = true
             }
         } while (anyPipeUpdated)
-
-        println("Checked $pipeChecks times for perfect pipe type.")
-
-        return currentCost
     }
 
-
-    fun calculateCosts(grid: Grid): Costs {
-        // Pipe costs
-        val pipeInvestCostTotal = grid.pipes.sumOf { it.type.costPerMeter * it.length }
-        val pipeInvestCostAnnuity = pipeInvestCostTotal * pipeAnnuityFactor
-        val pipeOperationCost = pipeOperationCostFunc(pipeInvestCostTotal)
-
-        val pumpInvestCostTotal = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency)
-        val pumpInvestCostAnnuity = pumpInvestCostTotal * pumpAnnuityFactor
-        val pumpOperationCost = grid.input.pumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
-
-        val heatLossCost = grid.totalHeatLoss / 1_000 * heatGenerationCost
-
-        val investCostAnnuity = pipeInvestCostAnnuity + pumpInvestCostAnnuity
-        val operationCostPerYear = pipeOperationCost + pumpOperationCost + heatLossCost
-
-        val total = investCostAnnuity + operationCostPerYear
-        return Costs(pipeInvestCostTotal, pipeInvestCostAnnuity, pipeOperationCost,
-            pumpInvestCostTotal, pumpInvestCostAnnuity, pumpOperationCost,
-           heatLossCost, total)
+    private fun optimizePipe(pipe: Pipe, types: List<PipeType> = investParams.pipeTypes): Boolean {
+        var bestType = pipe.type
+        var foundBetterType = false
+        for (type in types) {
+            numberOfTypeChecks++
+            pipe.type = type
+            val newCost = investParams.calculateCosts(grid)
+            if (newCost.totalPerYear < gridCosts.totalPerYear) {
+                gridCosts = newCost
+                bestType = type
+                foundBetterType = true
+            }
+        }
+        if (foundBetterType)
+            numberOfUpdates++
+        pipe.type = bestType
+        return foundBetterType
     }
-
-    private fun calculateAnnuityFactor(lifespan: Double) : Double =
-        (1.0 + wacc / 100.0).pow(lifespan) * (wacc / 100.0) / ((1.0 + wacc / 100.0).pow(lifespan) - 1)
 }
