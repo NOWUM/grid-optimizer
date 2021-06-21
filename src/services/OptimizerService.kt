@@ -68,7 +68,12 @@ class OptimizerService {
                     it.id,
                     it.energyDemand,
                     it.pressureLoss,
-                    it.pumpPower
+                    it.pumpPower,
+                    it.flowInTemperature,
+                    it.flowOutTemperature,
+                    it.energyDemand.sum(),
+                    it.pumpPower.maxOrNull()!!,
+                    it.pressureLoss.maxOrNull()!!
                 )
             }
         )
