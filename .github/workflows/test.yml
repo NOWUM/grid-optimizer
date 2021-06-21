@@ -52,7 +52,7 @@ jobs:
       # Publish test results
       #
       - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1.17
+        uses: EnricoMi/publish-unit-test-result-action@v1.18
         if: always()
         with:
           files: build/test-results/test/**.xml
