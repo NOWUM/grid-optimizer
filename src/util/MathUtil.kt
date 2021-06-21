@@ -115,6 +115,8 @@ fun pipeHeatLoss(
 /**
  * Umwandlung der Reynoldszahl zu Rohrwiderstandsbeiwert (Lambda).
  *
+ * Hinweis: Die Grenzen zur Annährung wurden leicht verschoben, damit keine Lücken entstehen.
+ *
  * Quelle: Jungbluth, 09 Uebung Waermeverteilung.pdf, Folie 12
  *
  * @param re Double - Rohrwiderstandsbeiwert
@@ -124,15 +126,15 @@ fun pipeHeatLoss(
  */
 fun reynoldsNumberToLambda(re: Double, diameter: Double, k: Double = 0.01) : Double = when {
     // laminare Strömung
-    re <= 2300 ->
+    re <= 2320 ->
         64 / re
 
     // hydraulisch glatt
-    2320 < re && re < diameter / k * log10(0.1 * diameter / k) ->
+    2320 < re && re <= diameter / k * log10(0.1 * diameter / k) ->
         0.309 / log10(re / 7).pow(2)
 
     // Übergangsbereich
-    diameter / k * log10(0.1 * diameter / k) < re && re < 400 * diameter / k * log10(3.715*diameter/k) ->
+    diameter / k * log10(0.1 * diameter / k) < re && re <= 400 * diameter / k * log10(3.715*diameter/k) ->
         0.25 / log10(15 / re + k / (3.715 * diameter))
 
     // hydraulisch rau
