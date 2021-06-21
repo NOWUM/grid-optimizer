@@ -13,9 +13,6 @@ export interface HotWaterGrid extends NodeElements{
 export interface BaseNode extends Node, NodeOptimization{
     id: string,
     type: NodeType,
-
-
-
 }
 
 export interface NodeOptimization {
@@ -38,6 +35,12 @@ export interface InputNode extends BaseNode{
 export interface PipeOptimization {
     diameter?: number;
     isCritical?: boolean;
+
+    volumeFlow?: number[],
+    pipeHeatLoss?: number[],
+    pipePressureLoss?: number[],
+    totalPressureLoss?: number[],
+    totalPumpPower?: number[]
 }
 
 export interface IntermediateNode extends BaseNode{

@@ -13,7 +13,7 @@ import {
     OptimizationResult,
     OptimizedNode,
     OutputNode,
-    Pipe
+    Pipe, PipeOptimization
 } from "../../models";
 import {baseUrl} from "../../utils/utility";
 import {trackPromise} from "react-promise-tracker";
@@ -53,9 +53,11 @@ export const OptimizeButton = ({grid, optimizationMetadata, setCosts, setPipes, 
         setCosts(res.costs)
 
         const newPipes = grid.pipes.map(p => {
-            const diameter = res.optimizedPipes.find(el => el.pipeId === p.id)?.diameter
+            const opt: PipeOptimization = res.optimizedPipes.find(el => el.pipeId === p.id) ?? {};
+            const {diameter, volumeFlow, pipeHeatLoss, pipePressureLoss,totalPressureLoss,totalPumpPower} = opt;
             const isCritical = !!res.criticalPath.find(el => el === p.id );  // if this id is part of the critical path its true, otherwise its false
-            return {...p, diameter, isCritical, data: {...p.data, diameter, isCritical}}
+            return {...p, diameter, isCritical, volumeFlow, pipeHeatLoss, pipePressureLoss,totalPressureLoss,totalPumpPower,
+                data: {...p.data, diameter, isCritical, volumeFlow, pipeHeatLoss, pipePressureLoss,totalPressureLoss,totalPumpPower}}
         })
 
         setNodeElements(mapResultToNodeElements(res))
