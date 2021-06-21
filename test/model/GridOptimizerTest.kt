@@ -20,7 +20,7 @@ class GridOptimizerTest {
     fun testOptimizer() {
         val grid = createSimpleGrid()
         val pipeTypes = createStreetPipes()
-        val optimizer = Optimizer(
+        val investParameter = InvestmentParameter(
             pipeTypes, // types of pipes that can be used
             { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
             { pumpPower -> 500.0 + pumpPower / 1000 * 500}, // invest cost for pump based on pump power
@@ -33,19 +33,20 @@ class GridOptimizerTest {
             0.60 // for pump
         )
 
-        optimizer.optimize(grid)
+        val optimizer = Optimizer(grid, investParameter)
+        optimizer.optimize()
 
-        val costs = optimizer.calculateCosts(grid)
 
         println("> Connected energy demand (OutputNodes): ${(grid.totalOutputEnergy / 1_000).round(3)} kWh")
         println("> Heat loss in all pipes: ${(grid.totalHeatLoss / 1_000).round(3)} kWh")
+        println("> Checked ${optimizer.numberOfTypeChecks} pipe types and made ${optimizer.numberOfUpdates} for perfect grid.")
 
-        println("> Grid costs u ${costs.totalPerYear.round(2)} €")
-        println(">> ${grid.pipes.sumOf { it.length }} m of pipes cost ${costs.pipeInvestCostTotal.round(2)} €.")
-        println(">> Pump with power of ${grid.neededPumpPower.round(3)} Watt for maximum pressure loss of ${grid.input.pressureLoss.maxOrNull()?.round(3)} Bar cost ${costs.pumpInvestCostTotal.round(2)} €.")
-        println(">> Heat loss of ${(grid.totalOutputEnergy / 1_000).round(3)} kW cost ${costs.heatLossCost.round(2)} €.")
+        println("> Grid costs u ${optimizer.gridCosts.totalPerYear.round(2)} € per year.")
+        println(">> ${grid.pipes.sumOf { it.length }} m of pipes cost ${optimizer.gridCosts.pipeInvestCostTotal.round(2)} €.")
+        println(">> Pump with power of ${grid.neededPumpPower.round(3)} Watt for maximum pressure loss of ${grid.input.pressureLoss.maxOrNull()?.round(3)} Bar cost ${optimizer.gridCosts.pumpInvestCostTotal.round(2)} €.")
+        println(">> Heat loss of ${(grid.totalOutputEnergy / 1_000).round(3)} kW cost ${optimizer.gridCosts.heatLossCost.round(2)} €.")
         grid.pipes.forEach { println("${it.id} should have a diameter of ${it.type.diameter}") }
-        println(costs)
+        println(optimizer.gridCosts)
     }
 
 

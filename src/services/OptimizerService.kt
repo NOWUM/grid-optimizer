@@ -5,6 +5,7 @@ import de.fhac.ewi.dto.OptimizationResponse
 import de.fhac.ewi.dto.OptimizedNodeResponse
 import de.fhac.ewi.dto.OptimizedPipeResponse
 import de.fhac.ewi.model.Grid
+import de.fhac.ewi.model.InvestmentParameter
 import de.fhac.ewi.model.Optimizer
 import de.fhac.ewi.model.PipeType
 import de.fhac.ewi.util.catchParseError
@@ -12,7 +13,7 @@ import de.fhac.ewi.util.toDoubleFunction
 
 class OptimizerService {
 
-    fun createByOptimizationRequest(request: OptimizationRequest): Optimizer {
+    fun createByOptimizationRequest(request: OptimizationRequest): InvestmentParameter {
         val pipeTypes =
             request.pipeTypes.map {
                 catchParseError("Could not parse PipeType $it.") {
@@ -29,7 +30,7 @@ class OptimizerService {
         val pumpInvestCostFunc =
             catchParseError("Invalid cost function for pump invest cost") { request.pumpInvestCostTemplate.toDoubleFunction() }
 
-        return Optimizer(
+        return InvestmentParameter(
             pipeTypes,
             pipeOperationCostFunc,
             pumpInvestCostFunc,
@@ -44,10 +45,13 @@ class OptimizerService {
     }
 
 
-    fun optimize(grid: Grid, optimizer: Optimizer): OptimizationResponse {
-        optimizer.optimize(grid)
+    fun optimize(grid: Grid, investmentParameter: InvestmentParameter): OptimizationResponse {
+        val optimizer = Optimizer(grid, investmentParameter)
+        optimizer.optimize()
+        println("> Checked ${optimizer.numberOfTypeChecks} pipe types and made ${optimizer.numberOfUpdates} for perfect grid. (grid had ${grid.pipes.size} pipes)")
+        println("> Grid costs now ${optimizer.gridCosts}")
         return OptimizationResponse(
-            optimizer.calculateCosts(grid),
+            optimizer.gridCosts,
             grid.pipes.map {
                 OptimizedPipeResponse(
                     it.id,
