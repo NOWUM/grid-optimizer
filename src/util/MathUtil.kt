@@ -34,13 +34,14 @@ fun volumeFlow(flowIn: Double, flowOut: Double, heatDemand: Double, p: Double = 
 /**
  * Berechnet die Strömungsgeschwindigkeit auf Basis des Rohrdurchmessers und dem Volumenstrom.
  *
+ * Quelle: Jungbluth, 09 Uebung Waermeverteilung.pdf, Folie 5
+ *
  * @param diameter Double - Rohrdurchmesser in m
  * @param volumeFlow Double - Volumenstrom in m^3/s
  * @return Double - Strömungsgeschwindigkeit in m/s
  */
-fun flowRate(diameter: Double, volumeFlow: Double): Double {
-    return volumeFlow / ((diameter / 2).pow(2) * Math.PI)
-}
+fun flowRate(diameter: Double, volumeFlow: Double): Double =
+    volumeFlow / (diameter.pow(2) * Math.PI / 4)
 
 /**
  * Druckverlustberechnung in Rohrleitungen.
