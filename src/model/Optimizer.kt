@@ -32,13 +32,14 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
     }
 
     /**
-     * Optimize all pipes in
+     * Optimize all pipes in critical path
      */
     private fun optimizePipesInCriticalPath() {
-        // TODO Find node at the end of critical path (maximum pressure loss in total?)
-        // TODO Optimize path from that to source
+        // Find node at the end of critical path (maximum pressure loss in total?)
         val criticalPath = grid.input.criticalChildNode.pathToSource
 
+
+        // Optimize path from that to source
         for (pipe in criticalPath)
             optimizePipe(pipe)
     }
@@ -47,7 +48,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
      * Starting from all output nodes optimize path to source (one go).
      */
     private fun optimizePipesFromOutputToSource() {
-        // TODO Filter all output nodes and calculate path to source for each
+        // Filter all output nodes and calculate path to source for each
         grid.nodes.filterIsInstance<OutputNode>().forEach { node ->
             val possiblePipes = investParams.pipeTypes.toMutableList()
             for (pipe in node.pathToSource) {
