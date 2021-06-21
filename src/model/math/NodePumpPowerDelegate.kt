@@ -10,7 +10,7 @@ import de.fhac.ewi.util.subscribeIfChanged
  *
  * @param T - For Delegate
  */
-class NodePumpPowerDelegate<T>: PipeBasedCalculableDelegate<T>() {
+class NodePumpPowerDelegate<T> : PipeBasedCalculableDelegate<T>() {
 
     override fun recalculateIndexed(index: Int, pipes: List<Pipe>): Double {
         return pipes.maxOf { it.totalPumpPower[index] }

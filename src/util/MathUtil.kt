@@ -34,18 +34,19 @@ fun volumeFlow(flowIn: Double, flowOut: Double, heatDemand: Double, p: Double = 
 /**
  * Berechnet die Strömungsgeschwindigkeit auf Basis des Rohrdurchmessers und dem Volumenstrom.
  *
+ * Quelle: Jungbluth, 09 Uebung Waermeverteilung.pdf, Folie 5
+ *
  * @param diameter Double - Rohrdurchmesser in m
  * @param volumeFlow Double - Volumenstrom in m^3/s
  * @return Double - Strömungsgeschwindigkeit in m/s
  */
-fun flowRate(diameter: Double, volumeFlow: Double): Double {
-    return volumeFlow / ((diameter / 2).pow(2) * Math.PI)
-}
+fun flowRate(diameter: Double, volumeFlow: Double): Double =
+    volumeFlow / (diameter.pow(2) * Math.PI / 4)
 
 /**
  * Druckverlustberechnung in Rohrleitungen.
  *
- * Quelle: https://www.schweizer-fn.de/stroemung/druckverlust/druckverlust.php#druckverlustrohr
+ * Quelle: Jungbluth, 09 Uebung Waermeverteilung.pdf, Folie 4
  * Hinweis: Formel ist für Pa ausgelegt - umrechnung in Bar
  *
  * @param flowSpeed Double - Strömungsgeschwindigkeit in m/s
@@ -62,7 +63,7 @@ fun pipePressureLoss(
     lambda: Double = 0.15,
     p: Double = WATER_DICHTE
 ) =
-    (lambda * length * p * flowSpeed.pow(2)) / (diameter * 2) / 100_000
+    lambda * length / diameter * p / 2 * flowSpeed.pow(2) / 100_000
 
 /**
  * Berechnet die benötigte Pumpleistung.
@@ -76,8 +77,6 @@ fun neededPumpPower(pressureLoss: Double, volumeFlow: Double): Double =
 
 /**
  * Berechnet den Wärmeverlust in einem Rohr.
- *
- * TODO Bereits für Vor und Rücklauf?
  *
  * @param flowIn Double - Vorlauftemperatur in °C
  * @param flowOut Double - Rücklauftemperatur in °C
@@ -107,8 +106,8 @@ fun pipeHeatLoss(
     val outerRadius = innerRadius + isolationThickness
     val numerator = 4 * Math.PI * length * ((flowIn + flowOut) / 2 - ground)
     val denominator = 1 / lambdaPipe * ln(outerRadius / innerRadius)
-    + 1 / lambdaGround * ln( 4 * (outerRadius + coverageHeight) / outerRadius)
-    + 1 / lambdaGround * ln( ((2 * (outerRadius + coverageHeight) / (distance + 2 * outerRadius)).pow(2) + 1).pow(0.5))
+    +1 / lambdaGround * ln(4 * (outerRadius + coverageHeight) / outerRadius)
+    +1 / lambdaGround * ln(((2 * (outerRadius + coverageHeight) / (distance + 2 * outerRadius)).pow(2) + 1).pow(0.5))
     return numerator / denominator
 }
 
@@ -122,4 +121,4 @@ fun pipeHeatLoss(
 fun List<Double>.toAllocationTemperature() =
     indices.map { d -> (t(d) + 0.5 * t(d - 1) + 0.25 * t(d - 2) + 0.125 * t(d - 3)) / (1 + 0.5 + 0.25 + 0.125) }
 
-private fun List<Double>.t(d: Int) = get((d+size) % size)
+private fun List<Double>.t(d: Int) = get((d + size) % size)

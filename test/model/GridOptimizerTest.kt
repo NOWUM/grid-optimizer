@@ -23,7 +23,7 @@ class GridOptimizerTest {
         val investParameter = InvestmentParameter(
             pipeTypes, // types of pipes that can be used
             { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
-            { pumpPower -> 500.0 + pumpPower / 1000 * 500}, // invest cost for pump based on pump power
+            { pumpPower -> 500.0 + pumpPower / 1000 * 500 }, // invest cost for pump based on pump power
             0.05, // unused (Kosten Erzeugung Wärmeverluste)
             40.0, // years for grid
             10.0, // years for pump
@@ -43,8 +43,18 @@ class GridOptimizerTest {
 
         println("> Grid costs u ${optimizer.gridCosts.totalPerYear.round(2)} € per year.")
         println(">> ${grid.pipes.sumOf { it.length }} m of pipes cost ${optimizer.gridCosts.pipeInvestCostTotal.round(2)} €.")
-        println(">> Pump with power of ${grid.neededPumpPower.round(3)} Watt for maximum pressure loss of ${grid.input.pressureLoss.maxOrNull()?.round(3)} Bar cost ${optimizer.gridCosts.pumpInvestCostTotal.round(2)} €.")
-        println(">> Heat loss of ${(grid.totalOutputEnergy / 1_000).round(3)} kW cost ${optimizer.gridCosts.heatLossCost.round(2)} €.")
+        println(
+            ">> Pump with power of ${grid.neededPumpPower.round(3)} Watt for maximum pressure loss of ${
+                grid.input.pressureLoss.maxOrNull()?.round(3)
+            } Bar cost ${optimizer.gridCosts.pumpInvestCostTotal.round(2)} €."
+        )
+        println(
+            ">> Heat loss of ${(grid.totalOutputEnergy / 1_000).round(3)} kW cost ${
+                optimizer.gridCosts.heatLossCost.round(
+                    2
+                )
+            } €."
+        )
         grid.pipes.forEach { println("${it.id} should have a diameter of ${it.type.diameter}") }
         println(optimizer.gridCosts)
     }
@@ -52,7 +62,12 @@ class GridOptimizerTest {
 
     private fun createSimpleGrid(): Grid {
         val grid = Grid()
-        grid.addInputNode("1", timeSeriesService.getSeries("Schemm 2018"), "80".toDoubleFunction(), "60".toDoubleFunction())
+        grid.addInputNode(
+            "1",
+            timeSeriesService.getSeries("Schemm 2018"),
+            "80".toDoubleFunction(),
+            "60".toDoubleFunction()
+        )
         grid.addIntermediateNode("2")
         val heatDemand = heatDemandService.createCurve(50_000.0, "EFH", "Schemm 2018")
         grid.addOutputNode("3", heatDemand, 1.0)

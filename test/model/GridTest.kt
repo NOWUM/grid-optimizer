@@ -7,7 +7,7 @@ class GridTest {
 
 
     private val SIMPLE_HEAT_DEMAND = HeatDemandCurve(List(8760) { 1.0 })
-    private val GROUND_TEMP_SERIES = TemperatureTimeSeries("dummy", List(365){10.0})
+    private val GROUND_TEMP_SERIES = TemperatureTimeSeries("dummy", List(365) { 10.0 })
 
     @Test
     fun createEmptyGrid() {

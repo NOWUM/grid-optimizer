@@ -21,7 +21,6 @@ class PipeFlowRateDelegate<T>(private val pipe: Pipe) : CalculableDelegate<T>() 
     }
 
     override fun recalculateIndexed(index: Int) = with(pipe) {
-        // TODO Hier direkt Formel für Strömungsgeschwindigkeit einsetzen?
         // TODO ggf anders berechnen, da der diameter jedes mal zur gleichen Fläche übertragen wird
         flowRate(type.diameter, volumeFlow[index])
     }

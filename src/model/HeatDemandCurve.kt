@@ -2,7 +2,6 @@ package de.fhac.ewi.model
 
 import de.fhac.ewi.util.mapIndicesParallel
 import de.fhac.ewi.util.requireNoNaNs
-import kotlin.streams.toList
 
 /**
  * Beinhaltet für jede Stunde im Jahr den Energiebedarf.
@@ -17,7 +16,9 @@ class HeatDemandCurve(val curve: List<Double>) {
 
     operator fun get(index: Int) = curve[index]
 
-    operator fun plus(other: HeatDemandCurve) = HeatDemandCurve(curve.mapIndicesParallel { curve[it] + other.curve[it] })
+    operator fun plus(other: HeatDemandCurve) =
+        HeatDemandCurve(curve.mapIndicesParallel { curve[it] + other.curve[it] })
+
     operator fun plus(other: List<Double>) = HeatDemandCurve(curve.mapIndicesParallel { curve[it] + other[it] })
 
     companion object {

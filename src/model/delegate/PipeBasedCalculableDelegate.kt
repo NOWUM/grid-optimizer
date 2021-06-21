@@ -8,7 +8,7 @@ import de.fhac.ewi.model.Pipe
  * @param T
  * @property connectedPipes MutableList<Pipe> - Child pipes
  */
-abstract class PipeBasedCalculableDelegate<T>() : CalculableDelegate<T>() {
+abstract class PipeBasedCalculableDelegate<T> : CalculableDelegate<T>() {
 
     private val connectedPipes = mutableListOf<Pipe>()
 
@@ -20,7 +20,7 @@ abstract class PipeBasedCalculableDelegate<T>() : CalculableDelegate<T>() {
     override fun recalculateIndexed(index: Int) = recalculateIndexed(index, connectedPipes)
 
     // Needed to prevent exception due circular call
-    override fun lazyInitialValue() = DoubleArray(8760) {999_999.0}
+    override fun lazyInitialValue() = DoubleArray(8760) { 999_999.0 }
 
     abstract fun recalculateIndexed(index: Int, pipes: List<Pipe>): Double
     abstract fun onPipeConnect(pipe: Pipe)

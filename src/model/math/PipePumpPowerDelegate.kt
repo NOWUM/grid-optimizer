@@ -1,11 +1,8 @@
 package de.fhac.ewi.model.math
 
 import de.fhac.ewi.model.Pipe
-import de.fhac.ewi.model.PipeType
 import de.fhac.ewi.model.delegate.CalculableDelegate
-import de.fhac.ewi.util.flowRate
 import de.fhac.ewi.util.neededPumpPower
-import de.fhac.ewi.util.pipePressureLoss
 import de.fhac.ewi.util.subscribeIfChanged
 
 /**
@@ -16,7 +13,7 @@ import de.fhac.ewi.util.subscribeIfChanged
  * @property pipe Pipe - Rohrleitung des Delegates
  * @constructor
  */
-class PipePumpPowerDelegate<T>(private val pipe: Pipe) :    CalculableDelegate<T>() {
+class PipePumpPowerDelegate<T>(private val pipe: Pipe) : CalculableDelegate<T>() {
 
     init {
         pipe::totalPressureLoss.subscribeIfChanged(this::updateValue)

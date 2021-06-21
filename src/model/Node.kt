@@ -4,9 +4,6 @@ import de.fhac.ewi.model.math.NodeEnergyDemandDelegate
 import de.fhac.ewi.model.math.NodePressureLossDelegate
 import de.fhac.ewi.model.math.NodePumpPowerDelegate
 import de.fhac.ewi.util.addPipeIfNeeded
-import de.fhac.ewi.util.mapIndicesParallel
-import de.fhac.ewi.util.mapParallel
-import de.fhac.ewi.util.neededPumpPower
 
 abstract class Node(val id: String) {
 
@@ -33,18 +30,21 @@ abstract class Node(val id: String) {
 
 
     open val flowInTemperature: List<Double>
-        get() = connectedPipes.single { it.target == this }.source.flowInTemperature // TODO Wärmeverlust der Pipe berücksichtigen
+        get() = connectedPipes.single { it.target == this }.source.flowInTemperature
 
     open val flowOutTemperature: List<Double>
-        get() = connectedPipes.single { it.target == this }.source.flowOutTemperature // TODO Wärmeverlust der Pipe berücksichtigen
+        get() = connectedPipes.single { it.target == this }.source.flowOutTemperature
 
     open val groundTemperature: List<Double>
         get() = connectedPipes.single { it.target == this }.source.groundTemperature
 
-    open val pathToSource: Array<Pipe> by lazy { connectedPipes.single { it.target == this }.let { arrayOf(it, *it.source.pathToSource) } }
+    open val pathToSource: Array<Pipe> by lazy {
+        connectedPipes.single { it.target == this }.let { arrayOf(it, *it.source.pathToSource) }
+    }
 
     open val criticalChildNode: Node
-        get() = connectedPipes.filter { it.source == this }.maxByOrNull { it.totalPressureLoss.sum() }?.target?.criticalChildNode?:this
+        get() = connectedPipes.filter { it.source == this }
+            .maxByOrNull { it.totalPressureLoss.sum() }?.target?.criticalChildNode ?: this
 
     fun isParentOf(target: Node): Boolean =
         target in connectedChildNodes || connectedChildNodes.any { it.isParentOf(target) }

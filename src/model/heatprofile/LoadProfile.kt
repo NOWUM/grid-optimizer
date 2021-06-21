@@ -15,8 +15,9 @@ class LoadProfile(temperatureTimeSeries: TemperatureTimeSeries, val hProfile: HP
 
     val dailyHeatCurve =
         allokation.map { ta ->
-            val sigmoid = hProfile.a / (1 + (hProfile.b / (ta - hProfile.zero)).pow(hProfile.c).ifNaN{ 0.0 } ) + hProfile.d
-            val linH = hProfile.mH * ta +  hProfile.bH
+            val sigmoid =
+                hProfile.a / (1 + (hProfile.b / (ta - hProfile.zero)).pow(hProfile.c).ifNaN { 0.0 }) + hProfile.d
+            val linH = hProfile.mH * ta + hProfile.bH
             val linW = hProfile.mW * ta + hProfile.bW
             return@map max(sigmoid + max(linH, linW), 0.0)
         }.requireNoNaNs()

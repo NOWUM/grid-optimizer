@@ -23,11 +23,10 @@ class PipeHeatLossDelegate<T>(private val pipe: Pipe) : CalculableDelegate<T>() 
     }
 
     override fun recalculateIndexed(index: Int) = with(pipe) {
-        // TODO Hier direkt Formel für pipeHeatLoss einsetzen?
         pipeHeatLoss(
             flowIn[index],
             flowOut[index],
-            10.0, // TODO static
+            10.0,
             type.diameter,
             type.isolationThickness,
             coverageHeight,

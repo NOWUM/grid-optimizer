@@ -35,7 +35,12 @@ class Grid {
         _nodes += node
     }
 
-    fun addInputNode(id: String, groundSeries: TemperatureTimeSeries, flowTemperature: DoubleFunction, returnTemperature: DoubleFunction) {
+    fun addInputNode(
+        id: String,
+        groundSeries: TemperatureTimeSeries,
+        flowTemperature: DoubleFunction,
+        returnTemperature: DoubleFunction
+    ) {
         if (_nodes.filterIsInstance<InputNode>().count() == 1)
             throw IllegalArgumentException("This grid has already an input node. Only one input node is supported at the moment.")
 
