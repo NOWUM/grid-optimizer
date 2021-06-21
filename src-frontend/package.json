@@ -17,7 +17,7 @@
     "@types/react-dom": "^17.0.8",
     "@types/reactour": "^1.18.1",
     "event-emitter": "^0.3.5",
-    "plotly.js": "^2.0.0",
+    "plotly.js": "^2.1.0",
     "react": "^17.0.2",
     "react-confirm-alert": "^2.7.0",
     "react-dom": "^17.0.2",
