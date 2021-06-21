@@ -42,10 +42,6 @@ abstract class Node(val id: String) {
         connectedPipes.single { it.target == this }.let { arrayOf(it, *it.source.pathToSource) }
     }
 
-    open val criticalChildNode: Node
-        get() = connectedPipes.filter { it.source == this }
-            .maxByOrNull { it.totalPressureLoss.sum() }?.target?.criticalChildNode ?: this
-
     fun isParentOf(target: Node): Boolean =
         target in connectedChildNodes || connectedChildNodes.any { it.isParentOf(target) }
 
