@@ -29,53 +29,96 @@ export const OptimizationAccordion = ({nodes}: { nodes: BaseNode[] }) => {
                     {n.data?.label} ({n.id})
                 </AccordionSummary>
                 <AccordionDetails>
-                    {getGraph(n.optimizedThermalEnergyDemand!, n.connectedPressureLoss!, n.neededPumpPower!)}
+                    {getGraph(n)}
                 </AccordionDetails>
 
             </Accordion>
         </>
     }
 
-    const getGraph = (oted: number[], pressureLoss: number[], pumpPower: number[]) => {
+    const getGraph = (n: BaseNode) => {
         const plotDataHeat = [
             {
-                y: oted,
+                x: "date",
+                y: n.optimizedThermalEnergyDemand!,
                 type: "scattergl",
-                mode: 'lines+markers',
                 marker: {color: 'red'},
                 name: "Angeschlossener Wärmebedarf [Wh]"
             }]
         const plotDataPressure = [
             {
-                y: pressureLoss,
+                y: n.connectedPressureLoss!,
                 type: "scattergl",
-                mode: 'lines+markers',
                 marker: {color: 'red'},
                 name: "Druckverluste [Bar]"
             }]
 
         const plotDataPumpPower = [
             {
-                y: pumpPower,
+                y: n.neededPumpPower,
                 type: "scattergl",
-                mode: 'lines+markers',
                 marker: {color: 'red'},
                 name: "Benötigte Pumpleistung [Wh]"
             }]
 
-        return <div style={{justifyContent: 'center', flexDirection: 'row', display: 'flex'}}>
+        const plotFlowTemperature = [
+            {
+                y: n.flowOutTemperature,
+                type: "scatter",
+                marker: {color: 'blue'},
+                name: "Rücklauftemperatur [Wh]"
+            }, {
+                y: n.flowInTemperature,
+                type: "scatter",
+                fill: 'tonexty',
+                marker: {color: 'red'},
+                name: "Vorlauftemperatur [Wh]"
+            },
+        ]
+
+        return <div
+            style={{justifyContent: 'center', flexDirection: 'row', flexWrap: "wrap", display: 'flex', width: "100%"}}>
+
             <Plot
-            data={plotDataHeat}
-            style={{width: '100%', height: '100%'}}
-            layout={{autosize: true, title: 'Angeschlossener Wärmebedarf [Wh]', xaxis: {title: 'Stunde im Jahr'}}}/>
+                data={plotDataHeat}
+                style={{width: '500px', height: '400px'}}
+                layout={{
+                    autosize: true,
+                    title: 'Angeschlossener Wärmebedarf [Wh]',
+                    xaxis: {title: 'Stunde im Jahr'},
+                    legend: {
+                        x: 1,
+                        xanchor: 'right',
+                        y: 1
+                    }
+                }}/>
             <Plot
                 data={plotDataPressure}
-                style={{width: '100%', height: '100%'}}
-                layout={{autosize: true, title: 'Druckverluste [Bar]', xaxis: {title: 'Stunde im Jahr'}}}/>
+                style={{width: '500px', height: '400px'}}
+                layout={{
+                    autosize: true, title: 'Druckverluste [Bar]', xaxis: {title: 'Stunde im Jahr'}, legend: {
+                        x: 1,
+                        xanchor: 'right',
+                        y: 1
+                    }
+                }}/>
             <Plot
                 data={plotDataPumpPower}
-                style={{width: '100%', height: '100%'}}
-                layout={{autosize: true, title: 'Benötigte Pumpleistung [Wh]', xaxis: {title: 'Stunde im Jahr'}}}/>
+                style={{width: '500px', height: '400px'}}
+                layout={{
+                    autosize: true, title: 'Benötigte Pumpleistung [Wh]', xaxis: {title: 'Stunde im Jahr'}, legend: {
+                        x: 1,
+                        xanchor: 'right',
+                        y: 1
+                    }
+                }}/>
+
+            <Plot
+                data={plotFlowTemperature}
+                style={{width: '650px', height: '400px'}}
+                layout={{
+                    autosize: true, title: 'Wasser Temperatur [°C]', xaxis: {title: 'Stunde im Jahr'}
+                }}/>
         </div>
     }
 

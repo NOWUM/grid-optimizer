@@ -10,12 +10,24 @@ export interface HotWaterGrid extends NodeElements{
     temperatureSeries: string
 }
 
-export interface BaseNode extends Node{
+export interface BaseNode extends Node, NodeOptimization{
     id: string,
     type: NodeType,
+
+
+
+}
+
+export interface NodeOptimization {
     optimizedThermalEnergyDemand?: number[],
     connectedPressureLoss?: number[],
-    neededPumpPower?: number[]
+    neededPumpPower?: number[],
+    flowInTemperature?: number[],
+    flowOutTemperature?: number[],
+
+    annualEnergyDemand?: number,
+    maximalNeededPumpPower?: number,
+    maximalPressureLoss?: number
 }
 
 export interface InputNode extends BaseNode{
@@ -25,6 +37,7 @@ export interface InputNode extends BaseNode{
 
 export interface PipeOptimization {
     diameter?: number;
+    isCritical?: boolean;
 }
 
 export interface IntermediateNode extends BaseNode{
@@ -84,6 +97,7 @@ export interface OptimizationResult {
     costs: Costs,
     optimizedPipes: OptimizedPipe[],
     optimizedNodes: OptimizedNode[],
+    criticalPath: string[],
 }
 
 export interface OptimizedPipe {
@@ -95,7 +109,13 @@ export interface OptimizedNode {
     nodeId: string,
     thermalEnergyDemand: number[],
     connectedPressureLoss: number[],
-    neededPumpPower: number[]
+    neededPumpPower: number[],
+    flowInTemperature: number[],
+    flowOutTemperature: number[],
+
+    annualEnergyDemand: number,
+    maximalNeededPumpPower: number,
+    maximalPressureLoss: number
 }
 
 export interface HeatDemand {

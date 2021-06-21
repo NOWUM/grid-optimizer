@@ -54,8 +54,8 @@ export const OptimizeButton = ({grid, optimizationMetadata, setCosts, setPipes, 
 
         const newPipes = grid.pipes.map(p => {
             const diameter = res.optimizedPipes.find(el => el.pipeId === p.id)?.diameter
-            console.log(diameter)
-            return {...p, diameter, data: {...p.data, diameter}}
+            const isCritical = !!res.criticalPath.find(el => el === p.id );  // if this id is part of the critical path its true, otherwise its false
+            return {...p, diameter, isCritical, data: {...p.data, diameter, isCritical}}
         })
 
         setNodeElements(mapResultToNodeElements(res))
@@ -76,7 +76,14 @@ export const OptimizeButton = ({grid, optimizationMetadata, setCosts, setPipes, 
             return {...n,
                 optimizedThermalEnergyDemand: resultNode?.thermalEnergyDemand,
                 connectedPressureLoss: resultNode?.connectedPressureLoss,
-                neededPumpPower: resultNode?.neededPumpPower}
+                neededPumpPower: resultNode?.neededPumpPower,
+                flowInTemperature: resultNode?.flowInTemperature,
+                flowOutTemperature: resultNode?.flowOutTemperature,
+
+                annualEnergyDemand: resultNode?.annualEnergyDemand,
+                maximalNeededPumpPower: resultNode?.maximalNeededPumpPower,
+                maximalPressureLoss: resultNode?.maximalPressureLoss
+            }
         })
     }
 
