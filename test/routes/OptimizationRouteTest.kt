@@ -3,10 +3,12 @@ package de.fhac.ewi.routes
 import de.fhac.ewi.module
 import io.ktor.http.*
 import io.ktor.server.testing.*
+import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class OptimizationRouteTest {
+    @Ignore
     @Test
     fun optimizeGridGroupA4() {
         withTestApplication({ module(testing = true) }) {
