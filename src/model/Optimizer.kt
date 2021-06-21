@@ -16,15 +16,19 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
         numberOfTypeChecks = 0
         numberOfUpdates = 0
 
+        val initialType = investParams.pipeTypes.minByOrNull { it.diameter }?: throw IllegalStateException("No pipe types defined for optimization.")
         // Set all pipes to first possible type
-        grid.pipes.forEach { it.type = investParams.pipeTypes.first() }
+        grid.pipes.forEach { it.type = initialType }
         gridCosts = investParams.calculateCosts(grid)
 
         optimizePipesInCriticalPath()
+        println("Critical $numberOfTypeChecks checks and $numberOfUpdates updates")
 
         optimizePipesFromOutputToSource()
+        println("Out2Source $numberOfTypeChecks checks and $numberOfUpdates updates")
 
         optimizeAllPipes()
+        println("All $numberOfTypeChecks checks and $numberOfUpdates updates")
     }
 
     /**
@@ -45,8 +49,11 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
     private fun optimizePipesFromOutputToSource() {
         // TODO Filter all output nodes and calculate path to source for each
         grid.nodes.filterIsInstance<OutputNode>().forEach { node ->
-            for (pipe in node.pathToSource)
-                optimizePipe(pipe) // TODO Immer nur gleiche/dickere Leitungen probieren?
+            val possiblePipes = investParams.pipeTypes.toMutableList()
+            for (pipe in node.pathToSource) {
+                optimizePipe(pipe, possiblePipes)
+                possiblePipes.removeIf { pipe.type.diameter > it.diameter }
+            }
         }
     }
 
@@ -55,7 +62,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
      */
     private fun optimizeAllPipes() {
         var anyPipeUpdated: Boolean
-        optimizer@ do {
+        do {
             anyPipeUpdated = false
             for (pipe in grid.pipes) {
                 if (optimizePipe(pipe))
@@ -64,10 +71,19 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
         } while (anyPipeUpdated)
     }
 
+    /**
+     * Checks all possible types in pipe and check if total costs are lower.
+     *
+     * @param pipe Pipe - Rohrleitung für die die Gesamtkosten minimiert werden sollen
+     * @param types List<PipeType> - Liste mit möglichen Rohrtypen
+     * @return Boolean - true, wenn Optimierung vorgenommen wurde. Sonst false
+     */
     private fun optimizePipe(pipe: Pipe, types: List<PipeType> = investParams.pipeTypes): Boolean {
         var bestType = pipe.type
         var foundBetterType = false
-        for (type in types) {
+
+        // check all possible types excluding the current pipe type
+        types.filterNot { it == pipe.type }.forEach { type ->
             numberOfTypeChecks++
             pipe.type = type
             val newCost = investParams.calculateCosts(grid)
@@ -77,6 +93,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
                 foundBetterType = true
             }
         }
+
         if (foundBetterType)
             numberOfUpdates++
         pipe.type = bestType
