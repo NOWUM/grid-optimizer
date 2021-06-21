@@ -21,7 +21,6 @@ class PipePressureLossDelegate<T>(private val pipe: Pipe) : CalculableDelegate<T
     }
 
     override fun recalculateIndexed(index: Int) = with(pipe) {
-        // TODO Hier direkt Formel für pressure loss einsetzen?
         pipePressureLoss(flowRate[index], length, type.diameter) * 2
     }
 

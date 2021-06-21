@@ -24,7 +24,6 @@ class PipeVolumeFlowDelegate<T>(val pipe: Pipe) : CalculableDelegate<T>() {
     }
 
     override fun recalculateIndexed(index: Int): Double {
-        // TODO Hier direkt Formel für Volumenstrom einsetzen?
         return volumeFlow(flowIn[index], flowOut[index], pipe.target.energyDemand[index])
     }
 
