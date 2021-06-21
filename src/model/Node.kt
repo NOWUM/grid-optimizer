@@ -33,10 +33,10 @@ abstract class Node(val id: String) {
 
 
     open val flowInTemperature: List<Double>
-        get() = connectedPipes.single { it.target == this }.source.flowInTemperature // TODO Wärmeverlust der Pipe berücksichtigen
+        get() = connectedPipes.single { it.target == this }.source.flowInTemperature
 
     open val flowOutTemperature: List<Double>
-        get() = connectedPipes.single { it.target == this }.source.flowOutTemperature // TODO Wärmeverlust der Pipe berücksichtigen
+        get() = connectedPipes.single { it.target == this }.source.flowOutTemperature
 
     open val groundTemperature: List<Double>
         get() = connectedPipes.single { it.target == this }.source.groundTemperature
