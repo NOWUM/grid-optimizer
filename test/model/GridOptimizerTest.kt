@@ -37,10 +37,13 @@ class GridOptimizerTest {
 
         val costs = optimizer.calculateCosts(grid)
 
+        println("> Connected energy demand (OutputNodes): ${(grid.totalOutputEnergy / 1_000).round(3)} kWh")
+        println("> Heat loss in all pipes: ${(grid.totalHeatLoss / 1_000).round(3)} kWh")
+
         println("> Grid costs u ${costs.totalPerYear.round(2)} €")
         println(">> ${grid.pipes.sumOf { it.length }} m of pipes cost ${costs.pipeInvestCostTotal.round(2)} €.")
-        println(">> Pump with power of ${grid.neededPumpPower.round(3)} Watt for maximum pressure loss of ${grid.input.connectedPressureLoss.maxOrNull()?.round(3)} Bar cost ${costs.pumpInvestCostTotal.round(2)} €.")
-        println(">> Heat loss of ${grid.pipes.sumOf { it.pipeHeatLoss.sum() / 1000.0 }.round(3)} kW cost ${costs.heatLossCost.round(2)} €.")
+        println(">> Pump with power of ${grid.neededPumpPower.round(3)} Watt for maximum pressure loss of ${grid.input.pressureLoss.maxOrNull()?.round(3)} Bar cost ${costs.pumpInvestCostTotal.round(2)} €.")
+        println(">> Heat loss of ${(grid.totalOutputEnergy / 1_000).round(3)} kW cost ${costs.heatLossCost.round(2)} €.")
         grid.pipes.forEach { println("${it.id} should have a diameter of ${it.type.diameter}") }
         println(costs)
     }

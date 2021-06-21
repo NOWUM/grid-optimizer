@@ -1,6 +1,7 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.util.*
+import de.fhac.ewi.model.delegate.SubscribableDelegate
+import de.fhac.ewi.model.math.*
 
 data class Pipe(
     val id: String,
@@ -10,29 +11,23 @@ data class Pipe(
     val coverageHeight: Double // in m
 ) {
 
-    var type: PipeType = PipeType.UNDEFINED
+    var type by SubscribableDelegate(PipeType.UNDEFINED)
 
-    val volumeFlow: List<Double>
-        get() = target.connectedThermalEnergyDemand.curve.mapIndexed { idx, energyDemand ->
-            volumeFlow(source.flowInTemperature[idx], source.flowOutTemperature[idx], energyDemand)
-        }
+    val heatLoss by PipeHeatLossDelegate(this)
+
+    val energyDemand by PipeEnergyDemandDelegate(this)
+
+    val volumeFlow by PipeVolumeFlowDelegate(this)
 
     // Strömungsgeschwindigkeit = Volumenstrom / Rohrquerschnittsfläche
-    val flowRate: List<Double>
-        get() = volumeFlow.mapParallel { flowRate(type.diameter, it) }
+    val flowRate by PipeFlowRateDelegate(this)
 
     // Druckverluste in Bar. *2 für Hin und Rückleitung.
-    val pipePressureLoss: List<Double>
-        get() = flowRate.mapParallel { pipePressureLoss(it, length, type.diameter) * 2 }
+    val pipePressureLoss by PipePressureLossDelegate(this)
 
-    val pipeHeatLoss: List<Double>
-        get() {
-            val flowIn = source.flowInTemperature
-            val flowOut = source.flowOutTemperature
-            val ground = source.groundTemperature
-            return flowIn.mapIndicesParallel { idx -> pipeHeatLoss(flowIn[idx], flowOut[idx], ground[idx],
-                type.diameter, type.isolationThickness, coverageHeight, type.distanceBetweenPipes, length) }
-        }
+    val totalPressureLoss by PipeTotalPressureLossDelegate(this)
+
+    val totalPumpPower by PipePumpPowerDelegate(this)
 
     init {
         if (id.isBlank())

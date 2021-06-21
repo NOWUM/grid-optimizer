@@ -55,10 +55,10 @@ class GridService(
 
     fun calculateMaxMassenstrom(grid: Grid, temperatureSeries: String): MassenstromResponse {
         val tempRow = temperatureService.getSeries(temperatureSeries).temperatures.repeatEach(24)
-        val heatDemand = grid.input.connectedThermalEnergyDemand
+        val heatDemand = grid.input.energyDemand // including heat losses
         val massenstroms = tempRow.indices.map { idx ->
             massenstrom(grid.input.flowInTemperature[idx], grid.input.flowOutTemperature[idx], heatDemand[idx])
         }
-        return MassenstromResponse(tempRow, grid.input.flowInTemperature, grid.input.flowOutTemperature, heatDemand.curve, massenstroms)
+        return MassenstromResponse(tempRow, grid.input.flowInTemperature, grid.input.flowOutTemperature, heatDemand, massenstroms)
     }
 }

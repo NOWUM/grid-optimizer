@@ -23,7 +23,7 @@ class Optimizer(
         var currentCost = Double.MAX_VALUE
 
         // Reset all diameters
-        grid.pipes.forEach { it.type = PipeType.UNDEFINED }
+        grid.pipes.forEach { it.type = pipeTypes.first() }
 
         var pipeChecks = 0
 
@@ -41,7 +41,6 @@ class Optimizer(
                     if (newCost < currentCost) {
                         currentCost = newCost
                         anyPipeUpdated = true
-                        continue@pipeCheck
                     } else {
                         pipe.type = lastType
                     }
@@ -63,9 +62,9 @@ class Optimizer(
 
         val pumpInvestCostTotal = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency)
         val pumpInvestCostAnnuity = pumpInvestCostTotal * pumpAnnuityFactor
-        val pumpOperationCost = grid.input.neededPumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
+        val pumpOperationCost = grid.input.pumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
 
-        val heatLossCost = grid.pipes.sumOf { it.pipeHeatLoss.sum() } / 1_000 * heatGenerationCost
+        val heatLossCost = grid.totalHeatLoss / 1_000 * heatGenerationCost
 
         val investCostAnnuity = pipeInvestCostAnnuity + pumpInvestCostAnnuity
         val operationCostPerYear = pipeOperationCost + pumpOperationCost + heatLossCost

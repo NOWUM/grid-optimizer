@@ -1,5 +1,9 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.model.math.NodeEnergyDemandDelegate
+import de.fhac.ewi.model.math.NodePressureLossDelegate
+import de.fhac.ewi.model.math.NodePumpPowerDelegate
+import de.fhac.ewi.util.addPipeIfNeeded
 import de.fhac.ewi.util.mapIndicesParallel
 import de.fhac.ewi.util.mapParallel
 import de.fhac.ewi.util.neededPumpPower
@@ -21,40 +25,12 @@ abstract class Node(val id: String) {
 
 
     // complex attributes
-    open val connectedPressureLoss: List<Double>
-        get() {
-            // Retrieve losses per connected pipe
-            // TODO Pipe Pressure Loss counts twice because hin und rückweg
-            val losses = connectedPipes.filter { it.source == this }
-                .map { pipe -> pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).mapParallel { (a, b) -> a + b } }
+    open val energyDemand by NodeEnergyDemandDelegate()
 
-            if (losses.isEmpty()) return List(8760) { 0.0 }
+    open val pressureLoss by NodePressureLossDelegate()
 
-            // calculate maximum pressure loss for each hour
-            return losses.first().mapIndicesParallel { idx -> losses.maxOf { it[idx] } }
-        }
+    open val pumpPower by NodePumpPowerDelegate()
 
-    open val neededPumpPower: List<Double>
-        get() {
-            // (Druckverlust im Rohr + daran angeschlossener höchster Druckverlust) * 100_000 [Umrechnung Bar zu Pascal]  * Volumenstrom
-            // TODO Pipe Pressure Loss counts twice because hin und rückweg
-            val powers = connectedPipes.filter { it.source == this }
-                .map { pipe ->
-                    pipe.pipePressureLoss.zip(pipe.target.connectedPressureLoss).mapParallel { (a, b) -> a + b }
-                        .zip(pipe.volumeFlow)
-                        .mapParallel { (pressureLoss, volumeFlow) -> neededPumpPower(pressureLoss, volumeFlow) }
-                }
-
-            if (powers.isEmpty()) return List(8760) { 0.0 }
-
-            // calculate maximum needed pump power for each hour
-            return powers.first().mapIndicesParallel { idx -> powers.maxOf { it[idx] } }
-        }
-
-    // Gesamter Wärmebedarf + Verluste in Rohrleitungen in Watt auf das Jahr aufgeteilt
-    open val connectedThermalEnergyDemand: HeatDemandCurve
-        get() = connectedPipes.filter { it.source == this }
-            .fold(HeatDemandCurve.ZERO) { r, p -> r + p.target.connectedThermalEnergyDemand + p.pipeHeatLoss }
 
     open val flowInTemperature: List<Double>
         get() = connectedPipes.single { it.target == this }.source.flowInTemperature // TODO Wärmeverlust der Pipe berücksichtigen
@@ -82,6 +58,11 @@ abstract class Node(val id: String) {
 
         connectedPipes += pipe
         pipe.target.connectedPipes += pipe
+
+        // Include child pipe in property calculation
+        this::energyDemand.addPipeIfNeeded(pipe)
+        this::pressureLoss.addPipeIfNeeded(pipe)
+        this::pumpPower.addPipeIfNeeded(pipe)
     }
 
 }

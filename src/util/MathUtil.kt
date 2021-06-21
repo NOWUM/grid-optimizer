@@ -24,7 +24,7 @@ fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double, c: Double =
  *
  * @param flowIn Double - Vorlauftemperatur in °C
  * @param flowOut Double - Rücklauftemperatur in °C
- * @param heatDemand Double - Benötigte Wärmeenergie in kW
+ * @param heatDemand Double - Benötigte Wärmeenergie in Wh
  * @param p Double - Dichte des Mediums in kg/m^3
  * @return Double - Volumenstrom in m^3/s
  */
@@ -76,6 +76,8 @@ fun neededPumpPower(pressureLoss: Double, volumeFlow: Double): Double =
 
 /**
  * Berechnet den Wärmeverlust in einem Rohr.
+ *
+ * TODO Bereits für Vor und Rücklauf?
  *
  * @param flowIn Double - Vorlauftemperatur in °C
  * @param flowOut Double - Rücklauftemperatur in °C
