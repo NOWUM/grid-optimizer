@@ -27,7 +27,7 @@ class PipeHeatLossDelegate<T>(private val pipe: Pipe) : CalculableDelegate<T>() 
         pipeHeatLoss(
             flowIn[index],
             flowOut[index],
-            10.0, // TODO static
+            10.0,
             type.diameter,
             type.isolationThickness,
             coverageHeight,
