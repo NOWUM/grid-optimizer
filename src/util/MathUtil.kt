@@ -45,7 +45,7 @@ fun flowRate(diameter: Double, volumeFlow: Double): Double {
 /**
  * Druckverlustberechnung in Rohrleitungen.
  *
- * Quelle: https://www.schweizer-fn.de/stroemung/druckverlust/druckverlust.php#druckverlustrohr
+ * Quelle: Jungbluth, 09 Uebung Waermeverteilung.pdf, Folie 4
  * Hinweis: Formel ist für Pa ausgelegt - umrechnung in Bar
  *
  * @param flowSpeed Double - Strömungsgeschwindigkeit in m/s
@@ -62,7 +62,7 @@ fun pipePressureLoss(
     lambda: Double = 0.15,
     p: Double = WATER_DICHTE
 ) =
-    (lambda * length * p * flowSpeed.pow(2)) / (diameter * 2) / 100_000
+    lambda * length / diameter * p / 2 * flowSpeed.pow(2) / 100_000
 
 /**
  * Berechnet die benötigte Pumpleistung.
