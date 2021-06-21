@@ -1,11 +1,8 @@
 package de.fhac.ewi.util
 
 import de.fhac.ewi.model.Pipe
-import de.fhac.ewi.model.delegate.CalculableDelegate
 import de.fhac.ewi.model.delegate.PipeBasedCalculableDelegate
 import de.fhac.ewi.model.delegate.SubscribableDelegate
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty0
 import kotlin.reflect.jvm.isAccessible
 

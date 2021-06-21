@@ -12,7 +12,7 @@ import de.fhac.ewi.util.subscribeIfChanged
  *
  * @param T - For Delegate
  */
-class NodeEnergyDemandDelegate<T>: PipeBasedCalculableDelegate<T>() {
+class NodeEnergyDemandDelegate<T> : PipeBasedCalculableDelegate<T>() {
 
     override fun recalculateIndexed(index: Int, pipes: List<Pipe>): Double {
         return pipes.sumOf { it.energyDemand[index] }

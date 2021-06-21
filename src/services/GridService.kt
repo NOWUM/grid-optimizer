@@ -31,7 +31,8 @@ class GridService(
             grid.addIntermediateNode(it.id)
         }
         request.outputNodes.forEach {
-            val curve = demandService.createCurve(it.thermalEnergyDemand * 1000, it.loadProfileName, request.temperatureSeries)
+            val curve =
+                demandService.createCurve(it.thermalEnergyDemand * 1000, it.loadProfileName, request.temperatureSeries)
             grid.addOutputNode(it.id, curve, it.pressureLoss)
 
             if (it.replicas != null && it.replicas > 1) {
@@ -59,6 +60,12 @@ class GridService(
         val massenstroms = tempRow.indices.map { idx ->
             massenstrom(grid.input.flowInTemperature[idx], grid.input.flowOutTemperature[idx], heatDemand[idx])
         }
-        return MassenstromResponse(tempRow, grid.input.flowInTemperature, grid.input.flowOutTemperature, heatDemand, massenstroms)
+        return MassenstromResponse(
+            tempRow,
+            grid.input.flowInTemperature,
+            grid.input.flowOutTemperature,
+            heatDemand,
+            massenstroms
+        )
     }
 }

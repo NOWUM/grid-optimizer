@@ -12,9 +12,9 @@ class PerformanceTest {
     @Test
     fun calculateWithList() {
         val dFunc = "x*4+5".toDoubleFunction()
-        val a = List(ARRAY_SIZE) {it.toDouble()}
-        val b = List(ARRAY_SIZE) {it}
-        val c = List(ARRAY_SIZE) {it.toDouble()}
+        val a = List(ARRAY_SIZE) { it.toDouble() }
+        val b = List(ARRAY_SIZE) { it }
+        val c = List(ARRAY_SIZE) { it.toDouble() }
         val time = measureTimeMillis {
             repeat(TIMES) {
                 a.indices.map { a[it] * b[it] + dFunc(c[it]) }
@@ -26,9 +26,9 @@ class PerformanceTest {
     @Test
     fun calculateWithArray() {
         val dFunc = "x*4+5".toDoubleFunction()
-        val a = Array(ARRAY_SIZE) {it.toDouble()}
-        val b = Array(ARRAY_SIZE) {it}
-        val c = Array(ARRAY_SIZE) {it.toDouble()}
+        val a = Array(ARRAY_SIZE) { it.toDouble() }
+        val b = Array(ARRAY_SIZE) { it }
+        val c = Array(ARRAY_SIZE) { it.toDouble() }
         val time = measureTimeMillis {
             repeat(TIMES) {
                 a.indices.map { a[it] * b[it] + dFunc(c[it]) }
@@ -41,9 +41,9 @@ class PerformanceTest {
     @Test
     fun calculateWithDoubleArray() {
         val dFunc = "x*4+5".toDoubleFunction()
-        val a = DoubleArray(ARRAY_SIZE) {it.toDouble()}
-        val b = IntArray(ARRAY_SIZE) {it}
-        val c = DoubleArray(ARRAY_SIZE) {it.toDouble()}
+        val a = DoubleArray(ARRAY_SIZE) { it.toDouble() }
+        val b = IntArray(ARRAY_SIZE) { it }
+        val c = DoubleArray(ARRAY_SIZE) { it.toDouble() }
         val time = measureTimeMillis {
             repeat(TIMES) {
                 a.indices.map { a[it] * b[it] + dFunc(c[it]) }
@@ -55,9 +55,9 @@ class PerformanceTest {
     @Test
     fun calculateWithArrayParallel() {
         val dFunc = "x*4+5".toDoubleFunction()
-        val a = Array(ARRAY_SIZE) {it.toDouble()}
-        val b = Array(ARRAY_SIZE) {it}
-        val c = Array(ARRAY_SIZE) {it.toDouble()}
+        val a = Array(ARRAY_SIZE) { it.toDouble() }
+        val b = Array(ARRAY_SIZE) { it }
+        val c = Array(ARRAY_SIZE) { it.toDouble() }
         val time = measureTimeMillis {
             repeat(TIMES) {
                 a.indices.toList().parallelStream().map { a[it] * b[it] + dFunc(c[it]) }.toList()

@@ -10,7 +10,7 @@ import de.fhac.ewi.util.subscribeIfChanged
  *
  * @param T - For Delegate
  */
-class NodePressureLossDelegate<T>: PipeBasedCalculableDelegate<T>() {
+class NodePressureLossDelegate<T> : PipeBasedCalculableDelegate<T>() {
 
     override fun recalculateIndexed(index: Int, pipes: List<Pipe>): Double {
         return pipes.maxOf { it.totalPressureLoss[index] }

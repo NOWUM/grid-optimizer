@@ -27,7 +27,8 @@ class InvestmentParameter(
 
         val pumpInvestCostTotal = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency)
         val pumpInvestCostAnnuity = pumpInvestCostTotal * pumpAnnuityFactor
-        val pumpOperationCost = grid.input.pumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
+        val pumpOperationCost =
+            grid.input.pumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
 
         val heatLossCost = grid.totalHeatLoss / 1_000 * heatGenerationCost
 
@@ -35,11 +36,13 @@ class InvestmentParameter(
         val operationCostPerYear = pipeOperationCost + pumpOperationCost + heatLossCost
 
         val total = investCostAnnuity + operationCostPerYear
-        return Costs(pipeInvestCostTotal, pipeInvestCostAnnuity, pipeOperationCost,
+        return Costs(
+            pipeInvestCostTotal, pipeInvestCostAnnuity, pipeOperationCost,
             pumpInvestCostTotal, pumpInvestCostAnnuity, pumpOperationCost,
-           heatLossCost, total)
+            heatLossCost, total
+        )
     }
 
-    private fun calculateAnnuityFactor(lifespan: Double) : Double =
+    private fun calculateAnnuityFactor(lifespan: Double): Double =
         (1.0 + wacc / 100.0).pow(lifespan) * (wacc / 100.0) / ((1.0 + wacc / 100.0).pow(lifespan) - 1)
 }
