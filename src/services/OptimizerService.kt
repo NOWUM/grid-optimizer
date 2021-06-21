@@ -56,7 +56,11 @@ class OptimizerService {
                 OptimizedPipeResponse(
                     it.id,
                     it.type.diameter,
-                    it.pipePressureLoss
+                    it.volumeFlow,
+                    it.heatLoss,
+                    it.pipePressureLoss,
+                    it.totalPressureLoss,
+                    it.totalPumpPower
                 )
             },
             grid.nodes.map {
