@@ -77,8 +77,6 @@ fun neededPumpPower(pressureLoss: Double, volumeFlow: Double): Double =
 /**
  * Berechnet den Wärmeverlust in einem Rohr.
  *
- * TODO Bereits für Vor und Rücklauf?
- *
  * @param flowIn Double - Vorlauftemperatur in °C
  * @param flowOut Double - Rücklauftemperatur in °C
  * @param ground Double - Bodentemperatur in °C
