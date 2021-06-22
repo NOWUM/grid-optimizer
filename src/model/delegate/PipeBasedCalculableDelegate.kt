@@ -15,6 +15,7 @@ abstract class PipeBasedCalculableDelegate<T> : CalculableDelegate<T>() {
     fun addChild(pipe: Pipe) {
         connectedPipes += pipe
         onPipeConnect(pipe)
+        updateValue() // After new pipe update value because it could have changed
     }
 
     override fun recalculateIndexed(index: Int) = recalculateIndexed(index, connectedPipes)
