@@ -56,7 +56,7 @@ export const DefaultEdge = ({
                                 targetY,
                                 sourcePosition,
                                 targetPosition,
-                                style = {},
+                                style,
                                 data,
                                 arrowHeadType,
                                 markerEndId,
@@ -74,6 +74,10 @@ export const DefaultEdge = ({
         </>
     }
 
+    if (data?.isCritical) {
+        style = {...style, stroke: "red"}
+    }
+
     const text = (data?.diameter || data?.length) ? (
         <EdgeText
             x={centerX}
@@ -81,7 +85,6 @@ export const DefaultEdge = ({
             label={getLabel()}
         />
     ) : null;
-
     return <>
         <Tooltip title={"Das ist ein Test"}>
             <>

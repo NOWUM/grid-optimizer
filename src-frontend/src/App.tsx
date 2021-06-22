@@ -168,7 +168,7 @@ function App() {
                     <FormulaCheck />
                 </TabPanel>
                 <TabPanel value={"5"}>
-                    <OptimizationNodeDetails nodeElements={nodeElements} />
+                    <OptimizationNodeDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}/>
                 </TabPanel>
 
             </TabContext>

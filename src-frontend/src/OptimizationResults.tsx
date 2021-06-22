@@ -2,7 +2,6 @@ import React, {memo} from "react";
 // @ts-ignore
 import Plot from 'react-plotly.js';
 import {MassenstromResponse} from "./models";
-// const temps =  require("./mock/temperature-mock")
 
 export const OptimizationResultsComponent = ({massenstrom}: {massenstrom: MassenstromResponse}) => {
     const getPlotData = () => {
@@ -14,19 +13,6 @@ export const OptimizationResultsComponent = ({massenstrom}: {massenstrom: Massen
                 marker: {color: 'red'},
                 name: "Energie Heat Demand [kWh]"
             },
-            // {
-            //     y: massenstrom.flowInTemperatures,
-            //     type: "scattergl",
-            //     mode: 'lines+markers',
-            //     marker: {color: 'green'},
-            //     name: "Flow In Temperature [°C]"
-            // }, {
-            //     y: massenstrom.flowOutTemperatures,
-            //     type: "scattergl",
-            //     mode: 'lines+markers',
-            //     marker: {color: 'blue'},
-            //     name: "Flow Out Temperature [°C]"
-            // },
             {
                 y: massenstrom.massenstrom,
                 type: "scattergl",

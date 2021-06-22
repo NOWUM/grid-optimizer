@@ -1,7 +1,9 @@
 import {Handle, Position} from "react-flow-renderer";
-import {customInputHandleStyle, CustomNodeDate, customOutputHandleStyle} from "./InputNode";
-import {showNodeIntermediateDialog, showNodeOutputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
-import {IntermediateNode as IntermediateNodeModel, OutputNode as OutputNodeModel} from "../models";
+import {customInputHandleStyle, customOutputHandleStyle, getOptimizationTooltip} from "./InputNode";
+import {showNodeIntermediateDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
+import {IntermediateNode as IntermediateNodeModel} from "../models";
+import {Tooltip} from "@material-ui/core";
+import React from "react";
 
 
 const customNodeStyles = {
@@ -27,28 +29,32 @@ export const IntermediateNode = (node : IntermediateNodeModel) => {
     }
 
     return (
-        <div style={customNodeStyles} onDoubleClick={handleClick}>
-            <Handle type="target" position={Position.Top} style={{ ...customInputHandleStyle }} />
-            <div>{node.data.label}</div>
-            <Handle
-                type="source"
-                position={Position.Right}
-                id="a"
-                style={{ ...customOutputHandleStyle }}
-            />
-            <Handle
-                type="source"
-                position={Position.Bottom}
-                id="b"
-                style={{ ...customOutputHandleStyle }}
-            />
+        <Tooltip title={<>
+            {node.data.annualEnergyDemand ? getOptimizationTooltip(node.data) : <></>}
+        </>}>
+            <div style={customNodeStyles} onDoubleClick={handleClick}>
+                <Handle type="target" position={Position.Top} style={{...customInputHandleStyle}}/>
+                <div>{node.data.label}</div>
+                <Handle
+                    type="source"
+                    position={Position.Right}
+                    id="a"
+                    style={{...customOutputHandleStyle}}
+                />
+                <Handle
+                    type="source"
+                    position={Position.Bottom}
+                    id="b"
+                    style={{...customOutputHandleStyle}}
+                />
 
-            <Handle
-                type="source"
-                position={Position.Left}
-                id="c"
-                style={{ ...customOutputHandleStyle }}
-            />
-        </div>
+                <Handle
+                    type="source"
+                    position={Position.Left}
+                    id="c"
+                    style={{...customOutputHandleStyle}}
+                />
+            </div>
+        </Tooltip>
     );
 };

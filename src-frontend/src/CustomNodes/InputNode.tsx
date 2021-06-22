@@ -1,7 +1,7 @@
 import {Handle, Position} from "react-flow-renderer";
 import {Tooltip} from "@material-ui/core";
-import React from "react";
-import {InputNode as InputNodeModel} from "../models";
+import React, {ReactElement} from "react";
+import {BaseNode, InputNode as InputNodeModel} from "../models";
 import {showNodeInputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
 import {verifyBackend} from "../ReactFlow/FlowContainer";
 
@@ -22,6 +22,14 @@ export const customOutputHandleStyle = {
 
 export interface CustomNodeDate {
     label: string | Element
+}
+
+export const getOptimizationTooltip = (baseNode: BaseNode): ReactElement => {
+    return <>
+        Jährlicher Energiebedarf: {baseNode?.annualEnergyDemand} W/h <br/>
+        Maximal benötigte Pumpleistung: {baseNode?.maximalNeededPumpPower} Watt <br/>
+        Maximaler Druckverust: {baseNode?.maximalPressureLoss} Bar <br/>
+    </>
 }
 
 
@@ -50,7 +58,7 @@ export const InputNode = (node: InputNodeModel) => {
         <Tooltip title={<>
             Formel Vorlauftemperatur: {node.data.flowTemperatureTemplate}<br/>
             Formel Rücklauftemperatur: {node.data.returnTemperatureTemplate} <br/>
-
+            {node.data.annualEnergyDemand? getOptimizationTooltip(node.data): <></>}
         </>}>
             <div style={customNodeStyles} onDoubleClick={handleClick}>
                 <Handle
