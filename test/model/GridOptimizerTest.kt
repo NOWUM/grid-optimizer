@@ -23,7 +23,7 @@ class GridOptimizerTest {
         val investParameter = InvestmentParameter(
             pipeTypes, // types of pipes that can be used
             { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
-            { pumpPower -> 500.0 + pumpPower / 1000 * 500 }, // invest cost for pump based on pump power
+            { pumpPower -> 500.0 + pumpPower * 500 }, // invest cost for pump based on pump power f(kW) = €
             0.07, // (Kosten Erzeugung Wärmeverluste)
             40.0, // years for grid
             10.0, // years for pump
