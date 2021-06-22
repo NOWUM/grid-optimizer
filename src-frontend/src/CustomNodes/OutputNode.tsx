@@ -1,5 +1,5 @@
 import React from "react";
-import {customInputHandleStyle} from "./InputNode";
+import {customInputHandleStyle, getOptimizationTooltip} from "./InputNode";
 import {Handle, Position} from "react-flow-renderer";
 import {showNodeOutputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
 import {OutputNode as OutputNodeModel} from "../models";
@@ -36,7 +36,9 @@ export const OutputNode = (node: OutputNodeModel) => {
             Wärmebedarf: {node.data.thermalEnergyDemand} kWh<br/>
             Druckverlust: {node.data.pressureLoss} Bar <br/>
             Lastprofil: {node.data.loadProfileName} <br/>
-            Replicas: {node.data.replicas}
+            Replicas: {node.data.replicas} <br/>
+
+            {node.data.annualEnergyDemand? getOptimizationTooltip(node.data): <></>}
         </>}>
             <div style={customNodeStyles} onDoubleClick={handleClick}>
                 <Handle type="target" position={Position.Top} style={{...customInputHandleStyle}}/>

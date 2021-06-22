@@ -52,11 +52,16 @@ class OptimizerService {
         println("> Grid costs now ${optimizer.gridCosts}")
         return OptimizationResponse(
             optimizer.gridCosts,
+            grid.input.criticalChildNode.pathToSource.map { it.id },
             grid.pipes.map {
                 OptimizedPipeResponse(
                     it.id,
                     it.type.diameter,
-                    it.pipePressureLoss
+                    it.volumeFlow,
+                    it.heatLoss,
+                    it.pipePressureLoss,
+                    it.totalPressureLoss,
+                    it.totalPumpPower
                 )
             },
             grid.nodes.map {
@@ -64,7 +69,12 @@ class OptimizerService {
                     it.id,
                     it.energyDemand,
                     it.pressureLoss,
-                    it.pumpPower
+                    it.pumpPower,
+                    it.flowInTemperature,
+                    it.flowOutTemperature,
+                    it.energyDemand.sum(),
+                    it.pumpPower.maxOrNull()!!,
+                    it.pressureLoss.maxOrNull()!!
                 )
             }
         )
