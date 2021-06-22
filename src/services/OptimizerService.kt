@@ -52,7 +52,7 @@ class OptimizerService {
         println("> Grid costs now ${optimizer.gridCosts}")
         return OptimizationResponse(
             optimizer.gridCosts,
-            grid.input.criticalChildNode.pathToSource.map { it.id },
+            grid.criticalPath.map { it.id },
             grid.pipes.map {
                 OptimizedPipeResponse(
                     it.id,
