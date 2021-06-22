@@ -16,7 +16,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
         numberOfTypeChecks = 0
         numberOfUpdates = 0
 
-        // Reset all pipes to first possible type
+        // Reset all pipes to undefined type
         grid.pipes.forEach { it.type = PipeType.UNDEFINED }
         gridCosts = investParams.calculateCosts(grid)
 
@@ -34,12 +34,8 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
      * Optimize all pipes in critical path
      */
     private fun optimizePipesInCriticalPath() {
-        // Find node at the end of critical path (maximum pressure loss in total?)
-        val criticalPath = grid.input.criticalChildNode.pathToSource
-
-
-        // Optimize path from that to source
-        optimizePipePath(criticalPath)
+        // CriticalPath = Longest Path from OutputNode to InputNode
+        optimizePipePath(grid.criticalPath)
     }
 
     /**

@@ -1,6 +1,7 @@
 package de.fhac.ewi.util
 
 import kotlin.math.ln
+import kotlin.math.log10
 import kotlin.math.pow
 
 const val WATER_DICHTE = 997.0
@@ -49,21 +50,21 @@ fun flowRate(diameter: Double, volumeFlow: Double): Double =
  * Quelle: Jungbluth, 09 Uebung Waermeverteilung.pdf, Folie 4
  * Hinweis: Formel ist für Pa ausgelegt - umrechnung in Bar
  *
- * @param flowSpeed Double - Strömungsgeschwindigkeit in m/s
+ * @param flowRate Double - Strömungsgeschwindigkeit in m/s
  * @param length Double - Länge der Rohrleitung in m
  * @param diameter Double - Rohrinnendurchmesser in m
- * @param lambda Double - Rohrwiederstandsbeiwert oder Rohrreibungszahl (maybe 0.15 von Wikipedia https://de.wikipedia.org/wiki/Rohrreibungszahl)
+ * @param lambda Double - Rohrwiederstandsbeiwert oder Rohrreibungszahl
  * @param p Double - Dichte des Mediums in kg/m^3
  * @return Double - Druckverlust in Bar
  */
 fun pipePressureLoss(
-    flowSpeed: Double,
+    flowRate: Double,
     length: Double,
     diameter: Double,
-    lambda: Double = 0.15,
+    lambda: Double = reynoldsNumberToLambda(reynoldsNumber(flowRate, diameter), diameter),
     p: Double = WATER_DICHTE
 ) =
-    lambda * length / diameter * p / 2 * flowSpeed.pow(2) / 100_000
+    lambda * length / diameter * p / 2 * flowRate.pow(2) / 100_000
 
 /**
  * Berechnet die benötigte Pumpleistung.
@@ -111,6 +112,52 @@ fun pipeHeatLoss(
     return numerator / denominator
 }
 
+/**
+ * Umwandlung der Reynoldszahl zu Rohrwiderstandsbeiwert (Lambda).
+ *
+ * Hinweis: Die Grenzen zur Annährung wurden leicht verschoben, damit keine Lücken entstehen.
+ *
+ * Quelle: Jungbluth, 09 Uebung Waermeverteilung.pdf, Folie 12
+ *
+ * @param re Double - Rohrwiderstandsbeiwert
+ * @param diameter Double - Rohrinnendurchmesser in m
+ * @param k Double - keine Ahnung
+ * @return Double - Rohrwiderstandsbeiwert dimensionslos
+ */
+fun reynoldsNumberToLambda(re: Double, diameter: Double, k: Double = 0.01) : Double = when {
+    // laminare Strömung
+    re <= 2320 ->
+        64 / re
+
+    // hydraulisch glatt
+    2320 < re && re <= diameter / k * log10(0.1 * diameter / k) ->
+        0.309 / log10(re / 7).pow(2)
+
+    // Übergangsbereich
+    diameter / k * log10(0.1 * diameter / k) < re && re <= 400 * diameter / k * log10(3.715*diameter/k) ->
+        0.25 / log10(15 / re + k / (3.715 * diameter))
+
+    // hydraulisch rau
+    400 * diameter / k * log10(3.715*diameter/k) < re ->
+        0.25 / log10(3.715 * diameter / k).pow(2)
+
+    else -> throw IllegalArgumentException("No formula found for input re=$re, diameter=$diameter, k=$k")
+}
+
+/**
+ * Berechnet aus Strömungsgeschwindigkeit und Viskosität die Reynoldszahl.
+ *
+ * Quelle: Jungbluth, 09 Uebung Waermeverteilung.pdf, Folie 6
+ * Standardwert Viskosität: https://www.lss.ovgu.de/lss_media/Downloads/Lehre/Stro%CC%88mungsmechanik/Arbeitsheft/IV-p-160.pdf
+ * TODO Viskosität ist Temperaturabhängig. Eigentlich müsste man da also etwas tun.
+ *
+ * @param flowRate Double - Strömungsgeschwindigkeit in m/s
+ * @param diameter Double - Rohrinnendurchmesser in m
+ * @param viskositaet Double - Viskosität in m^2/s
+ * @return Double - Reynoldszahl dimensionslos
+ */
+fun reynoldsNumber(flowRate: Double, diameter: Double, viskositaet: Double = 0.000000388): Double =
+    flowRate * diameter / viskositaet
 
 /**
  * Berechnet T_Allokation für Tagesmittelwerte

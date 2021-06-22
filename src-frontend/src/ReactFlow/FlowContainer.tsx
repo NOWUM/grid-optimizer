@@ -185,9 +185,6 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
     }
 
     const getElementsForFlow = (): Elements => {
-
-        console.log(nodeElements)
-        console.log(pipes)
         const inputNodes = addTypeToNodes(nodeElements.inputNodes, NodeType.INPUT_NODE)
         const intermediateNodes = addTypeToNodes(nodeElements.intermediateNodes, NodeType.INTERMEDIATE_NODE)
         const outputNodes = addTypeToNodes(nodeElements.outputNodes, NodeType.OUTPUT_NODE)
@@ -197,18 +194,23 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         })
 
         inputNodes.forEach((n) => {
-            const {flowTemperatureTemplate, returnTemperatureTemplate} = (n as InputNodeModel)
+            const {flowTemperatureTemplate, returnTemperatureTemplate, annualEnergyDemand,
+                maximalNeededPumpPower, maximalPressureLoss} = (n as InputNodeModel)
             n.data = {
-                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode, onDelete: handleDeleteNode
+                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode, onDelete: handleDeleteNode,
+                annualEnergyDemand, maximalNeededPumpPower, maximalPressureLoss
             }
         })
 
         intermediateNodes.forEach((n) => {
-            n.data = {...n.data, updateNode, onDelete: handleDeleteNode}
+            const {annualEnergyDemand, maximalNeededPumpPower, maximalPressureLoss} = n;
+            n.data = {...n.data, updateNode, onDelete: handleDeleteNode, annualEnergyDemand, maximalNeededPumpPower,
+                maximalPressureLoss}
         })
 
         outputNodes.forEach((n) => {
-            const {thermalEnergyDemand, pressureLoss, loadProfileName, replicas} = (n as OutputNodeModel)
+            const {thermalEnergyDemand, pressureLoss, loadProfileName, replicas, annualEnergyDemand,
+                maximalNeededPumpPower, maximalPressureLoss} = (n as OutputNodeModel)
             n.data = {
                 ...n.data,
                 thermalEnergyDemand,
@@ -216,7 +218,10 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 updateNode,
                 loadProfileName,
                 replicas,
-                onDelete: handleDeleteNode
+                onDelete: handleDeleteNode,
+                annualEnergyDemand,
+                maximalNeededPumpPower,
+                maximalPressureLoss
             }
         })
 
