@@ -121,7 +121,7 @@ fun pipeHeatLoss(
  *
  * @param re Double - Rohrwiderstandsbeiwert
  * @param diameter Double - Rohrinnendurchmesser in m
- * @param k Double - keine Ahnung
+ * @param k Double - Rohrrauheit in ???
  * @return Double - Rohrwiderstandsbeiwert dimensionslos
  */
 fun reynoldsNumberToLambda(re: Double, diameter: Double, k: Double = 0.01) : Double = when {
