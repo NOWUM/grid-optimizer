@@ -23,6 +23,8 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
         optimizePipesInCriticalPath()
         println("Critical $numberOfTypeChecks checks and $numberOfUpdates updates")
 
+        // TODO Der maximale Druckverlust verändert sich hier eigentlich nicht mehr.
+
         optimizePipesFromOutputToSource()
         println("Out2Source $numberOfTypeChecks checks and $numberOfUpdates updates")
 
@@ -35,7 +37,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
      */
     private fun optimizePipesInCriticalPath() {
         // CriticalPath = Longest Path from OutputNode to InputNode
-        optimizePipePath(grid.criticalPath)
+        optimizePipePath(grid.criticalPath.toList())
     }
 
     /**
@@ -44,7 +46,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
     private fun optimizePipesFromOutputToSource() {
         // Filter all output nodes and calculate path to source for each
         grid.nodes.filterIsInstance<OutputNode>().forEach { node ->
-            optimizePipePath(node.pathToSource)
+            optimizePipePath(node.pathToSource.toList())
         }
     }
 
@@ -69,12 +71,12 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
      * @param types List<PipeType> - Liste mit möglichen Rohrtypen
      * @return Boolean - true, wenn Optimierung vorgenommen wurde. Sonst false
      */
-    private fun optimizePipe(pipe: Pipe, types: List<PipeType> = investParams.pipeTypes): Boolean {
+    private fun optimizePipe(pipe: Pipe, types: List<PipeType> = investParams.pipeTypes.filterNot { it == pipe.type }): Boolean {
         var bestType = pipe.type
         var foundBetterType = false
 
         // check all possible types excluding the current pipe type
-        types.filterNot { it == pipe.type }.forEach { type ->
+        types.forEach { type ->
             numberOfTypeChecks++
             pipe.type = type
             val newCost = investParams.calculateCosts(grid)
@@ -91,59 +93,40 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
         return foundBetterType
     }
 
-    private fun optimizePipePath(pipes: Array<Pipe>) {
-        val bestTypes = pipes.map { it.type }.toMutableList()
+    /**
+     * Rekursives Verfahren zur Optimierung eines Strangs Richtung Einspeisepunkt.
+     *
+     * @param pipes Array<Pipe>
+     * @param preselectedTypes List<PipeType>
+     */
+    private fun optimizePipePath(pipes: List<Pipe>, preselectedTypes: List<PipeType> = investParams.pipeTypes): Boolean {
+        val currentPipe = pipes.first()
 
-        val possibleTypes = investParams.pipeTypes.sortedBy { it.diameter }.toMutableList()
-        // If first pipe already has a valid then remove all smaller ones. They can't be right I guess.
-        if (pipes.first().type != PipeType.UNDEFINED)
-            possibleTypes.removeIf { it.diameter < pipes.first().type.diameter }
-
-        pipes.forEachIndexed { index, pipe ->
-            var foundBetterType = false
-            // Probiere alle möglichen Types für dieses Rohrstück aus
-            for (type in possibleTypes) {
-                numberOfTypeChecks++
-                // Für die aktuelle Pipe neuen Typ setzen
-                pipe.type = type
-
-
-                // Für alle nachfolgenden Pipes diesen Typ setzen. Es macht keinen Sinn, dass der Rohrdurchmesser kleiner wird.
-                for (i in index + 1 until pipes.size)
-                    if (bestTypes[i] == PipeType.UNDEFINED || bestTypes[i].diameter < pipes[i-1].type.diameter)
-                        pipes[i].type = pipes[i-1].type
-                    else
-                        pipes[i].type = bestTypes[i]
-
-                // Berechnung der Netzkosten
-                val newCost = investParams.calculateCosts(grid)
-
-              /*  println(
-                    "Checking ${type.diameter} on ${pipe.id} with parent path ${
-                        pipes.drop(index + 1).map { it.id + "(${it.type.diameter})" }
-                    } costs are ${newCost.totalPerYear} ${newCost.totalPerYear < gridCosts.totalPerYear} ${grid.neededPumpPower}"
-                )*/
-
-                // If costs are lower then old grid or old best type is UNDEFINED -> Update
-                if (newCost.totalPerYear < gridCosts.totalPerYear || bestTypes[index] == PipeType.UNDEFINED) {
-                    gridCosts = newCost
-
-                    for (i in index until pipes.size)
-                        bestTypes[i] = pipes[i].type
-
-                    foundBetterType = true
-                    println("Is better!")
-                }
-            }
-
-            if (foundBetterType)
-                numberOfUpdates++
-            // Set current pipe to best type found in current check (or before)
-            pipe.type = bestTypes[index]
-            // Remove all types with a smaller diameter then current pipe. No recheck required
-            possibleTypes.removeIf { it.diameter < pipe.type.diameter }
+        // Auswahl der möglichen Rohrtypen, die für die Optimierung sinnvoll erscheinen
+        val possibleTypes = preselectedTypes.toMutableList()
+        currentPipe.target.largestConnectedPipe?.let { largestConnectedPipe ->
+            possibleTypes.removeIf { it.diameter < largestConnectedPipe.diameter }
         }
 
-        // Restore best types already done in loop above
+        // Falls es nur eine Pipe im Pfad gibt, dann diese optimieren und ggf updaten.
+        if (pipes.size == 1)
+            return optimizePipe(currentPipe, possibleTypes)
+
+        // Andernfalls müssen wir den Spaß rekursiv aufrufen.
+        var bestType = currentPipe.type
+        var betterPathFound = false
+        val newPipePath = pipes.drop(1)
+
+        for (type in possibleTypes) {
+            currentPipe.type = type
+
+            if (optimizePipePath(newPipePath, possibleTypes)) {
+                bestType = currentPipe.type
+                betterPathFound = true
+            }
+        }
+
+        currentPipe.type = bestType
+        return betterPathFound
     }
 }
