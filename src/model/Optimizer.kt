@@ -16,10 +16,8 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
         numberOfTypeChecks = 0
         numberOfUpdates = 0
 
-        val initialType = investParams.pipeTypes.minByOrNull { it.diameter }
-            ?: throw IllegalStateException("No pipe types defined for optimization.")
-        // Set all pipes to first possible type
-        grid.pipes.forEach { it.type = initialType }
+        // Reset all pipes to undefined type
+        grid.pipes.forEach { it.type = PipeType.UNDEFINED }
         gridCosts = investParams.calculateCosts(grid)
 
         optimizePipesInCriticalPath()
@@ -85,7 +83,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
             numberOfTypeChecks++
             pipe.type = type
             val newCost = investParams.calculateCosts(grid)
-            if (newCost.totalPerYear < gridCosts.totalPerYear) {
+            if (newCost.totalPerYear < gridCosts.totalPerYear || bestType == PipeType.UNDEFINED) {
                 gridCosts = newCost
                 bestType = type
                 foundBetterType = true
