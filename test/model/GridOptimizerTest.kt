@@ -24,7 +24,7 @@ class GridOptimizerTest {
             pipeTypes, // types of pipes that can be used
             { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
             { pumpPower -> 500.0 + pumpPower / 1000 * 500 }, // invest cost for pump based on pump power
-            0.05, // unused (Kosten Erzeugung Wärmeverluste)
+            0.07, // (Kosten Erzeugung Wärmeverluste)
             40.0, // years for grid
             10.0, // years for pump
             1.75, // Zinsen in %
@@ -69,13 +69,13 @@ class GridOptimizerTest {
             "60".toDoubleFunction()
         )
         grid.addIntermediateNode("2")
-        val heatDemand = heatDemandService.createCurve(50_000.0, "EFH", "Schemm 2018")
+        val heatDemand = heatDemandService.createCurve(50_000_000.0, "EFH", "Schemm 2018")
         grid.addOutputNode("3", heatDemand, 1.0)
-        val heatDemand2 = heatDemandService.createCurve(60_000.0, "EFH", "Schemm 2018")
+        val heatDemand2 = heatDemandService.createCurve(60_000_000.0, "EFH", "Schemm 2018")
         grid.addOutputNode("4", heatDemand2, 1.0)
         grid.addPipe("P1", "1", "2", 100.0, 0.6)
         grid.addPipe("P2", "2", "3", 50.0, 0.6)
-        grid.addPipe("P3", "2", "4", 250.0, 0.6)
+        grid.addPipe("P3", "2", "4", 20.0, 0.6)
         return grid
     }
 
