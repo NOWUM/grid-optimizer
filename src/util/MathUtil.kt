@@ -16,7 +16,7 @@ const val WATER_DICHTE = 997.0
  * @return Double - Massenstrom in kg/s
  */
 fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double, c: Double = 4.187) =
-    (heatDemand) / (c * (flowIn - flowOut))
+    (heatDemand / 1000) / (c * (flowIn - flowOut))
 
 /**
  * Berechnet den Volumenstrom aus Temperaturdifferenz, Wärmebedarf und der Dichte des Mediums.
