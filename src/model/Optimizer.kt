@@ -39,8 +39,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
 
 
         // Optimize path from that to source
-        for (pipe in criticalPath)
-            optimizePipe(pipe)
+        optimizePipePath(criticalPath)
     }
 
     /**
@@ -49,11 +48,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
     private fun optimizePipesFromOutputToSource() {
         // Filter all output nodes and calculate path to source for each
         grid.nodes.filterIsInstance<OutputNode>().forEach { node ->
-            val possiblePipes = investParams.pipeTypes.toMutableList()
-            for (pipe in node.pathToSource) {
-                optimizePipe(pipe, possiblePipes)
-                possiblePipes.removeIf { pipe.type.diameter > it.diameter }
-            }
+            optimizePipePath(node.pathToSource)
         }
     }
 
@@ -98,5 +93,61 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
             numberOfUpdates++
         pipe.type = bestType
         return foundBetterType
+    }
+
+    private fun optimizePipePath(pipes: Array<Pipe>) {
+        val bestTypes = pipes.map { it.type }.toMutableList()
+
+        val possibleTypes = investParams.pipeTypes.sortedBy { it.diameter }.toMutableList()
+        // If first pipe already has a valid then remove all smaller ones. They can't be right I guess.
+        if (pipes.first().type != PipeType.UNDEFINED)
+            possibleTypes.removeIf { it.diameter < pipes.first().type.diameter }
+
+        pipes.forEachIndexed { index, pipe ->
+            var foundBetterType = false
+            // Probiere alle möglichen Types für dieses Rohrstück aus
+            for (type in possibleTypes) {
+                numberOfTypeChecks++
+                // Für die aktuelle Pipe neuen Typ setzen
+                pipe.type = type
+
+
+                // Für alle nachfolgenden Pipes diesen Typ setzen. Es macht keinen Sinn, dass der Rohrdurchmesser kleiner wird.
+                for (i in index + 1 until pipes.size)
+                    if (bestTypes[i] == PipeType.UNDEFINED || bestTypes[i].diameter < pipes[i-1].type.diameter)
+                        pipes[i].type = pipes[i-1].type
+                    else
+                        pipes[i].type = bestTypes[i]
+
+                // Berechnung der Netzkosten
+                val newCost = investParams.calculateCosts(grid)
+
+              /*  println(
+                    "Checking ${type.diameter} on ${pipe.id} with parent path ${
+                        pipes.drop(index + 1).map { it.id + "(${it.type.diameter})" }
+                    } costs are ${newCost.totalPerYear} ${newCost.totalPerYear < gridCosts.totalPerYear} ${grid.neededPumpPower}"
+                )*/
+
+                // If costs are lower then old grid or old best type is UNDEFINED -> Update
+                if (newCost.totalPerYear < gridCosts.totalPerYear || bestTypes[index] == PipeType.UNDEFINED) {
+                    gridCosts = newCost
+
+                    for (i in index until pipes.size)
+                        bestTypes[i] = pipes[i].type
+
+                    foundBetterType = true
+                    println("Is better!")
+                }
+            }
+
+            if (foundBetterType)
+                numberOfUpdates++
+            // Set current pipe to best type found in current check (or before)
+            pipe.type = bestTypes[index]
+            // Remove all types with a smaller diameter then current pipe. No recheck required
+            possibleTypes.removeIf { it.diameter < pipe.type.diameter }
+        }
+
+        // Restore best types already done in loop above
     }
 }
