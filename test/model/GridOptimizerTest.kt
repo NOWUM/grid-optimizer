@@ -3,11 +3,9 @@ package de.fhac.ewi.model
 import de.fhac.ewi.services.HeatDemandService
 import de.fhac.ewi.services.LoadProfileService
 import de.fhac.ewi.services.TemperatureTimeSeriesService
-import de.fhac.ewi.util.loadHProfiles
-import de.fhac.ewi.util.loadTemperatureTimeSeries
-import de.fhac.ewi.util.round
-import de.fhac.ewi.util.toDoubleFunction
+import de.fhac.ewi.util.*
 import org.junit.Test
+import kotlin.test.assertEquals
 
 
 class GridOptimizerTest {
@@ -16,48 +14,64 @@ class GridOptimizerTest {
     private val loadProfileService = LoadProfileService(loadHProfiles())
     private val heatDemandService = HeatDemandService(timeSeriesService, loadProfileService)
 
-    @Test
-    fun testOptimizer() {
-        val grid = createSimpleGrid()
-        val pipeTypes = createStreetPipes()
-        val investParameter = InvestmentParameter(
-            pipeTypes, // types of pipes that can be used
-            { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
-            { pumpPower -> 500.0 + pumpPower * 500 }, // invest cost for pump based on pump power f(kW) = €
-            0.07, // (Kosten Erzeugung Wärmeverluste)
-            40.0, // years for grid
-            10.0, // years for pump
-            1.75, // Zinsen in %
-            0.3, // for pump operation per kWh
-            0.9, // for pump
-            0.60 // for pump
-        )
+    private val investParameter = InvestmentParameter(
+        createStreetPipes(), // types of pipes that can be used
+        { invest -> invest * 0.01 }, // operating cost for grid based on invest cost
+        { pumpPower -> 500.0 + pumpPower * 500 }, // invest cost for pump based on pump power f(kW) = €
+        0.07, // (Kosten Erzeugung Wärmeverluste)
+        40.0, // years for grid
+        10.0, // years for pump
+        1.75, // Zinsen in %
+        0.3, // for pump operation per kWh
+        0.9, // for pump
+        0.60 // for pump
+    )
 
+    @Test
+    fun testSimpleGrid() {
+        val grid = createSimpleGrid()
+        val optimizer = callOptimizer(grid)
+        assertEquals(15296.67, optimizer.gridCosts.totalPerYear.round(2))
+    }
+
+    @Test
+    fun testMediumGrid() {
+        val grid = createMediumGrid()
+        val optimizer = callOptimizer(grid)
+        assertEquals(44125.05, optimizer.gridCosts.totalPerYear.round(2))
+    }
+
+
+    private fun callOptimizer(grid: Grid): Optimizer {
         val optimizer = Optimizer(grid, investParameter)
         optimizer.optimize()
 
+        println("=== Optimization of Grid ===")
 
-        println("> Connected energy demand (OutputNodes): ${(grid.totalOutputEnergy / 1_000).round(3)} kWh")
-        println("> Heat loss in all pipes: ${(grid.totalHeatLoss / 1_000).round(3)} kWh")
-        println("> Checked ${optimizer.numberOfTypeChecks} pipe types and made ${optimizer.numberOfUpdates} for perfect grid.")
+        println("> Grid Layout\n${grid.gridTreeString()}\n")
 
-        println("> Grid costs u ${optimizer.gridCosts.totalPerYear.round(2)} € per year.")
-        println(">> ${grid.pipes.sumOf { it.length }} m of pipes cost ${optimizer.gridCosts.pipeInvestCostTotal.round(2)} €.")
-        println(
-            ">> Pump with power of ${grid.neededPumpPower.round(3)} Watt for maximum pressure loss of ${
-                grid.input.pressureLoss.maxOrNull()?.round(3)
-            } Bar cost ${optimizer.gridCosts.pumpInvestCostTotal.round(2)} €."
-        )
-        println(
-            ">> Heat loss of ${(grid.totalOutputEnergy / 1_000).round(3)} kW cost ${
-                optimizer.gridCosts.heatLossCost.round(
-                    2
-                )
-            } €."
-        )
-        grid.pipes.forEach { println("${it.id} should have a diameter of ${it.type.diameter}") }
-        println(optimizer.gridCosts)
+        println("> Grid Statistics\n" +
+                ">> Nodes: ${grid.nodes.size} with a total energy demand of ${(grid.totalOutputEnergy / 1_000_000).round(3)} MWh\n" +
+                ">> Pipes: ${grid.pipes.size} with a total length of ${grid.pipes.sumOf { it.length }} meter\n" +
+                ">> Wärmeverlust: ${(grid.totalHeatLoss / 1_000_000).round(3)} MWh (${((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(1)} %)\n" +
+                ">> Druckverlust: ${grid.input.pressureLoss.maxOrNull()?.round(2)} Bar (max)\n" +
+                ">> Volumenstrom: ${String.format("%.6f", grid.input.volumeFlow.maxOrNull())} m^3/s (max)\n" +
+                ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n")
+
+        println("> Costs\n" +
+                ">> Pipe Invest (Gesamt)   : ${optimizer.gridCosts.pipeInvestCostTotal.round(2).toString().padStart(8)} €\n" +
+                ">> Pipe Invest (Annuität) : ${optimizer.gridCosts.pipeInvestCostAnnuity.round(2).toString().padStart(8)} €\n" +
+                ">> Pipe Operation pro Jahr: ${optimizer.gridCosts.pipeOperationCost.round(2).toString().padStart(8)} €\n" +
+                ">> Pump Invest (Gesamt)   : ${optimizer.gridCosts.pumpInvestCostTotal.round(2).toString().padStart(8)} €\n" +
+                ">> Pump Invest (Annuität) : ${optimizer.gridCosts.pumpInvestCostAnnuity.round(2).toString().padStart(8)} €\n" +
+                ">> Pump Operation pro Jahr: ${optimizer.gridCosts.pumpOperationCost.round(2).toString().padStart(8)} €\n" +
+                ">> Wärmeverlust pro Jahr  : ${optimizer.gridCosts.heatLossCost.round(2).toString().padStart(8)} €\n" +
+                "\n" +
+                ">> Gesamtkosten pro Jahr  : ${optimizer.gridCosts.totalPerYear.round(2)} €")
+
+        return optimizer
     }
+
 
 
     private fun createSimpleGrid(): Grid {
@@ -76,6 +90,36 @@ class GridOptimizerTest {
         grid.addPipe("P1", "1", "2", 100.0, 0.6)
         grid.addPipe("P2", "2", "3", 50.0, 0.6)
         grid.addPipe("P3", "2", "4", 20.0, 0.6)
+        return grid
+    }
+
+    private fun createMediumGrid(): Grid {
+        val grid = Grid()
+        val timeSeriesString = "DWD Koeln Bonn 2018"
+        grid.addInputNode(
+            "#1",
+            timeSeriesService.getSeries(timeSeriesString),
+            "75".toDoubleFunction(),
+            "60".toDoubleFunction()
+        )
+
+        val heatDemand = heatDemandService.createCurve(60_000_000.0, "EFH", timeSeriesString)
+        val heatDemand2 = heatDemandService.createCurve(50_000_000.0, "EFH", timeSeriesString)
+        grid.addIntermediateNode("#2")
+        grid.addOutputNode("#2.1", heatDemand, 1.0)
+        grid.addOutputNode("#2.2", heatDemand2, 1.0)
+        grid.addPipe("P1", "#1", "#2", 100.0, 0.6)
+        grid.addPipe("P2", "#2", "#2.1", 50.0, 0.6)
+        grid.addPipe("P3", "#2", "#2.2", 20.0, 0.6)
+
+        val heatDemand3 = heatDemandService.createCurve(50_000_000.0, "EFH", timeSeriesString)
+        val heatDemand4 = heatDemandService.createCurve(120_000_000.0, "EFH", timeSeriesString)
+        grid.addIntermediateNode("#3")
+        grid.addOutputNode("#3.1", heatDemand3, 1.0)
+        grid.addOutputNode("#3.2", heatDemand4, 1.0)
+        grid.addPipe("P4", "#1", "#3", 100.0, 0.6)
+        grid.addPipe("P5", "#3", "#3.1", 60.0, 0.6)
+        grid.addPipe("P6", "#3", "#3.2", 10.0, 0.6)
         return grid
     }
 
