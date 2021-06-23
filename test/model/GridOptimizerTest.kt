@@ -48,6 +48,14 @@ class GridOptimizerTest {
         assertEquals(46399.16, optimizer.gridCosts.totalPerYear.round(2))
     }
 
+    @Test
+    fun testOptimizationPipeReset() {
+        val grid = createMediumGrid()
+        val optimizer = callOptimizer(grid)
+        val newCalculation = investParameter.calculateCosts(grid)
+        // If here is any differenz then we might have a bug resetting the pipes
+        assertEquals(newCalculation, optimizer.gridCosts)
+    }
 
     private fun callOptimizer(grid: Grid): Optimizer {
         val optimizer = Optimizer(grid, investParameter)
