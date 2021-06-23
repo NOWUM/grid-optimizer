@@ -56,7 +56,8 @@ class GridOptimizerTest {
                 ">> Wärmeverlust: ${(grid.totalHeatLoss / 1_000_000).round(3)} MWh (${((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(1)} %)\n" +
                 ">> Druckverlust: ${grid.input.pressureLoss.maxOrNull()?.round(2)} Bar (max)\n" +
                 ">> Volumenstrom: ${String.format("%.6f", grid.input.volumeFlow.maxOrNull())} m^3/s (max)\n" +
-                ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n")
+                ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n" +
+                ">> Kritischer Pfad: ${grid.criticalPath.sumOf { it.length }} m Länge mit ${((grid.input.pressureLoss.maxOrNull()?:0.0) * 100_000 / grid.criticalPath.sumOf { it.length }).round(3)} Pa/m Druckverlust\n")
 
         println("> Costs\n" +
                 ">> Pipe Invest (Gesamt)   : ${optimizer.gridCosts.pipeInvestCostTotal.round(2).toString().padStart(8)} €\n" +
