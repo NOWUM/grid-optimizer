@@ -23,7 +23,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
         gridCosts = investParams.calculateCosts(grid)
 
 
-        optimizeCriticalPipesOneByOne()
+        /* optimizeCriticalPipesOneByOne()
         println(
             "Critical one by one $numberOfTypeChecks checks and $numberOfUpdates updates (current costs are ${
                 gridCosts.totalPerYear.round(
@@ -53,6 +53,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
             })"
         )
 
+*/
 
         optimizeAllPipes()
         println(
