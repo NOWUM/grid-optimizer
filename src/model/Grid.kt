@@ -66,7 +66,7 @@ class Grid {
             ?: throw IllegalArgumentException("Node for source $sourceId not found.")
 
         val target = _nodes.find { it.id == targetId }
-            ?: throw IllegalArgumentException("Node for source $targetId not found.")
+            ?: throw IllegalArgumentException("Node for target $targetId not found.")
 
         val pipe = Pipe(id, source, target, length, pipeLayingDepth)
         source.connectChild(pipe)
