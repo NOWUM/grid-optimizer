@@ -31,21 +31,21 @@ class GridOptimizerTest {
     fun testSimpleGrid() {
         val grid = createSimpleGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(15296.67, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(15305.58, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testMediumGrid() {
         val grid = createMediumGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(44125.05, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(44280.44, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testLargeGrid() {
         val grid = createLargeGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(217304.28, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(217483.69, optimizer.gridCosts.totalPerYear.round(2))
     }
 
 
@@ -64,7 +64,8 @@ class GridOptimizerTest {
                 ">> Wärmeverlust: ${(grid.totalHeatLoss / 1_000_000).round(3)} MWh (${((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(1)} %)\n" +
                 ">> Druckverlust: ${grid.input.pressureLoss.maxOrNull()?.round(2)} Bar (max)\n" +
                 ">> Volumenstrom: ${String.format("%.6f", grid.input.volumeFlow.maxOrNull())} m^3/s (max)\n" +
-                ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n")
+                ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n" +
+                ">> Kritischer Pfad: ${grid.criticalPath.sumOf { it.length }} m Länge mit ${((grid.input.pressureLoss.maxOrNull()?:0.0) * 100_000 / grid.criticalPath.sumOf { it.length }).round(3)} Pa/m Druckverlust\n")
 
         println("> Costs\n" +
                 ">> Pipe Invest (Gesamt)   : ${optimizer.gridCosts.pipeInvestCostTotal.round(2).toString().padStart(8)} €\n" +

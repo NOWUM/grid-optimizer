@@ -5,17 +5,12 @@ package de.fhac.ewi.model.delegate
  *
  * @param T - Keine Ahnung
  */
-abstract class CalculableDelegate<T> : SubscribableDelegate<T, DoubleArray>() {
+abstract class LazyCalculableDoubleArray<T> : LazyCalculableProperty<T, DoubleArray>() {
 
     abstract fun recalculateIndexed(index: Int): Double
 
-    open fun recalculate(): DoubleArray = DoubleArray(8760) { recalculateIndexed(it) }
-
-    fun updateValue() {
-        setValue(recalculate())
-    }
+    override fun recalculate(): DoubleArray = DoubleArray(8760) { recalculateIndexed(it) }
 
     override fun hasChanged(oldValue: DoubleArray, newValue: DoubleArray) = !(oldValue contentEquals newValue)
 
-    override fun lazyInitialValue() = recalculate()
 }
