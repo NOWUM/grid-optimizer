@@ -17,7 +17,10 @@ class NodePressureLossDelegate<T> : PipeBasedCalculableDelegate<T>() {
     }
 
     override fun onPipeConnect(pipe: Pipe) {
-        pipe::totalPressureLoss.subscribeIfChanged(this::updateValue)
+        pipe::totalPressureLoss.subscribeIfChanged(this)
     }
 
+    override fun onPossiblePipeUpdate(pipe: Pipe) {
+        pipe.totalPressureLoss
+    }
 }

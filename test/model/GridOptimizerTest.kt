@@ -31,14 +31,21 @@ class GridOptimizerTest {
     fun testSimpleGrid() {
         val grid = createSimpleGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(15296.67, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(15305.58, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testMediumGrid() {
         val grid = createMediumGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(44125.05, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(44280.44, optimizer.gridCosts.totalPerYear.round(2))
+    }
+
+    @Test
+    fun testLargeGrid() {
+        val grid = createLargeGrid()
+        val optimizer = callOptimizer(grid)
+        assertEquals(217483.69, optimizer.gridCosts.totalPerYear.round(2))
     }
 
 
@@ -49,6 +56,7 @@ class GridOptimizerTest {
         println("=== Optimization of Grid ===")
 
         println("> Grid Layout\n${grid.gridTreeString()}\n")
+        println("> Critical Path\n${grid.criticalPath.reversed().map { "${it.id} (${it.length} m)" }}\n")
 
         println("> Grid Statistics\n" +
                 ">> Nodes: ${grid.nodes.size} with a total energy demand of ${(grid.totalOutputEnergy / 1_000_000).round(3)} MWh\n" +
@@ -56,7 +64,8 @@ class GridOptimizerTest {
                 ">> Wärmeverlust: ${(grid.totalHeatLoss / 1_000_000).round(3)} MWh (${((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(1)} %)\n" +
                 ">> Druckverlust: ${grid.input.pressureLoss.maxOrNull()?.round(2)} Bar (max)\n" +
                 ">> Volumenstrom: ${String.format("%.6f", grid.input.volumeFlow.maxOrNull())} m^3/s (max)\n" +
-                ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n")
+                ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n" +
+                ">> Kritischer Pfad: ${grid.criticalPath.sumOf { it.length }} m Länge mit ${((grid.input.pressureLoss.maxOrNull()?:0.0) * 100_000 / grid.criticalPath.sumOf { it.length }).round(3)} Pa/m Druckverlust\n")
 
         println("> Costs\n" +
                 ">> Pipe Invest (Gesamt)   : ${optimizer.gridCosts.pipeInvestCostTotal.round(2).toString().padStart(8)} €\n" +
@@ -120,6 +129,42 @@ class GridOptimizerTest {
         grid.addPipe("P4", "#1", "#3", 100.0, 0.6)
         grid.addPipe("P5", "#3", "#3.1", 60.0, 0.6)
         grid.addPipe("P6", "#3", "#3.2", 10.0, 0.6)
+        return grid
+    }
+
+    private fun createLargeGrid(): Grid {
+        val grid = createMediumGrid()
+        val timeSeriesString = "DWD Koeln Bonn 2018"
+        grid.addIntermediateNode("#3.3")
+        grid.addPipe("P7", "#3", "#3.3", 70.0, 0.6)
+        val heatDemand = heatDemandService.createCurve(60_000_000.0, "EFH", timeSeriesString)
+        grid.addOutputNode("#3.3.1", heatDemand, 0.6)
+        grid.addOutputNode("#3.3.2", heatDemand, 0.9)
+        grid.addOutputNode("#3.3.3", heatDemand, 0.6)
+        grid.addOutputNode("#3.3.4", heatDemand, 0.9)
+        grid.addPipe("P8", "#3.3", "#3.3.1", 10.0, 0.6)
+        grid.addPipe("P9", "#3.3", "#3.3.2", 25.0, 0.6)
+        grid.addPipe("P10", "#3.3", "#3.3.3", 17.0, 0.6)
+        grid.addPipe("P11", "#3.3", "#3.3.4", 12.0, 0.6)
+
+        val heatDemand2 = heatDemandService.createCurve(300_000_000.0, "MFH", timeSeriesString)
+        grid.addIntermediateNode("#4")
+        grid.addIntermediateNode("#4.1")
+        grid.addIntermediateNode("#4.1.1")
+        grid.addIntermediateNode("#4.2")
+        grid.addPipe("P12", "#1", "#4", 150.0, 0.6)
+        grid.addPipe("P13", "#4", "#4.1", 150.0, 0.6)
+        grid.addPipe("P14", "#4.1", "#4.1.1", 50.0, 0.6)
+        grid.addPipe("P16", "#4", "#4.2", 150.0, 0.6)
+        grid.addOutputNode("#4.3", heatDemand2, 0.8)
+        grid.addOutputNode("#4.4", heatDemand2, 0.8)
+        grid.addPipe("P17", "#4", "#4.3", 30.0, 0.6)
+        grid.addPipe("P18", "#4", "#4.4", 40.0, 0.6)
+        grid.addOutputNode("#4.1.1.1", heatDemand2, 0.8)
+        grid.addPipe("P19", "#4.1.1", "#4.1.1.1", 10.0, 0.6)
+        grid.addOutputNode("#4.2.1", heatDemand2, 0.8)
+        grid.addPipe("P20", "#4.2", "#4.2.1", 20.0, 0.6)
+
         return grid
     }
 

@@ -1,7 +1,7 @@
 package de.fhac.ewi.model.math
 
 import de.fhac.ewi.model.Node
-import de.fhac.ewi.model.delegate.CalculableDelegate
+import de.fhac.ewi.model.delegate.LazyCalculableDoubleArray
 import de.fhac.ewi.util.neededPumpPower
 import de.fhac.ewi.util.subscribeIfChanged
 
@@ -11,10 +11,10 @@ import de.fhac.ewi.util.subscribeIfChanged
  *
  * @param T - For Delegate
  */
-class NodePumpPowerDelegate<T>(private val node: Node) : CalculableDelegate<T>() {
+class NodePumpPowerDelegate<T>(private val node: Node) : LazyCalculableDoubleArray<T>() {
 
     init {
-        node::pressureLoss.subscribeIfChanged(this::updateValue)
+        node::pressureLoss.subscribeIfChanged(this)
         // volumeFlow does not need subscription, because it is in totalPressureLoss included
     }
 
@@ -22,4 +22,7 @@ class NodePumpPowerDelegate<T>(private val node: Node) : CalculableDelegate<T>()
         neededPumpPower(pressureLoss[index], volumeFlow[index])
     }
 
+    override fun checkForChanges() {
+        node.pressureLoss
+    }
 }

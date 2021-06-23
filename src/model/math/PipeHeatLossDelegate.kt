@@ -1,7 +1,7 @@
 package de.fhac.ewi.model.math
 
 import de.fhac.ewi.model.Pipe
-import de.fhac.ewi.model.delegate.CalculableDelegate
+import de.fhac.ewi.model.delegate.LazyCalculableDoubleArray
 import de.fhac.ewi.util.pipeHeatLoss
 import de.fhac.ewi.util.subscribeIfChanged
 
@@ -13,13 +13,13 @@ import de.fhac.ewi.util.subscribeIfChanged
  * @property pipe Pipe - Rohrleitung des Delegates
  * @constructor
  */
-class PipeHeatLossDelegate<T>(private val pipe: Pipe) : CalculableDelegate<T>() {
+class PipeHeatLossDelegate<T>(private val pipe: Pipe) : LazyCalculableDoubleArray<T>() {
 
     private val flowIn: DoubleArray by lazy { pipe.source.flowInTemperature.toDoubleArray() } // static
     private val flowOut: DoubleArray by lazy { pipe.source.flowOutTemperature.toDoubleArray() } // static
 
     init {
-        pipe::type.subscribeIfChanged(this::updateValue)
+        pipe::type.subscribeIfChanged(this)
     }
 
     override fun recalculateIndexed(index: Int) = with(pipe) {
@@ -33,6 +33,11 @@ class PipeHeatLossDelegate<T>(private val pipe: Pipe) : CalculableDelegate<T>() 
             type.distanceBetweenPipes,
             length
         )
+    }
+
+
+    override fun checkForChanges() {
+        // type changes will directly result in recalculation
     }
 
 }
