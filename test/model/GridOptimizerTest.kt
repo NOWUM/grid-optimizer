@@ -38,7 +38,7 @@ class GridOptimizerTest {
     fun testMediumGrid() {
         val grid = createMediumGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(37947.67, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(44125.05, optimizer.gridCosts.totalPerYear.round(2))
     }
 
 
@@ -95,25 +95,27 @@ class GridOptimizerTest {
 
     private fun createMediumGrid(): Grid {
         val grid = Grid()
+        val timeSeriesString = "DWD Koeln Bonn 2018"
         grid.addInputNode(
             "#1",
-            timeSeriesService.getSeries("DWD Koeln Bonn 2018"),
+            timeSeriesService.getSeries(timeSeriesString),
             "75".toDoubleFunction(),
             "60".toDoubleFunction()
         )
+
+        val heatDemand = heatDemandService.createCurve(60_000_000.0, "EFH", timeSeriesString)
+        val heatDemand2 = heatDemandService.createCurve(50_000_000.0, "EFH", timeSeriesString)
         grid.addIntermediateNode("#2")
-        val heatDemand = heatDemandService.createCurve(50_000_000.0, "EFH", "DWD Koeln Bonn 2018")
         grid.addOutputNode("#2.1", heatDemand, 1.0)
-        val heatDemand2 = heatDemandService.createCurve(60_000_000.0, "EFH", "DWD Koeln Bonn 2018")
         grid.addOutputNode("#2.2", heatDemand2, 1.0)
         grid.addPipe("P1", "#1", "#2", 100.0, 0.6)
         grid.addPipe("P2", "#2", "#2.1", 50.0, 0.6)
         grid.addPipe("P3", "#2", "#2.2", 20.0, 0.6)
 
+        val heatDemand3 = heatDemandService.createCurve(50_000_000.0, "EFH", timeSeriesString)
+        val heatDemand4 = heatDemandService.createCurve(120_000_000.0, "EFH", timeSeriesString)
         grid.addIntermediateNode("#3")
-        val heatDemand3 = heatDemandService.createCurve(50_000_000.0, "EFH", "DWD Koeln Bonn 2018")
         grid.addOutputNode("#3.1", heatDemand3, 1.0)
-        val heatDemand4 = heatDemandService.createCurve(60_000_000.0, "EFH", "DWD Koeln Bonn 2018")
         grid.addOutputNode("#3.2", heatDemand4, 1.0)
         grid.addPipe("P4", "#1", "#3", 100.0, 0.6)
         grid.addPipe("P5", "#3", "#3.1", 60.0, 0.6)
