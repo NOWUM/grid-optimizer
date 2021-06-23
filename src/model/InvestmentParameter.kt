@@ -25,7 +25,7 @@ class InvestmentParameter(
         val pipeInvestCostAnnuity = pipeInvestCostTotal * pipeAnnuityFactor
         val pipeOperationCost = pipeOperationCostFunc(pipeInvestCostTotal)
 
-        val pumpInvestCostTotal = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency / electricalEfficiency)
+        val pumpInvestCostTotal = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency / electricalEfficiency / 1_000)
         val pumpInvestCostAnnuity = pumpInvestCostTotal * pumpAnnuityFactor
         val pumpOperationCost =
             grid.input.pumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }

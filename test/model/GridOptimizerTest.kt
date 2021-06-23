@@ -31,21 +31,21 @@ class GridOptimizerTest {
     fun testSimpleGrid() {
         val grid = createSimpleGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(15305.58, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(5258.47, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testMediumGrid() {
         val grid = createMediumGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(44280.44, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(11324.87, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testLargeGrid() {
         val grid = createLargeGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(217483.69, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(46399.16, optimizer.gridCosts.totalPerYear.round(2))
     }
 
 
