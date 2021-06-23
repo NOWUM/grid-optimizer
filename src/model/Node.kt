@@ -15,6 +15,9 @@ abstract class Node(val id: String) {
 
     private val connectedPipes = mutableListOf<Pipe>()
 
+    val connectedChildPipes: List<Pipe>
+        get() = connectedPipes.filter { it.source == this }
+
     val connectedChildNodes: List<Node>
         get() = connectedPipes.filter { it.source == this }.map { it.target }
 
