@@ -20,11 +20,11 @@ class PipeVolumeFlowDelegate<T>(val pipe: Pipe) : CalculableDelegate<T>() {
     private val flowOut: DoubleArray by lazy { pipe.source.flowOutTemperature.toDoubleArray() } // static
 
     init {
-        pipe.target::energyDemand.subscribeIfChanged(this::updateValue)
+        pipe::energyDemand.subscribeIfChanged(this::updateValue)
     }
 
     override fun recalculateIndexed(index: Int): Double {
-        return volumeFlow(flowIn[index], flowOut[index], pipe.target.energyDemand[index])
+        return volumeFlow(flowIn[index], flowOut[index], pipe.energyDemand[index])
     }
 
 }

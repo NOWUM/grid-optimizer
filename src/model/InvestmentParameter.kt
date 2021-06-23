@@ -6,7 +6,7 @@ import kotlin.math.pow
 class InvestmentParameter(
     val pipeTypes: List<PipeType>, // invest costs (1x) for a one meter pipe as f(diameter) = €
     val pipeOperationCostFunc: DoubleFunction, // annual operation cost for a grid as f(sum of pipeInvestCost) = €
-    val pumpInvestCostFunc: DoubleFunction, // invest costs (1x) for a pump as f(Leistung in Watt) = €
+    val pumpInvestCostFunc: DoubleFunction, // invest costs (1x) for a pump as f(Leistung in kW) = €
     val heatGenerationCost: Double, // costs for generating heat losses
     val lifespanOfGrid: Double, // Lifespan of grid. Needed for invest cost calculation
     val lifespanOfPump: Double, // Lifespan of pump. Needed for invest cost calculation
@@ -25,7 +25,7 @@ class InvestmentParameter(
         val pipeInvestCostAnnuity = pipeInvestCostTotal * pipeAnnuityFactor
         val pipeOperationCost = pipeOperationCostFunc(pipeInvestCostTotal)
 
-        val pumpInvestCostTotal = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency)
+        val pumpInvestCostTotal = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency / electricalEfficiency)
         val pumpInvestCostAnnuity = pumpInvestCostTotal * pumpAnnuityFactor
         val pumpOperationCost =
             grid.input.pumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }

@@ -7,7 +7,7 @@ data class PipeType(
     val distanceBetweenPipes: Double // in m
 ) {
     companion object {
-        val UNDEFINED = PipeType(1337.0, 9_999.0, Double.POSITIVE_INFINITY, 0.5)
+        val UNDEFINED = PipeType(1337.0, 9_999_999.0, Double.POSITIVE_INFINITY, 0.5)
     }
 }
 

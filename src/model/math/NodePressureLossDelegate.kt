@@ -13,7 +13,7 @@ import de.fhac.ewi.util.subscribeIfChanged
 class NodePressureLossDelegate<T> : PipeBasedCalculableDelegate<T>() {
 
     override fun recalculateIndexed(index: Int, pipes: List<Pipe>): Double {
-        return pipes.maxOf { it.totalPressureLoss[index] }
+        return pipes.maxOfOrNull { it.totalPressureLoss[index] }?:0.0 // Falls keine Pipe angeschlossen ist, gibt es keinen Druckverlust.
     }
 
     override fun onPipeConnect(pipe: Pipe) {
