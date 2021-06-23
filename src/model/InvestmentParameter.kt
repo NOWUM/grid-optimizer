@@ -4,18 +4,19 @@ import de.fhac.ewi.util.DoubleFunction
 import kotlin.math.pow
 
 class InvestmentParameter(
-    val pipeTypes: List<PipeType>, // invest costs (1x) for a one meter pipe as f(diameter) = €
+    pipeTypes: List<PipeType>, // possible pipe types that can be used in optimization
     val pipeOperationCostFunc: DoubleFunction, // annual operation cost for a grid as f(sum of pipeInvestCost) = €
     val pumpInvestCostFunc: DoubleFunction, // invest costs (1x) for a pump as f(Leistung in kW) = €
     val heatGenerationCost: Double, // costs for generating heat losses
-    val lifespanOfGrid: Double, // Lifespan of grid. Needed for invest cost calculation
-    val lifespanOfPump: Double, // Lifespan of pump. Needed for invest cost calculation
+    lifespanOfGrid: Double, // Lifespan of grid in years. Needed for invest cost calculation
+    lifespanOfPump: Double, // Lifespan of pump in years. Needed for invest cost calculation
     val wacc: Double, // Zinsen
     val electricityCost: Double, // €/kWh [for pump station]
     val electricalEfficiency: Double, // for pump
     val hydraulicEfficiency: Double, // for pump
 ) {
 
+    val pipeTypes: List<PipeType> = pipeTypes.sortedBy { it.diameter }
     val pipeAnnuityFactor = calculateAnnuityFactor(lifespanOfGrid)
     val pumpAnnuityFactor = calculateAnnuityFactor(lifespanOfPump)
 
