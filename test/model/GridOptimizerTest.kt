@@ -45,7 +45,7 @@ class GridOptimizerTest {
     fun testLargeGrid() {
         val grid = createLargeGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(217304.28, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(217483.69, optimizer.gridCosts.totalPerYear.round(2))
     }
 
 
