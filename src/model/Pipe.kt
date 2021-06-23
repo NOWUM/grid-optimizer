@@ -1,6 +1,6 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.model.delegate.SubscribableDelegate
+import de.fhac.ewi.model.delegate.SubscribableProperty
 import de.fhac.ewi.model.math.*
 
 data class Pipe(
@@ -11,7 +11,7 @@ data class Pipe(
     val coverageHeight: Double // in m
 ) {
 
-    var type by SubscribableDelegate(PipeType.UNDEFINED)
+    var type by SubscribableProperty(PipeType.UNDEFINED)
 
     val heatLoss by PipeHeatLossDelegate(this)
 

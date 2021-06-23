@@ -12,24 +12,24 @@ import kotlin.reflect.KProperty
  * @property subscribers MutableList<Function0<Unit>> - Subscriber, die bei Änderung benachrichtigt werden
  * @constructor
  */
-open class SubscribableDelegate<T, V : Any>(initialValue: V? = null) : ReadWriteProperty<T, V> {
+open class SubscribableProperty<T, V : Any>(initialValue: V? = null) : ReadWriteProperty<T, V> {
 
     private lateinit var value: V
 
-    private val subscribers: MutableList<() -> Unit> = mutableListOf()
+    val subscribers: MutableList<Subscriber> = mutableListOf()
 
     init {
         if (initialValue != null)
             value = initialValue
     }
 
-    fun subscribe(onChange: () -> Unit) {
-        subscribers += onChange
+    fun subscribe(subscriber: Subscriber) {
+        subscribers += subscriber
     }
 
     override fun getValue(thisRef: T, property: KProperty<*>): V {
         if (!this::value.isInitialized)
-            value = lazyInitialValue()
+            setValue(lazyInitialValue())
         return value
     }
 
@@ -45,6 +45,6 @@ open class SubscribableDelegate<T, V : Any>(initialValue: V? = null) : ReadWrite
         value = newValue
 
         if (oldValue == null || hasChanged(oldValue, newValue))
-            subscribers.forEach { it.invoke() }
+            subscribers.forEach(Subscriber::onValueChange)
     }
 }

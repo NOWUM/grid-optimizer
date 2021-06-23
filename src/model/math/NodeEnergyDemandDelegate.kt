@@ -19,7 +19,11 @@ class NodeEnergyDemandDelegate<T> : PipeBasedCalculableDelegate<T>() {
     }
 
     override fun onPipeConnect(pipe: Pipe) {
-        pipe::energyDemand.subscribeIfChanged(this::updateValue)
+        pipe::energyDemand.subscribeIfChanged(this)
+    }
+
+    override fun onPossiblePipeUpdate(pipe: Pipe) {
+        pipe.energyDemand
     }
 
 }
