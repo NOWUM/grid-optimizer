@@ -31,14 +31,14 @@ class GridOptimizerTest {
     fun testSimpleGrid() {
         val grid = createSimpleGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(15296.67, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(15305.58, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testMediumGrid() {
         val grid = createMediumGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(44125.05, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(44280.44, optimizer.gridCosts.totalPerYear.round(2))
     }
 
 
