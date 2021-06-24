@@ -1,8 +1,10 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.model.strategies.RepeatAllOneByOne
+import de.fhac.ewi.model.strategies.Strategy
 import de.fhac.ewi.util.round
 
-class Optimizer(private val grid: Grid, private val investParams: InvestmentParameter) {
+class Optimizer(val grid: Grid, private val investParams: InvestmentParameter) {
 
     lateinit var gridCosts: Costs
         private set
@@ -22,110 +24,18 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
         grid.pipes.forEach { it.type = PipeType.UNDEFINED }
         gridCosts = investParams.calculateCosts(grid)
 
+        val strategies: List<Strategy> = listOf(RepeatAllOneByOne)
 
-        /* optimizeCriticalPipesOneByOne()
-        println(
-            "Critical one by one $numberOfTypeChecks checks and $numberOfUpdates updates (current costs are ${
-                gridCosts.totalPerYear.round(
-                    2
-                )
-            })"
-        )
-
-        optimizeCriticalPipePath()
-        println(
-            "Critical hole path $numberOfTypeChecks checks and $numberOfUpdates updates (current costs are ${
-                gridCosts.totalPerYear.round(
-                    2
-                )
-            })"
-        )
-
-        // TODO Der maximale Druckverlust verändert sich hier eigentlich nicht mehr.
-        println("Max pressure loss after critical path: " + grid.input.pressureLoss.maxOrNull())
-
-        optimizeUnsetPathsFromOutputToSourceUntilNoChange()
-        println(
-            "Out2Source $numberOfTypeChecks checks and $numberOfUpdates updates (current costs are ${
-                gridCosts.totalPerYear.round(
-                    2
-                )
-            })"
-        )
-
-*/
-
-        optimizeAllPipes()
-        println(
-            "All $numberOfTypeChecks checks and $numberOfUpdates updates (current costs are ${
-                gridCosts.totalPerYear.round(
-                    2
-                )
-            })"
-        )
-
-        println("Max pressure loss at the end of optimization: " + grid.input.pressureLoss.maxOrNull())
-    }
-
-    private fun optimizeCriticalPipesOneByOne() {
-        for (pipe in grid.criticalPath) {
-            optimizePipe(pipe, fastMode = true)
+        strategies.forEach { strategy ->
+            val oldNumberOfTypeChecks = numberOfTypeChecks
+            val oldNumberOfUpdates = numberOfUpdates
+            strategy.apply(this)
+            println("> Applied strategy ${strategy.javaClass.simpleName}. Grid costs now ${gridCosts.totalPerYear.round(2)} €\n" +
+                    ">> Number of type checks: ${numberOfTypeChecks - oldNumberOfTypeChecks} times ($numberOfTypeChecks total)\n" +
+                    ">> Number of type update: ${numberOfUpdates - oldNumberOfUpdates} times ($numberOfUpdates total)\n" +
+                    ">> Maximum pressure loss: ${grid.input.pressureLoss.maxOrNull()} Bar")
         }
-    }
 
-    /**
-     * Optimize all pipes in critical path
-     */
-    private fun optimizeCriticalPipePath() {
-        // CriticalPath = Longest Path from OutputNode to InputNode
-        optimizePipePath(grid.criticalPath.toList())
-    }
-
-    // Nicht ganz so geil
-    private fun optimizeUnsetPathsFromOutputToSourceOneByOne() {
-        grid.nodes.filterIsInstance<OutputNode>().forEach { node ->
-            val path = node.pathToSource
-            if (path.first().type == PipeType.UNDEFINED)
-                for (pipe in path)
-                    optimizePipe(pipe, fastMode = true)
-        }
-    }
-
-    /**
-     * Starting from all output nodes optimize path to source (one go).
-     */
-    private fun optimizeUnsetPathsFromOutputToSource() {
-        // Filter all output nodes and calculate path to source for each
-        grid.nodes.filterIsInstance<OutputNode>().forEach { node ->
-            val path = node.pathToSource
-            if (path.first().type == PipeType.UNDEFINED)
-                optimizePipePath(path.toList(), fastMode = true)
-        }
-    }
-
-    private fun optimizeUnsetPathsFromOutputToSourceUntilNoChange() {
-        var anyPathUpdated: Boolean
-        do {
-            anyPathUpdated = false
-            grid.nodes.filterIsInstance<OutputNode>().forEach { node ->
-                if (optimizePipePath(node.pathToSource.toList(), fastMode = false))
-                    anyPathUpdated = true
-            }
-        } while (anyPathUpdated)
-    }
-
-    /**
-     * Check every type on every pipe until no further update is made.
-     */
-    private fun optimizeAllPipes() {
-        var anyPipeUpdated: Boolean
-        do {
-            anyPipeUpdated = false
-            for (pipe in grid.pipes) {
-                if (optimizePipe(pipe, fastMode = true))
-                    anyPipeUpdated = true
-            }
-        } while (anyPipeUpdated)
     }
 
     /**
@@ -135,7 +45,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
      * @param types List<PipeType> - Liste mit möglichen Rohrtypen
      * @return Boolean - true, wenn Optimierung vorgenommen wurde. Sonst false
      */
-    private fun optimizePipe(
+    internal fun optimizePipe(
         pipe: Pipe,
         types: List<PipeType> = investParams.pipeTypes.filterNot { it == pipe.type },
         fastMode: Boolean = false
@@ -175,7 +85,7 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
      * @param pipes Array<Pipe>
      * @param preselectedTypes List<PipeType>
      */
-    private fun optimizePipePath(
+    internal fun optimizePipePath(
         pipes: List<Pipe>,
         preselectedTypes: List<PipeType> = investParams.pipeTypes,
         fastMode: Boolean = true
@@ -217,37 +127,5 @@ class Optimizer(private val grid: Grid, private val investParams: InvestmentPara
         return betterPathFound
     }
 
-    // TODO Bringt ebenfalls nichts
-    private fun optimizeAllConnectedPipes(node: Node = grid.input) {
-        for (child in node.connectedChildNodes)
-            if (child.connectedChildPipes.isNotEmpty())
-                optimizeAllConnectedPipes(child)
 
-        optimizeChildPipesOfNode(node.connectedChildPipes)
-    }
-
-    private fun optimizeChildPipesOfNode(pipes: List<Pipe>): Boolean {
-        if (pipes.size == 1)
-            return optimizePipe(pipes.first(), fastMode = true)
-
-        val currentPipe = pipes.first()
-        var bestType = currentPipe.type
-        var betterChildCombinationFound = false
-        val remainingChildPipes = pipes.drop(1)
-
-        val possibleTypes =
-            investParams.pipeTypes.filter { currentPipe.type == PipeType.UNDEFINED || it.diameter > currentPipe.type.diameter }
-
-        for (type in possibleTypes) {
-            currentPipe.type = type
-
-            if (optimizeChildPipesOfNode(remainingChildPipes)) {
-                bestType = currentPipe.type
-                betterChildCombinationFound = true
-            }
-        }
-
-        currentPipe.type = bestType
-        return betterChildCombinationFound
-    }
 }
