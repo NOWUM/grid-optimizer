@@ -20,18 +20,30 @@ class InvestmentParameter(
     val pipeAnnuityFactor = calculateAnnuityFactor(lifespanOfGrid)
     val pumpAnnuityFactor = calculateAnnuityFactor(lifespanOfPump)
 
-    fun calculateCosts(grid: Grid): Costs {
-        // Pipe costs
-        val pipeInvestCostTotal = grid.pipes.sumOf { it.type.costPerMeter * it.length }
+    fun calculateCosts(grid: Grid): Costs =
+        calculateCosts(grid.pipes, grid.neededPumpPower, grid.input.pumpPower.sum(), grid.totalHeatLoss)
+
+    fun calculateCosts(node: Node): Costs =
+        calculateCosts(node.connectedChildPipes, node.pumpPower.maxOrNull()!!, node.pumpPower.sum(), node.totalHeatLoss)
+
+    /**
+     * Berechnung der Kosten.
+     * @param pipes List<Pipe> - Rohrleitungen
+     * @param maxPumpPower Double - maximal benötigte Pumpleistung in W
+     * @param pumpPower Double - benötigte Pumpleistung im gesamten Jahr in Wh
+     * @param heatLoss Double - Wärmeverlust in W
+     * @return Costs - Kosten in €
+     */
+    private fun calculateCosts(pipes: List<Pipe>, maxPumpPower: Double, pumpPower: Double, heatLoss: Double): Costs {
+        val pipeInvestCostTotal = pipes.sumOf { it.type.costPerMeter * it.length }
         val pipeInvestCostAnnuity = pipeInvestCostTotal * pipeAnnuityFactor
         val pipeOperationCost = pipeOperationCostFunc(pipeInvestCostTotal)
 
-        val pumpInvestCostTotal = pumpInvestCostFunc(grid.neededPumpPower / hydraulicEfficiency / electricalEfficiency / 1_000)
+        val pumpInvestCostTotal = pumpInvestCostFunc(maxPumpPower / 1_000 / hydraulicEfficiency / electricalEfficiency )
         val pumpInvestCostAnnuity = pumpInvestCostTotal * pumpAnnuityFactor
-        val pumpOperationCost =
-            grid.input.pumpPower.sumOf { it / hydraulicEfficiency / electricalEfficiency / 1_000 * electricityCost }
+        val pumpOperationCost = pumpPower / 1_000 / hydraulicEfficiency / electricalEfficiency  * electricityCost
 
-        val heatLossCost = grid.totalHeatLoss / 1_000 * heatGenerationCost
+        val heatLossCost = heatLoss / 1_000 * heatGenerationCost
 
         val investCostAnnuity = pipeInvestCostAnnuity + pumpInvestCostAnnuity
         val operationCostPerYear = pipeOperationCost + pumpOperationCost + heatLossCost
