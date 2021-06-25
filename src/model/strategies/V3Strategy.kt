@@ -11,15 +11,21 @@ import de.fhac.ewi.model.Pipe
  *
  * Der Algorithmus endet, wenn alle Rohre im Netz einmal geprüft wurden, ohne das ein besserer Rohrtyp gefunden wurde.
  */
-object RepeatAllOneByOne : Strategy {
+object V3Strategy : Strategy {
     override fun apply(optimizer: Optimizer) = with(optimizer) {
-        val pipes = grid.nodes.filterIsInstance<OutputNode>().sortedByDescending { it.pathToSource.sumOf(Pipe::length) }.flatMap { it.pathToSource.toList().reversed() }.distinct()
+        // TODO sortedByDescending ist in Medium Grid besser
+        val pipes = grid.nodes.filterIsInstance<OutputNode>().sortedBy { it.pathToSource.sumOf(Pipe::length) }.flatMap { it.pathToSource.toList().reversed() }.distinct()
+        //val pipes = grid.pipes.sortedBy { it.source.pathToSource.size }
         var anyPipeUpdated: Boolean
         do {
             anyPipeUpdated = false
             for (pipe in pipes) {
-                if (optimizePipe(pipe, fastMode = true))
+                if (optimizePipe(pipe, fastMode = true)) {
                     anyPipeUpdated = true
+                    // Wenn ein Update gefunden wurde, nochmal fix den Pfad zum Input Node aktualisieren
+                    for (parent in pipe.source.pathToSource)
+                        optimizePipe(pipe, fastMode = true)
+                }
             }
         } while (anyPipeUpdated)
     }

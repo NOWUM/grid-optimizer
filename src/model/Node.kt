@@ -51,6 +51,9 @@ abstract class Node(val id: String) {
     open val largestConnectedPipe: PipeType?
         get() = connectedPipes.filter { it.source == this && it.type != PipeType.UNDEFINED }.maxByOrNull { it.type.diameter }?.type
 
+    open val totalHeatLoss: Double
+        get() = connectedPipes.filter { it.source == this }.sumOf { it.heatLoss.sum() + it.target.totalHeatLoss }
+
     fun isParentOf(target: Node): Boolean =
         target in connectedChildNodes || connectedChildNodes.any { it.isParentOf(target) }
 

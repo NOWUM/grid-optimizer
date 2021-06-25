@@ -12,6 +12,7 @@ object PathToSourceAsOne : Strategy {
         var anyPathUpdated: Boolean
         do {
             anyPathUpdated = false
+            println("Checking")
             grid.nodes.filterIsInstance<OutputNode>().map { it.pathToSource.toList() }.forEach { pipes ->
                 if (optimizePipePath(pipes))
                     anyPathUpdated = true

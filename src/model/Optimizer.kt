@@ -1,13 +1,12 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.model.strategies.RepeatAllOneByOne
-import de.fhac.ewi.model.strategies.Strategy
+import de.fhac.ewi.model.strategies.*
 import de.fhac.ewi.util.round
 
-class Optimizer(val grid: Grid, private val investParams: InvestmentParameter) {
+class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
 
     lateinit var gridCosts: Costs
-        private set
+
 
     var numberOfTypeChecks: Int = 0
         private set
@@ -20,8 +19,9 @@ class Optimizer(val grid: Grid, private val investParams: InvestmentParameter) {
         numberOfTypeChecks = 0
         numberOfUpdates = 0
 
+        val initial = PipeType.UNDEFINED//investParams.pipeTypes.last() //
         // Reset all pipes to undefined type
-        grid.pipes.forEach { it.type = PipeType.UNDEFINED }
+        grid.pipes.forEach { it.type = initial }
         gridCosts = investParams.calculateCosts(grid)
 
         val strategies: List<Strategy> = listOf(RepeatAllOneByOne)
@@ -33,7 +33,7 @@ class Optimizer(val grid: Grid, private val investParams: InvestmentParameter) {
             println("> Applied strategy ${strategy.javaClass.simpleName}. Grid costs now ${gridCosts.totalPerYear.round(2)} €\n" +
                     ">> Number of type checks: ${numberOfTypeChecks - oldNumberOfTypeChecks} times ($numberOfTypeChecks total)\n" +
                     ">> Number of type update: ${numberOfUpdates - oldNumberOfUpdates} times ($numberOfUpdates total)\n" +
-                    ">> Maximum pressure loss: ${grid.input.pressureLoss.maxOrNull()} Bar")
+                    ">> Maximum pressure loss: ${grid.input.pressureLoss.maxOrNull()} Bar (${(grid.input.pressureLoss.maxOrNull()?:0.0) * 100_000 / grid.criticalPath.sumOf { it.length }} Pa/m)")
         }
 
     }
@@ -51,6 +51,7 @@ class Optimizer(val grid: Grid, private val investParams: InvestmentParameter) {
         fastMode: Boolean = false
     ): Boolean {
         var bestType = pipe.type
+        //var currentMaxPressureLoss = grid.input.pressureLoss.maxOrNull()?:0.0
         var foundBetterType = false
 
         val skipIfTypesAreGettingWorse = (bestType != PipeType.UNDEFINED && fastMode)
@@ -65,9 +66,11 @@ class Optimizer(val grid: Grid, private val investParams: InvestmentParameter) {
             numberOfTypeChecks++
             pipe.type = type
             val newCost = investParams.calculateCosts(grid)
+            // if ((newCost.totalPerYear < gridCosts.totalPerYear || bestType == PipeType.UNDEFINED) && grid.input.pressureLoss.maxOrNull()?:0.0 <= currentMaxPressureLoss * 1.01) {
             if (newCost.totalPerYear < gridCosts.totalPerYear || bestType == PipeType.UNDEFINED) {
                 gridCosts = newCost
                 bestType = type
+                //currentMaxPressureLoss = grid.input.pressureLoss.maxOrNull()?:0.0
                 foundBetterType = true
             } else if (foundBetterType && skipIfTypesAreGettingWorse)
                 break
@@ -99,8 +102,8 @@ class Optimizer(val grid: Grid, private val investParams: InvestmentParameter) {
             possibleTypes.removeIf { it.diameter < largestConnectedPipe.diameter }
         }
         // If pipe type already set only check bigger or equal types then currently set
-        if (currentPipe.type != PipeType.UNDEFINED && fastMode)
-            possibleTypes.removeIf { it.diameter < currentPipe.type.diameter }
+        //if (currentPipe.type != PipeType.UNDEFINED && fastMode)
+          //  possibleTypes.removeIf { it.diameter < currentPipe.type.diameter }
 
         // Falls es nur eine Pipe im Pfad gibt, dann diese optimieren und ggf updaten.
         if (pipes.size == 1)
