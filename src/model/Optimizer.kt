@@ -1,6 +1,7 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.model.strategies.*
+import de.fhac.ewi.model.strategies.AllCombinations
+import de.fhac.ewi.model.strategies.Strategy
 import de.fhac.ewi.util.round
 
 class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
@@ -39,40 +40,50 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
     }
 
     /**
-     * Checks all possible types in pipe and check if total costs are lower.
+     * Überprüft mehrere Rohrtypen für eine Rohrleitung.
+     * Sobald ein Typ zu niedrigeren Gesamtkosten des gesamten Netzes führt, wird dieser als neuer bester Typ ausgewählt.
      *
-     * @param pipe Pipe - Rohrleitung für die die Gesamtkosten minimiert werden sollen
-     * @param types List<PipeType> - Liste mit möglichen Rohrtypen
-     * @return Boolean - true, wenn Optimierung vorgenommen wurde. Sonst false
+     * Die Optimierung folgt hierbei folgenden Annahmen:
+     * - Der optimale Durchmesser ist immer mindestens genauso groß wie der größte an der Rohrleitung angeschlossene Durchmesser.
+     * - Ist der alte Rohrtyp undefiniert, müssen alle Möglichkeiten ausprobiert werden - unabhängig der sonstigen Parameter.
+     * - Die aktuell ausgewählte Rohrleitung kann keine bessere Rohrleitung sein und wird deshalb nicht geprüft.
+     *   (Falls dies doch gewünscht ist, entsprechend `types` füllen.)
+     * - ...
+     *
+     * @param pipe Pipe - Rohrleitung, die optimiert werden soll.
+     * @param types List<PipeType> - Liste möglicher Rohrtypen, die für die Rohrleitung ausprobiert werden können. (Muss nach Durchmesser aufsteigend sortiert sein.)
+     * @param skipIfGettingWorse Boolean - Bricht den Test weiterer Typen ab, sobald eine bessere Rohrleitung gefunden wurde und danach schlechtere Ergebnisse erzielt werden.
+     * @param skipSmallerThenCurrent Boolean - Überspringt Rohre, die einen kleineren Rohrdurchmesser als die aktuell beste Leitung haben.
+     * @return Boolean - Wahr, wenn besserer Rohrtyp gefunden wurde.
      */
     internal fun optimizePipe(
         pipe: Pipe,
         types: List<PipeType> = investParams.pipeTypes.filterNot { it == pipe.type },
-        fastMode: Boolean = false
+        skipIfGettingWorse: Boolean = true,
+        skipSmallerThenCurrent: Boolean = false
     ): Boolean {
+        val lastTypeWasUndefined = pipe.type == PipeType.UNDEFINED
         var bestType = pipe.type
-        //var currentMaxPressureLoss = grid.input.pressureLoss.maxOrNull()?:0.0
         var foundBetterType = false
 
-        val skipIfTypesAreGettingWorse = (bestType != PipeType.UNDEFINED && fastMode)
-        val biggestSubtype = if (bestType != PipeType.UNDEFINED && fastMode) pipe.target.largestConnectedPipe else null
-
-        // check all possible types excluding the current pipe type
         for (type in types) {
 
-            if (biggestSubtype != null && type.diameter < biggestSubtype.diameter)
+            // if diameter is smaller than largest connected pipe continue. This can't be good.
+            if (type.diameter < pipe.target.largestConnectedPipe?.diameter ?: 0.0)
+                continue
+
+            if (skipSmallerThenCurrent && type.diameter < bestType.diameter)
                 continue
 
             numberOfTypeChecks++
             pipe.type = type
+
             val newCost = investParams.calculateCosts(grid)
-            // if ((newCost.totalPerYear < gridCosts.totalPerYear || bestType == PipeType.UNDEFINED) && grid.input.pressureLoss.maxOrNull()?:0.0 <= currentMaxPressureLoss * 1.01) {
             if (newCost.totalPerYear < gridCosts.totalPerYear || bestType == PipeType.UNDEFINED) {
                 gridCosts = newCost
                 bestType = type
-                //currentMaxPressureLoss = grid.input.pressureLoss.maxOrNull()?:0.0
                 foundBetterType = true
-            } else if (foundBetterType && skipIfTypesAreGettingWorse)
+            } else if (foundBetterType && skipIfGettingWorse && !lastTypeWasUndefined)
                 break
         }
 
@@ -83,52 +94,60 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
     }
 
     /**
-     * Rekursives Verfahren zur Optimierung eines Strangs Richtung Einspeisepunkt.
+     * Optimiert mehrere Rohrleitungen auf einmal. Ist notwendig, um komplexe Zusammenhänge zu erkennen. Oder so.
      *
-     * @param pipes Array<Pipe>
-     * @param preselectedTypes List<PipeType>
+     * Damit die Methode sauber funktioniert, müssen die Rohre nach der Distanz in Anzahl Rohrleitungen zum Einspeisepunkt
+     * absteigend sortiert werden.
+     *
+     * Es werden für die Rohre 1..n-1 verschiedene Rohrdurchmesser ausprobiert.
+     * Für das letzte Rohr n wird die Methode [optimizePipe] aufgerufen.
+     *
+     * Es wird auch die Möglichkeit des gleichbleibenden Rohrdurchmessers überprüft.
+     *
+     * @param pipes List<Pipe> - Die zu optimierenden Rohrleitungen.
+     * @param types List<PipeType> - Liste möglicher Rohrtypen, die für die Rohrleitung ausprobiert werden können. (Muss nach Durchmesser aufsteigend sortiert sein.)
+     * @param skipIfGettingWorse Boolean - Bricht den Test weiterer Typen ab, sobald eine bessere Rohrleitung gefunden wurde und danach schlechtere Ergebnisse erzielt werden.
+     * @param skipSmallerThenCurrent Boolean - Überspringt Rohre, die einen kleineren Rohrdurchmesser als die aktuell beste Leitung haben.
+     * @param currentIdx Int - Index der Pipe bei der die Optimierung begonnen werden soll.
+     * @return Boolean - Wahr, wenn bessere Kombination aus Rohrtypen gefunden wurde.
      */
-    internal fun optimizePipePath(
+    internal fun optimizePipes(
         pipes: List<Pipe>,
-        preselectedTypes: List<PipeType> = investParams.pipeTypes,
-        fastMode: Boolean = true
+        types: List<PipeType> = investParams.pipeTypes,
+        skipIfGettingWorse: Boolean = true,
+        skipSmallerThenCurrent: Boolean = false,
+        currentIdx: Int = 0
     ): Boolean {
-        val currentPipe = pipes.first()
+        val currentPipe = pipes[currentIdx]
 
-        // Weitere Eingrenzung der möglichen Rohrtypen, die für die Optimierung sinnvoll erscheinen
-        val possibleTypes = preselectedTypes.toMutableList()
-        // Current pipe type musst be larger then largest pipe connected
-        currentPipe.target.largestConnectedPipe?.let { largestConnectedPipe ->
-            possibleTypes.removeIf { it.diameter < largestConnectedPipe.diameter }
-        }
-        // If pipe type already set only check bigger or equal types then currently set
-        //if (currentPipe.type != PipeType.UNDEFINED && fastMode)
-          //  possibleTypes.removeIf { it.diameter < currentPipe.type.diameter }
+        // Optimize last pipe with the other fancy method
+        if (currentIdx == pipes.size - 1)
+            return optimizePipe(currentPipe, types, skipIfGettingWorse)
 
-        // Falls es nur eine Pipe im Pfad gibt, dann diese optimieren und ggf updaten.
-        if (pipes.size == 1)
-            return optimizePipe(currentPipe, possibleTypes)
-
-        // Andernfalls müssen wir den Spaß rekursiv aufrufen.
+        val lastTypeWasUndefined = currentPipe.type == PipeType.UNDEFINED
         var bestType = currentPipe.type
-        var betterPathFound = false
-        val newPipePath = pipes.drop(1)
+        var betterTypeFound = false
 
-        val skipIfTypesAreGettingWorse = (bestType != PipeType.UNDEFINED && fastMode)
+        for (type in investParams.pipeTypes) {
 
-        for (type in possibleTypes) {
+            // if diameter is smaller than largest connected pipe continue. This can't be good.
+            if (type.diameter < currentPipe.target.largestConnectedPipe?.diameter ?: 0.0)
+                continue
+
+            if (skipSmallerThenCurrent && type.diameter < bestType.diameter)
+                continue
+
             currentPipe.type = type
 
-            if (optimizePipePath(newPipePath, possibleTypes, fastMode)) {
-                bestType = currentPipe.type
-                betterPathFound = true
-            } else if (betterPathFound && skipIfTypesAreGettingWorse)
+            if (optimizePipes(pipes, types, skipIfGettingWorse, skipSmallerThenCurrent, currentIdx + 1)) {
+                bestType = type
+                betterTypeFound = true
+            } else if (betterTypeFound && skipIfGettingWorse && !lastTypeWasUndefined)
                 break
         }
 
         currentPipe.type = bestType
-        return betterPathFound
+        return betterTypeFound
     }
-
 
 }

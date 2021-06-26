@@ -15,7 +15,7 @@ object CriticalPathOneByOne : Strategy {
         do {
             anyPipeUpdated = false
             for (pipe in pipes) {
-                if (optimizePipe(pipe, fastMode = true))
+                if (optimizePipe(pipe))
                     anyPipeUpdated = true
             }
         } while (anyPipeUpdated)
