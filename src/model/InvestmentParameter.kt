@@ -35,7 +35,7 @@ class InvestmentParameter(
      * @return Costs - Kosten in €
      */
     private fun calculateCosts(pipes: List<Pipe>, maxPumpPower: Double, pumpPower: Double, heatLoss: Double): Costs {
-        val pipeInvestCostTotal = pipes.sumOf { it.type.costPerMeter * it.length }
+        val pipeInvestCostTotal = pipes.sumOf { it.investCost }
         val pipeInvestCostAnnuity = pipeInvestCostTotal * pipeAnnuityFactor
         val pipeOperationCost = pipeOperationCostFunc(pipeInvestCostTotal)
 

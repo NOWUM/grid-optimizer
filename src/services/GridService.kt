@@ -35,20 +35,11 @@ class GridService(
                 demandService.createCurve(it.thermalEnergyDemand * 1000, it.loadProfileName, request.temperatureSeries)
             grid.addOutputNode(it.id, curve, it.pressureLoss)
 
-            if (it.replicas != null && it.replicas > 1) {
-                repeat(it.replicas - 1) { number ->
-                    val newId = "${it.id}-$number"
-                    grid.addOutputNode(newId, curve, it.pressureLoss)
-                    copyPipesForNode.getOrPut(it.id) { mutableListOf() } += newId
-                }
-            }
+
+            grid.addOutputNode(it.id, curve, it.pressureLoss, it.replicas?:1)
         }
         request.pipes.forEach {
             grid.addPipe(it.id, it.source, it.target, it.length, it.coverageHeight)
-
-            copyPipesForNode[it.target]?.forEachIndexed { number, target ->
-                grid.addPipe("${it.id}-$number", it.source, target, it.length, it.coverageHeight)
-            }
         }
 
         return grid
