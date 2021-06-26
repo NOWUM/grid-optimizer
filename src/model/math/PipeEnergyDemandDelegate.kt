@@ -3,6 +3,7 @@ package de.fhac.ewi.model.math
 import de.fhac.ewi.model.Pipe
 import de.fhac.ewi.model.delegate.LazyCalculableDoubleArray
 import de.fhac.ewi.util.subscribeIfChanged
+import de.fhac.ewi.util.updateIfNeeded
 
 /**
  * ### Energiebedarf in Rohrleitung
@@ -25,7 +26,7 @@ class PipeEnergyDemandDelegate<T>(private val pipe: Pipe) : LazyCalculableDouble
     }
 
     override fun checkForChanges() {
-        pipe.heatLoss // check if heatLoss has changed
-        pipe.target.energyDemand // check if target.energyDemand has changed
+        pipe::heatLoss.updateIfNeeded() // on change it will trigger recalculation of this property
+        pipe.target::energyDemand.updateIfNeeded()
     }
 }

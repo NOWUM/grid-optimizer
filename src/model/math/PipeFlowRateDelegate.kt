@@ -4,6 +4,7 @@ import de.fhac.ewi.model.Pipe
 import de.fhac.ewi.model.delegate.LazyCalculableDoubleArray
 import de.fhac.ewi.util.flowRate
 import de.fhac.ewi.util.subscribeIfChanged
+import de.fhac.ewi.util.updateIfNeeded
 
 /**
  * ### Strömungsgeschwindigkeit in Rohrleitung
@@ -26,7 +27,7 @@ class PipeFlowRateDelegate<T>(private val pipe: Pipe) : LazyCalculableDoubleArra
     }
 
     override fun checkForChanges() {
-        pipe.volumeFlow // check if volumeFlow has changed
+        pipe::volumeFlow.updateIfNeeded() // on change it will trigger recalculation of this property
         // type changes will directly result in recalculation
     }
 }

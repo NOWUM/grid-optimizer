@@ -11,7 +11,6 @@ import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
-@Ignore
 class GridOptimizerTest {
 
     private val timeSeriesService = TemperatureTimeSeriesService(loadTemperatureTimeSeries())
@@ -42,14 +41,14 @@ class GridOptimizerTest {
     fun testMediumGrid() {
         val grid = createMediumGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(11324.87, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(11303.73, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testLargeGrid() {
         val grid = createLargeGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(46399.16, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(46358.27, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
@@ -59,6 +58,20 @@ class GridOptimizerTest {
         val newCalculation = investParameter.calculateCosts(grid)
         // If here is any differenz then we might have a bug resetting the pipes
         assertEquals(newCalculation, optimizer.gridCosts)
+    }
+
+    @Test
+    fun testPipeChange() {
+        val grid = createLargeGrid()
+        grid.pipes.forEach { it.type = investParameter.pipeTypes.first() }
+        val costPrevious = investParameter.calculateCosts(grid)
+        grid.pipes.forEach { it.type = investParameter.pipeTypes.last() }
+        val costsLarge = investParameter.calculateCosts(grid)
+        val costsLargeTwice = investParameter.calculateCosts(grid)
+        assertEquals(costsLarge, costsLargeTwice, "Costs should be on second check the same as first check.")
+        grid.pipes.forEach { it.type = investParameter.pipeTypes.first() }
+        val costAfter = investParameter.calculateCosts(grid)
+        assertEquals(costPrevious, costAfter, "Costs should be after pipe change the same as before with same pipes.")
     }
 
     @Ignore

@@ -2,6 +2,7 @@ package de.fhac.ewi.model.math
 
 import de.fhac.ewi.model.Pipe
 import de.fhac.ewi.model.delegate.PipeBasedCalculableDelegate
+import de.fhac.ewi.util.updateIfNeeded
 import de.fhac.ewi.util.subscribeIfChanged
 
 /**
@@ -23,7 +24,7 @@ class NodeEnergyDemandDelegate<T> : PipeBasedCalculableDelegate<T>() {
     }
 
     override fun onPossiblePipeUpdate(pipe: Pipe) {
-        pipe.energyDemand
+        pipe::energyDemand.updateIfNeeded() // on change it will trigger recalculation of this property
     }
 
 }

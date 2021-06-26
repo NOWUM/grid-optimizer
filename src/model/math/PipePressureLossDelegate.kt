@@ -4,6 +4,7 @@ import de.fhac.ewi.model.Pipe
 import de.fhac.ewi.model.delegate.LazyCalculableDoubleArray
 import de.fhac.ewi.util.pipePressureLoss
 import de.fhac.ewi.util.subscribeIfChanged
+import de.fhac.ewi.util.updateIfNeeded
 
 /**
  * ### Druckverlust in Rohrleitung
@@ -25,7 +26,7 @@ class PipePressureLossDelegate<T>(private val pipe: Pipe) : LazyCalculableDouble
     }
 
     override fun checkForChanges() {
-        pipe.flowRate // check if flowRate has changed
+        pipe::flowRate.updateIfNeeded() // on change it will trigger recalculation of this property
         // type changes will directly result in recalculation
     }
 

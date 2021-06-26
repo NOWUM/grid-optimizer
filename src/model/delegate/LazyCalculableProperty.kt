@@ -4,16 +4,11 @@ import kotlin.reflect.KProperty
 
 abstract class LazyCalculableProperty<T, V : Any> : SubscribableProperty<T, V>(), LazySubscriber {
 
-    var possibleUpdate = false
-    var recalculate = false
+    private var possibleUpdate = false
+    private var recalculate = false
 
     override fun getValue(thisRef: T, property: KProperty<*>): V {
-        if (possibleUpdate && !recalculate) {
-            checkForChanges()
-            possibleUpdate = false // we checked - if there must be an update then recalculate now should be set
-        }
-        if (recalculate)
-            updateValue()
+        updateIfNeeded()
         return super.getValue(thisRef, property)
     }
 
@@ -22,6 +17,15 @@ abstract class LazyCalculableProperty<T, V : Any> : SubscribableProperty<T, V>()
     abstract fun recalculate(): V
 
     override fun lazyInitialValue() = recalculate()
+
+    fun updateIfNeeded() {
+        if (possibleUpdate && !recalculate) {
+            checkForChanges()
+            possibleUpdate = false // we checked - if there must be an update then recalculate now should be set otherwise we dont need to check again
+        }
+        if (recalculate)
+            updateValue()
+    }
 
     private fun updateValue() {
         setValue(recalculate())
@@ -37,7 +41,12 @@ abstract class LazyCalculableProperty<T, V : Any> : SubscribableProperty<T, V>()
             return // possible update already triggered
 
         possibleUpdate = true
-        subscribers.filterIsInstance<LazySubscriber>().forEach(LazySubscriber::onPossibleUpdate)
+        // Inform subscribers
+        for (subscriber in subscribers)
+            if (subscriber is LazySubscriber)
+                subscriber.onPossibleUpdate() // Lazy subscribers will get possible update information
+            else
+                subscriber.onValueChange() // we dont know if value will change. For normal subscribers we should force the update
     }
 
     /**
@@ -48,8 +57,6 @@ abstract class LazyCalculableProperty<T, V : Any> : SubscribableProperty<T, V>()
             return // recalculation already triggered
 
         recalculate = true
-        if (!possibleUpdate) // if possible update not already announced
-            subscribers.filterIsInstance<LazySubscriber>().forEach(LazySubscriber::onPossibleUpdate)
-        possibleUpdate = false // possible update now false, because we already forced an recalculation
+        onPossibleUpdate() // The value of this property can be changed with next get
     }
 }
