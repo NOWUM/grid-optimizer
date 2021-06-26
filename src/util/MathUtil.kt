@@ -135,7 +135,7 @@ fun reynoldsNumberToLambda(re: Double, diameter: Double, k: Double = 0.01) : Dou
 
     // Übergangsbereich
     diameter / k * log10(0.1 * diameter / k) < re && re <= 400 * diameter / k * log10(3.715*diameter/k) ->
-        0.25 / log10(15 / re + k / (3.715 * diameter))
+        0.25 / log10(15 / re + k / (3.715 * diameter)).pow(2)
 
     // hydraulisch rau
     400 * diameter / k * log10(3.715*diameter/k) < re ->
