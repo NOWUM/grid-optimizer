@@ -15,6 +15,9 @@ abstract class Node(val id: String) {
 
     private val connectedPipes = mutableListOf<Pipe>()
 
+    val connectedChildPipes: List<Pipe>
+        get() = connectedPipes.filter { it.source == this }
+
     val connectedChildNodes: List<Node>
         get() = connectedPipes.filter { it.source == this }.map { it.target }
 
@@ -44,6 +47,12 @@ abstract class Node(val id: String) {
     open val pathToSource: Array<Pipe> by lazy {
         connectedPipes.single { it.target == this }.let { arrayOf(it, *it.source.pathToSource) }
     }
+
+    open val largestConnectedPipe: PipeType?
+        get() = connectedPipes.filter { it.source == this && it.type != PipeType.UNDEFINED }.maxByOrNull { it.type.diameter }?.type
+
+    open val totalHeatLoss: Double
+        get() = connectedPipes.filter { it.source == this }.sumOf { it.heatLoss.sum() + it.target.totalHeatLoss }
 
     fun isParentOf(target: Node): Boolean =
         target in connectedChildNodes || connectedChildNodes.any { it.isParentOf(target) }

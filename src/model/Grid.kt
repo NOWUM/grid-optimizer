@@ -28,7 +28,7 @@ class Grid {
     val totalHeatLoss: Double
         get() = pipes.sumOf { it.heatLoss.sum() }
 
-    val criticalPath: Array<Pipe> by lazy { nodes.filterIsInstance<OutputNode>().map { it.pathToSource}.maxByOrNull { path -> path.sumOf { it.length } }!! }
+    val criticalPath: Array<Pipe> by lazy { nodes.filterIsInstance<OutputNode>().map { it.pathToSource }.maxByOrNull { path -> path.sumOf { it.length } }!! }
 
     private fun addNode(node: Node) {
         if (_nodes.any { it.id.equals(node.id, true) })
