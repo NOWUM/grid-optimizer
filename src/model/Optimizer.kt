@@ -24,7 +24,7 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         grid.pipes.forEach { it.type = initial }
         gridCosts = investParams.calculateCosts(grid)
 
-        val strategies: List<Strategy> = listOf(RepeatAllOneByOne)
+        val strategies: List<Strategy> = listOf(AllCombinations)
 
         strategies.forEach { strategy ->
             val oldNumberOfTypeChecks = numberOfTypeChecks

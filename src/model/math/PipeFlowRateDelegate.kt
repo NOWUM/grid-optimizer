@@ -21,9 +21,11 @@ class PipeFlowRateDelegate<T>(private val pipe: Pipe) : LazyCalculableDoubleArra
         pipe::type.subscribeIfChanged(this)
     }
 
-    override fun recalculateIndexed(index: Int) = with(pipe) {
-        // TODO ggf anders berechnen, da der diameter jedes mal zur gleichen Fläche übertragen wird
-        flowRate(type.diameter, volumeFlow[index])
+
+    override fun recalculate(): DoubleArray {
+        val volumeFlow = pipe.volumeFlow
+        // TODO ggf querschnitt schon vorberechnen?
+        return DoubleArray(8760) { index -> flowRate(pipe.type.diameter, volumeFlow[index])}
     }
 
     override fun checkForChanges() {

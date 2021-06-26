@@ -24,8 +24,9 @@ class NodeVolumeFlowDelegate<T>(val node: Node) : LazyCalculableDoubleArray<T>()
         node::energyDemand.subscribeIfChanged(this)
     }
 
-    override fun recalculateIndexed(index: Int) = with(node) {
-        volumeFlow(flowIn[index], flowOut[index], energyDemand[index])
+    override fun recalculate(): DoubleArray {
+        val energyDemand = node.energyDemand
+        return DoubleArray(8760) { index -> volumeFlow(flowIn[index], flowOut[index], energyDemand[index])}
     }
 
     override fun checkForChanges() {

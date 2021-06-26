@@ -21,8 +21,10 @@ class PipePumpPowerDelegate<T>(private val pipe: Pipe) : LazyCalculableDoubleArr
         pipe::volumeFlow.subscribeIfChanged(this)
     }
 
-    override fun recalculateIndexed(index: Int) = with(pipe) {
-        neededPumpPower(totalPressureLoss[index], volumeFlow[index])
+    override fun recalculate(): DoubleArray {
+        val totalPressureLoss = pipe.totalPressureLoss
+        val volumeFlow = pipe.volumeFlow
+        return DoubleArray(8760) { index -> neededPumpPower(totalPressureLoss[index], volumeFlow[index])}
     }
 
     override fun checkForChanges() {

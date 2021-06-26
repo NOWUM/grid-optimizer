@@ -22,17 +22,17 @@ class PipeHeatLossDelegate<T>(private val pipe: Pipe) : LazyCalculableDoubleArra
         pipe::type.subscribeIfChanged(this)
     }
 
-    override fun recalculateIndexed(index: Int) = with(pipe) {
-        pipeHeatLoss(
+    override fun recalculate(): DoubleArray {
+        return DoubleArray(8760) { index -> pipeHeatLoss(
             flowIn[index],
             flowOut[index],
             10.0,
-            type.diameter,
-            type.isolationThickness,
-            coverageHeight,
-            type.distanceBetweenPipes,
-            length
-        )
+            pipe.type.diameter,
+            pipe.type.isolationThickness,
+            pipe.coverageHeight,
+            pipe.type.distanceBetweenPipes,
+            pipe.length
+        ) }
     }
 
 

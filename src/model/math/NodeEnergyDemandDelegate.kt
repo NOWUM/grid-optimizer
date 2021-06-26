@@ -15,8 +15,9 @@ import de.fhac.ewi.util.subscribeIfChanged
  */
 class NodeEnergyDemandDelegate<T> : PipeBasedCalculableDelegate<T>() {
 
-    override fun recalculateIndexed(index: Int, pipes: List<Pipe>): Double {
-        return pipes.sumOf { it.energyDemand[index] }
+    override fun recalculate(pipes: List<Pipe>): DoubleArray {
+        val energyDemands = pipes.map { it.energyDemand }
+        return DoubleArray(8760) {index -> energyDemands.sumOf { it[index] } }
     }
 
     override fun onPipeConnect(pipe: Pipe) {

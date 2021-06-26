@@ -21,8 +21,11 @@ class PipeEnergyDemandDelegate<T>(private val pipe: Pipe) : LazyCalculableDouble
         pipe.target::energyDemand.subscribeIfChanged(this)
     }
 
-    override fun recalculateIndexed(index: Int) = with(pipe) {
-        heatLoss[index] + target.energyDemand[index]
+
+    override fun recalculate(): DoubleArray {
+        val heatLoss = pipe.heatLoss
+        val targetEnergyDemand = pipe.target.energyDemand
+        return DoubleArray(8760) { index -> heatLoss[index] + targetEnergyDemand[index] }
     }
 
     override fun checkForChanges() {
