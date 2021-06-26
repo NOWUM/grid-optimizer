@@ -61,6 +61,20 @@ class GridOptimizerTest {
         assertEquals(newCalculation, optimizer.gridCosts)
     }
 
+    @Test
+    fun testPipeChange() {
+        val grid = createLargeGrid()
+        grid.pipes.forEach { it.type = investParameter.pipeTypes.first() }
+        val costPrevious = investParameter.calculateCosts(grid)
+        grid.pipes.forEach { it.type = investParameter.pipeTypes.last() }
+        val costsLarge = investParameter.calculateCosts(grid)
+        val costsLargeTwice = investParameter.calculateCosts(grid)
+        assertEquals(costsLarge, costsLargeTwice, "Costs should be on second check the same as first check.")
+        grid.pipes.forEach { it.type = investParameter.pipeTypes.first() }
+        val costAfter = investParameter.calculateCosts(grid)
+        assertEquals(costPrevious, costAfter, "Costs should be after pipe change the same as before with same pipes.")
+    }
+
     @Ignore
     @Test
     fun testGroupA4Grid() {
