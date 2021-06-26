@@ -3,6 +3,7 @@ package de.fhac.ewi.model.math
 import de.fhac.ewi.model.Pipe
 import de.fhac.ewi.model.delegate.LazyCalculableDoubleArray
 import de.fhac.ewi.util.subscribeIfChanged
+import de.fhac.ewi.util.updateIfNeeded
 
 /**
  * ### Gesamter Druckverlust in Rohrleitung
@@ -24,8 +25,8 @@ class PipeTotalPressureLossDelegate<T>(private val pipe: Pipe) : LazyCalculableD
     }
 
     override fun checkForChanges() {
-        pipe.pipePressureLoss // check if pipePressureLoss has changed
-        pipe.target.pressureLoss // check if target.pressureLoss has changed
+        pipe::pipePressureLoss.updateIfNeeded() // on change it will trigger recalculation of this property
+        pipe.target::pressureLoss.updateIfNeeded()
     }
 
 }

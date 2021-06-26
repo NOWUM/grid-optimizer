@@ -4,6 +4,7 @@ import de.fhac.ewi.model.Pipe
 import de.fhac.ewi.model.delegate.LazyCalculableDoubleArray
 import de.fhac.ewi.util.neededPumpPower
 import de.fhac.ewi.util.subscribeIfChanged
+import de.fhac.ewi.util.updateIfNeeded
 
 /**
  * ### Benötigte Pumpleistung in Rohrleitung
@@ -25,7 +26,7 @@ class PipePumpPowerDelegate<T>(private val pipe: Pipe) : LazyCalculableDoubleArr
     }
 
     override fun checkForChanges() {
-        pipe.totalPressureLoss // check if totalPressureLoss has changed
-        pipe.volumeFlow
+        pipe::totalPressureLoss.updateIfNeeded() // on change it will trigger recalculation of this property
+        pipe::volumeFlow.updateIfNeeded()
     }
 }

@@ -3,6 +3,7 @@ package de.fhac.ewi.model.math
 import de.fhac.ewi.model.Node
 import de.fhac.ewi.model.delegate.LazyCalculableDoubleArray
 import de.fhac.ewi.util.subscribeIfChanged
+import de.fhac.ewi.util.updateIfNeeded
 import de.fhac.ewi.util.volumeFlow
 
 
@@ -28,6 +29,6 @@ class NodeVolumeFlowDelegate<T>(val node: Node) : LazyCalculableDoubleArray<T>()
     }
 
     override fun checkForChanges() {
-        node.energyDemand
+        node::energyDemand.updateIfNeeded() // on change it will trigger recalculation of this property
     }
 }

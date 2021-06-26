@@ -15,6 +15,10 @@ fun KProperty0<*>.subscribeIfChanged(subscriber: Subscriber) {
     delegateAs<SubscribableProperty<*, *>>()?.subscribe(subscriber)
 }
 
+fun KProperty0<*>.updateIfNeeded() {
+    delegateAs<LazyCalculableProperty<*, *>>()?.run { updateIfNeeded() }
+}
+
 fun KProperty0<*>.addPipeIfNeeded(pipe: Pipe) {
     delegateAs<PipeBasedCalculableDelegate<*>>()?.addChild(pipe)
 }

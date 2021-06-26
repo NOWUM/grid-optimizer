@@ -8,12 +8,7 @@ abstract class LazyCalculableProperty<T, V : Any> : SubscribableProperty<T, V>()
     private var recalculate = false
 
     override fun getValue(thisRef: T, property: KProperty<*>): V {
-        if (possibleUpdate && !recalculate) {
-            checkForChanges()
-            possibleUpdate = false // we checked - if there must be an update then recalculate now should be set otherwise we dont need to check again
-        }
-        if (recalculate)
-            updateValue()
+        updateIfNeeded()
         return super.getValue(thisRef, property)
     }
 
@@ -22,6 +17,15 @@ abstract class LazyCalculableProperty<T, V : Any> : SubscribableProperty<T, V>()
     abstract fun recalculate(): V
 
     override fun lazyInitialValue() = recalculate()
+
+    fun updateIfNeeded() {
+        if (possibleUpdate && !recalculate) {
+            checkForChanges()
+            possibleUpdate = false // we checked - if there must be an update then recalculate now should be set otherwise we dont need to check again
+        }
+        if (recalculate)
+            updateValue()
+    }
 
     private fun updateValue() {
         setValue(recalculate())
