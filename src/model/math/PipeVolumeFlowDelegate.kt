@@ -26,7 +26,7 @@ class PipeVolumeFlowDelegate<T>(val pipe: Pipe) : LazyCalculableDoubleArray<T>()
 
     override fun recalculate(): DoubleArray {
         val energyDemand = pipe.energyDemand
-        return DoubleArray(8760) { index -> volumeFlow(flowIn[index], flowOut[index], energyDemand[index])}
+        return DoubleArray(8760) { index -> volumeFlow(flowIn[index], flowOut[index], energyDemand[index]) }
     }
 
     override fun checkForChanges() {

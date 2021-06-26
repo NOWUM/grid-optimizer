@@ -25,7 +25,7 @@ class PipeFlowRateDelegate<T>(private val pipe: Pipe) : LazyCalculableDoubleArra
     override fun recalculate(): DoubleArray {
         val volumeFlow = pipe.volumeFlow
         // TODO ggf querschnitt schon vorberechnen?
-        return DoubleArray(8760) { index -> flowRate(pipe.type.diameter, volumeFlow[index])}
+        return DoubleArray(8760) { index -> flowRate(pipe.type.diameter, volumeFlow[index]) }
     }
 
     override fun checkForChanges() {

@@ -23,7 +23,7 @@ class PipeTotalPressureLossDelegate<T>(private val pipe: Pipe) : LazyCalculableD
     override fun recalculate(): DoubleArray {
         val pipePressureLoss = pipe.pipePressureLoss
         val targetPressureLoss = pipe.target.pressureLoss
-        return DoubleArray(8760) { index -> pipePressureLoss[index] + targetPressureLoss[index]}
+        return DoubleArray(8760) { index -> pipePressureLoss[index] + targetPressureLoss[index] }
     }
 
     override fun checkForChanges() {

@@ -15,7 +15,7 @@ class NodePressureLossDelegate<T> : PipeBasedCalculableDelegate<T>() {
 
     override fun recalculate(pipes: List<Pipe>): DoubleArray {
         val pressureLosses = pipes.map { it.totalPressureLoss }
-        return DoubleArray(8760) {index -> pressureLosses.maxOf { it[index] } }
+        return DoubleArray(8760) { index -> pressureLosses.maxOf { it[index] } }
     }
 
     override fun onPipeConnect(pipe: Pipe) {

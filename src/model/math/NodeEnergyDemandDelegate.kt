@@ -2,8 +2,8 @@ package de.fhac.ewi.model.math
 
 import de.fhac.ewi.model.Pipe
 import de.fhac.ewi.model.delegate.PipeBasedCalculableDelegate
-import de.fhac.ewi.util.updateIfNeeded
 import de.fhac.ewi.util.subscribeIfChanged
+import de.fhac.ewi.util.updateIfNeeded
 
 /**
  * ### Energiebedarf in einem Knoten
@@ -17,7 +17,7 @@ class NodeEnergyDemandDelegate<T> : PipeBasedCalculableDelegate<T>() {
 
     override fun recalculate(pipes: List<Pipe>): DoubleArray {
         val energyDemands = pipes.map { it.energyDemand }
-        return DoubleArray(8760) {index -> energyDemands.sumOf { it[index] } }
+        return DoubleArray(8760) { index -> energyDemands.sumOf { it[index] } }
     }
 
     override fun onPipeConnect(pipe: Pipe) {
