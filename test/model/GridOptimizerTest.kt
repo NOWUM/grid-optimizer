@@ -11,7 +11,6 @@ import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
-@Ignore
 class GridOptimizerTest {
 
     private val timeSeriesService = TemperatureTimeSeriesService(loadTemperatureTimeSeries())
@@ -42,14 +41,14 @@ class GridOptimizerTest {
     fun testMediumGrid() {
         val grid = createMediumGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(11324.87, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(11303.73, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testLargeGrid() {
         val grid = createLargeGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(46399.16, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(46358.27, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
