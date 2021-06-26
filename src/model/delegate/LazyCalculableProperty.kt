@@ -4,8 +4,8 @@ import kotlin.reflect.KProperty
 
 abstract class LazyCalculableProperty<T, V : Any> : SubscribableProperty<T, V>(), LazySubscriber {
 
-    var possibleUpdate = false
-    var recalculate = false
+    private var possibleUpdate = false
+    private var recalculate = false
 
     override fun getValue(thisRef: T, property: KProperty<*>): V {
         if (possibleUpdate && !recalculate) {
