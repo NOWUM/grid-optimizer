@@ -16,7 +16,8 @@ fun Route.optimize(gridService: GridService, optimizerService: OptimizerService)
             val grid = catchParseError { gridService.createByGridRequest(request.grid) }
             grid.validate()
             val optimizer = catchParseError { optimizerService.createByOptimizationRequest(request) }
-            call.respond(optimizerService.optimize(grid, optimizer))
+            val id = optimizerService.optimize(grid, optimizer)
+            call.respond(optimizerService.getStatus(id))
         }
         route("{id}") {
             get {
