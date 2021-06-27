@@ -18,5 +18,26 @@ fun Route.optimize(gridService: GridService, optimizerService: OptimizerService)
             val optimizer = catchParseError { optimizerService.createByOptimizationRequest(request) }
             call.respond(optimizerService.optimize(grid, optimizer))
         }
+        route("{id}") {
+            get {
+                val id = call.parameters["id"]
+                call.respond(optimizerService.getStatus(id))
+            }
+            get("/pipe/{pipe}") {
+                val id = call.parameters["id"]
+                val pipeId = call.parameters["pipe"]
+                call.respond(optimizerService.getPipe(id, pipeId))
+            }
+            get("/node/{node}") {
+                val id = call.parameters["id"]
+                val nodeId = call.parameters["node"]
+                call.respond(optimizerService.getNode(id, nodeId))
+            }
+            get("/overview") {
+                val id = call.parameters["id"]
+                call.respond(optimizerService.getOverview(id))
+
+            }
+        }
     }
 }
