@@ -1,7 +1,6 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.model.strategies.AllCombinations
-import de.fhac.ewi.model.strategies.Strategy
+import de.fhac.ewi.model.strategies.*
 import de.fhac.ewi.util.round
 
 class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
@@ -25,7 +24,7 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         grid.pipes.forEach { it.type = initial }
         gridCosts = investParams.calculateCosts(grid)
 
-        val strategies: List<Strategy> = listOf(AllCombinations)
+        val strategies: List<Strategy> = listOf(CriticalPathOneByOne, PathToSourceOneByOne, LowerHeatLoss2, LowerPressureLoss4, RepeatAllOneByOne) // listOf(RepeatAllOneByOne)//
 
         strategies.forEach { strategy ->
             val oldNumberOfTypeChecks = numberOfTypeChecks
@@ -60,7 +59,8 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         pipe: Pipe,
         types: List<PipeType> = investParams.pipeTypes.filterNot { it == pipe.type },
         skipIfGettingWorse: Boolean = true,
-        skipSmallerThenCurrent: Boolean = false
+        skipSmallerThenCurrent: Boolean = false,
+        skipBiggerThenCurrent: Boolean = false
     ): Boolean {
         val lastTypeWasUndefined = pipe.type == PipeType.UNDEFINED
         var bestType = pipe.type
@@ -73,6 +73,9 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
                 continue
 
             if (skipSmallerThenCurrent && type.diameter < bestType.diameter)
+                continue
+
+            if (skipBiggerThenCurrent && type.diameter > bestType.diameter)
                 continue
 
             numberOfTypeChecks++
@@ -116,6 +119,8 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         types: List<PipeType> = investParams.pipeTypes,
         skipIfGettingWorse: Boolean = true,
         skipSmallerThenCurrent: Boolean = false,
+        skipBiggerThenCurrent: Boolean = false,
+        maxTries: Int = Integer.MAX_VALUE,
         currentIdx: Int = 0
     ): Boolean {
         val currentPipe = pipes[currentIdx]
@@ -127,6 +132,7 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         val lastTypeWasUndefined = currentPipe.type == PipeType.UNDEFINED
         var bestType = currentPipe.type
         var betterTypeFound = false
+        var typesTried = 0
 
         for (type in investParams.pipeTypes) {
 
@@ -137,9 +143,16 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
             if (skipSmallerThenCurrent && type.diameter < bestType.diameter)
                 continue
 
+            if (skipBiggerThenCurrent && type.diameter > bestType.diameter)
+                continue
+
+            if (typesTried >= maxTries)
+                break
+
+            typesTried++
             currentPipe.type = type
 
-            if (optimizePipes(pipes, types, skipIfGettingWorse, skipSmallerThenCurrent, currentIdx + 1)) {
+            if (optimizePipes(pipes, types, skipIfGettingWorse, skipSmallerThenCurrent, skipBiggerThenCurrent, maxTries, currentIdx + 1)) {
                 bestType = type
                 betterTypeFound = true
             } else if (betterTypeFound && skipIfGettingWorse && !lastTypeWasUndefined)
