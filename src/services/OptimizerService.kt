@@ -7,6 +7,10 @@ import de.fhac.ewi.model.Optimizer
 import de.fhac.ewi.model.PipeType
 import de.fhac.ewi.util.catchParseError
 import de.fhac.ewi.util.toDoubleFunction
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class OptimizerService {
@@ -45,12 +49,14 @@ class OptimizerService {
     }
 
 
-    fun optimize(grid: Grid, investmentParameter: InvestmentParameter): String {
+    suspend fun optimize(grid: Grid, investmentParameter: InvestmentParameter): String = coroutineScope {
         val optimizer = Optimizer(grid, investmentParameter)
         val uuid = UUID.randomUUID().toString()
         optimizations[uuid] = optimizer
-        optimizer.optimize() // TODO Async
-        return uuid
+        launch {
+            optimizer.optimize()
+        }
+        return@coroutineScope uuid
     }
 
     fun getStatus(id: String?): OptimizationStatusResponse {
