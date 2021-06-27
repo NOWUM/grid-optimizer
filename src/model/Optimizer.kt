@@ -7,7 +7,7 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
 
     lateinit var gridCosts: Costs
 
-    var running: Boolean = true
+    var completed: Boolean = false
         private set
 
     var numberOfTypeChecks: Int = 0
@@ -17,7 +17,7 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         private set
 
     fun optimize() {
-        running = true
+        completed = false
         // Reset variables
         numberOfTypeChecks = 0
         numberOfUpdates = 0
@@ -38,7 +38,7 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
                     ">> Number of type update: ${numberOfUpdates - oldNumberOfUpdates} times ($numberOfUpdates total)\n" +
                     ">> Maximum pressure loss: ${grid.input.pressureLoss.maxOrNull()} Bar (${(grid.input.pressureLoss.maxOrNull()?:0.0) * 100_000 / grid.criticalPath.sumOf { it.length }} Pa/m)")
         }
-        running = false
+        completed = true
     }
 
     /**
