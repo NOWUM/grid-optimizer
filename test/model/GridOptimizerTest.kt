@@ -12,6 +12,7 @@ import de.fhac.ewi.util.*
 import org.junit.Test
 import kotlin.test.assertEquals
 
+@Ignore
 class GridOptimizerTest {
 
     private val timeSeriesService = TemperatureTimeSeriesService(loadTemperatureTimeSeries())

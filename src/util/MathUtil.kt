@@ -119,7 +119,7 @@ fun pipeHeatLoss(
  *
  * Quelle: Jungbluth, 09 Uebung Waermeverteilung.pdf, Folie 12
  *
- * @param re Double - Rohrwiderstandsbeiwert
+ * @param re Double - Reynoldszahl dimensionslos
  * @param diameter Double - Rohrinnendurchmesser in m
  * @param k Double - Rohrrauheit in ???
  * @return Double - Rohrwiderstandsbeiwert dimensionslos
