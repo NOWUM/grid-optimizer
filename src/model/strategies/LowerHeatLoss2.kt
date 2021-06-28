@@ -1,6 +1,7 @@
 package de.fhac.ewi.model.strategies
 
 import de.fhac.ewi.model.Optimizer
+import de.fhac.ewi.util.maxOrElse
 
 /**
  * Wärmeverluste pro Meter im kritischen Pfad bestimmen, dann gucken welche Rohre da drüber liegen -> Diese müssen vergrößert werden.
@@ -13,10 +14,10 @@ object LowerHeatLoss2 : Strategy {
             var lowerHeatLossFound: Boolean
             do {
                 val pipes = grid.pipes
-                    .sortedByDescending { (it.heatLoss.maxOrNull() ?: 0.0) / it.length / criticalHeatLoss }
+                    .sortedByDescending { it.heatLoss.sum() / it.length / criticalHeatLoss }
                     .take(n)
                     .sortedByDescending { it.source.pathToSource.size }
-                lowerHeatLossFound = optimizePipes(pipes, skipBiggerThenCurrent = true)
+                lowerHeatLossFound = optimizePipes(pipes, skipBiggerThenCurrent = true, maxDifferenceToCurrent = 1)
             } while (lowerHeatLossFound)
         }
     }

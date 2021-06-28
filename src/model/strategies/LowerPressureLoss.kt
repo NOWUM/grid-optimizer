@@ -1,11 +1,18 @@
+@file:Suppress("DuplicatedCode")
+
 package de.fhac.ewi.model.strategies
 
-import de.fhac.ewi.model.InputNode
 import de.fhac.ewi.model.Node
 import de.fhac.ewi.model.Optimizer
 
 /**
- * Diese Strategie versucht den maximalen Druckverlust im Netz zu senken, indem die "schlimmsten" Leitungen zeitgleich optimiert werden
+ * Strategie dient der Senkung des maximalen Druckverlusts im Netz.
+ *
+ * Dazu wird für jeden Knoten mit angeschlossenen Pipes eben diese angeschlossenen Pipes + der Pfad zum Einspeisepunkt zeitgleich untersucht.
+ * Es wird für jede Pipe der aktuell beste Durchmesser & der Durchmesser eine Nummer größer ausprobiert und dann jeweils die Kosten bestimmt.
+ *
+ * Large: Nein
+ * Medium: Nein
  */
 object LowerPressureLoss : Strategy {
     override fun apply(optimizer: Optimizer): Unit = with(optimizer) {
@@ -14,10 +21,10 @@ object LowerPressureLoss : Strategy {
 
     private fun Optimizer.checkNode(node: Node) {
         node.connectedChildNodes.forEach { child ->
-            if (child.connectedChildPipes.size > 1)
+            if (child.connectedChildPipes.isNotEmpty())
                 checkNode(child)
         }
 
-        optimizePipes(node.connectedChildPipes + node.pathToSource, skipSmallerThenCurrent=true, maxTries = 3)
+        optimizePipes(node.connectedChildPipes + node.pathToSource, skipSmallerThenCurrent=true, maxDifferenceToCurrent = 1)
     }
 }

@@ -11,6 +11,7 @@ import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
+@Ignore
 class GridOptimizerTest {
 
     private val timeSeriesService = TemperatureTimeSeriesService(loadTemperatureTimeSeries())
@@ -74,7 +75,6 @@ class GridOptimizerTest {
         assertEquals(costPrevious, costAfter, "Costs should be after pipe change the same as before with same pipes.")
     }
 
-    @Ignore
     @Test
     fun testGroupA4Grid() {
         val grid = createGroupA4Grid()

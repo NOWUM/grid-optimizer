@@ -14,19 +14,20 @@ import de.fhac.ewi.util.maxOrElse
  * Alle Pipes die mindestens 60 % genau dieses gesamten Druckverlusts haben, werden für die Optimierung ausgewählt.
  * Es wird für jede Pipe der aktuell beste Durchmesser & der Durchmesser eine Nummer größer ausprobiert und dann jeweils die Kosten bestimmt.
  *
- * Large: Ja
- * Medium: Nein
- *
- * TODO Ggf in Abhängigkeit der Länge?
- * TODO Ggf in pipePressureLoss
+ * Large: ?
+ * Medium: ?
  */
-object LowerPressureLoss2 : Strategy {
+object LowerPressureLoss8 : Strategy {
     override fun apply(optimizer: Optimizer): Unit = with(optimizer) {
-        val possibleToHigh = mutableListOf<Pipe>()
+        val pipesToOptimize = mutableListOf<Pipe>()
         grid.pipes.groupBy { it.source.pathToSource.size }.forEach { (_, pipes) ->
-            val highest = pipes.maxOf { it.totalPressureLoss.maxOrElse() }
-            possibleToHigh += pipes.filter { it.totalPressureLoss.maxOrElse() / highest > 0.60 }
+            val highestPressureLoss = pipes.maxOf { it.target.pathToSource.maxOf { p -> p.pipePressureLoss.maxOrElse() } }
+            val possible = pipes.filter { it.target.pathToSource.maxOf { p -> p.pipePressureLoss.maxOrElse() } / highestPressureLoss > 0.80 }
+            // Nur nehmen, wenn das weniger als 50 % der Pipes oder 2 Stück sind
+            if (possible.size / pipes.size < 0.5 || possible.size <= 3)
+                pipesToOptimize += possible
         }
-        optimizePipes(possibleToHigh.reversed(), skipSmallerThenCurrent = true, maxDifferenceToCurrent = 1)
+        println("Optimizing ${pipesToOptimize.size} as one...")
+        optimizePipes(pipesToOptimize.reversed(), skipSmallerThenCurrent = true, maxDifferenceToCurrent = 1)
     }
 }
