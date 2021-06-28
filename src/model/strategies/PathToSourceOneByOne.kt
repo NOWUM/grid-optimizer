@@ -14,7 +14,7 @@ object PathToSourceOneByOne : Strategy {
             anyPathUpdated = false
             grid.nodes.filterIsInstance<OutputNode>().map { it.pathToSource }.forEach { pipes ->
                 for (pipe in pipes) {
-                    if (optimizePipe(pipe))
+                    if (optimizePipe(pipe, skipSmallerThenCurrent = true))
                         anyPathUpdated = true
                 }
             }
