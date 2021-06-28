@@ -1,5 +1,5 @@
 import {BaseNode, NodeElements, Pipe} from "../models";
-import React from "react";
+import React, {MutableRefObject, useEffect, useRef} from "react";
 import {Accordion, AccordionDetails, AccordionSummary} from "@material-ui/core";
 // @ts-ignore
 import Plot from 'react-plotly.js';
@@ -7,26 +7,48 @@ import Plot from 'react-plotly.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
-export const OptimizationNodeDetails = ({nodeElements, pipes}: { nodeElements: NodeElements, pipes: Pipe[] }) => {
+export const OptimizationNodeDetails = ({
+                                            nodeElements,
+                                            pipes,
+                                            activeId
+                                        }: { nodeElements: NodeElements, pipes: Pipe[], activeId?: string }) => {
+    let myRef = useRef<HTMLInputElement>()
+
+    useEffect(() => {
+        if (activeId) {
+            const offsetContainer: number = document.getElementById("first-optimization-accordion")?.offsetTop!;
+            document.getElementById("optimization-panel")?.scrollTo({
+                behavior: 'smooth',
+                top: myRef?.current?.offsetTop! - offsetContainer
+            });
+        }
+    }, [])
     return <>
         <h2>Input Nodes</h2>
-        <OptimizationAccordionNode nodes={nodeElements.inputNodes}/>
+        <OptimizationAccordionNode nodes={nodeElements.inputNodes} activeId={activeId} myRef={myRef}
+                                   id={"first-optimization-accordion"}/>
 
         <h2>Intermediate Nodes</h2>
-        <OptimizationAccordionNode nodes={nodeElements.intermediateNodes}/>
+        <OptimizationAccordionNode nodes={nodeElements.intermediateNodes} activeId={activeId} myRef={myRef}/>
 
         <h2>Output Nodes</h2>
-        <OptimizationAccordionNode nodes={nodeElements.outputNodes}/>
+        <OptimizationAccordionNode nodes={nodeElements.outputNodes} activeId={activeId} myRef={myRef}/>
 
         <h2>Pipes</h2>
-        <OptimizationAccordionPipe pipes={pipes}/>
+        <OptimizationAccordionPipe pipes={pipes} activeId={activeId} myRef={myRef}/>
     </>
 }
 
-export const OptimizationAccordionNode = ({nodes}: { nodes: BaseNode[] }) => {
-    const getAccordionNode = (n: BaseNode) => {
+export const OptimizationAccordionNode = ({
+                                              nodes,
+                                              activeId,
+                                              myRef,
+                                              id
+                                          }: { nodes: BaseNode[], activeId?: string, myRef: MutableRefObject<any>, id?: string }) => {
+    const getAccordionNode = (n: BaseNode, defaultExpanded: boolean) => {
         return <>
-            <Accordion TransitionProps={{unmountOnExit: true}}>
+            <Accordion TransitionProps={{unmountOnExit: true}} defaultExpanded={defaultExpanded}
+                       ref={defaultExpanded ? myRef : undefined} id={id}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
                     {n.data?.label} ({n.id})
                 </AccordionSummary>
@@ -125,15 +147,20 @@ export const OptimizationAccordionNode = ({nodes}: { nodes: BaseNode[] }) => {
     }
 
     return <>{nodes.filter(n => n.optimizedThermalEnergyDemand)
-        .map(n => getAccordionNode(n))
+        .map(n => getAccordionNode(n, n.id === activeId))
     }</>
 }
 
 
-export const OptimizationAccordionPipe = ({pipes}: { pipes: Pipe[] }) => {
-    const getAccordionPipe = (p: Pipe) => {
+export const OptimizationAccordionPipe = ({
+                                              pipes,
+                                              activeId,
+                                              myRef
+                                          }: { pipes: Pipe[], activeId?: string, myRef: MutableRefObject<any> }) => {
+    const getAccordionPipe = (p: Pipe, defaultExpanded: boolean) => {
         return <>
-            <Accordion TransitionProps={{unmountOnExit: true}}>
+            <Accordion TransitionProps={{unmountOnExit: true}} defaultExpanded={defaultExpanded}
+                       ref={defaultExpanded ? myRef : undefined}>
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
                     {p.data?.label} ({p.id})
                 </AccordionSummary>
@@ -240,7 +267,9 @@ export const OptimizationAccordionPipe = ({pipes}: { pipes: Pipe[] }) => {
         </div>
     }
 
-    return <>{pipes.filter((p: Pipe) => p.diameter)
-        .map(p => getAccordionPipe(p))
-    }</>
+    return <>
+        {
+            pipes.filter((p: Pipe) => p.diameter)
+                .map(p => getAccordionPipe(p, p.id === activeId))
+        }</>
 }

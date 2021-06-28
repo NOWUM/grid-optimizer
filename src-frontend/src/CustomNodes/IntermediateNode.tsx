@@ -1,5 +1,10 @@
 import {Handle, Position} from "react-flow-renderer";
-import {customInputHandleStyle, customOutputHandleStyle, getOptimizationTooltip} from "./InputNode";
+import {
+    customInputHandleStyle,
+    customOutputHandleStyle,
+    getOptimizationTooltip,
+    handleNodeCtrlClick
+} from "./InputNode";
 import {showNodeIntermediateDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
 import {IntermediateNode as IntermediateNodeModel} from "../models";
 import {Tooltip} from "@material-ui/core";
@@ -32,7 +37,7 @@ export const IntermediateNode = (node : IntermediateNodeModel) => {
         <Tooltip title={<>
             {node.data.annualEnergyDemand ? getOptimizationTooltip(node.data) : <></>}
         </>}>
-            <div style={customNodeStyles} onDoubleClick={handleClick}>
+            <div style={customNodeStyles} onDoubleClick={handleClick} onClick={() => handleNodeCtrlClick(node)}>
                 <Handle type="target" position={Position.Top} style={{...customInputHandleStyle}}/>
                 <div>{node.data.label}</div>
                 <Handle

@@ -1,9 +1,9 @@
-import {Handle, Position} from "react-flow-renderer";
+import {Edge, Handle, Position} from "react-flow-renderer";
 import {Tooltip} from "@material-ui/core";
 import React, {ReactElement} from "react";
-import {BaseNode, InputNode as InputNodeModel} from "../models";
+import {BaseNode, InputNode as InputNodeModel, Pipe} from "../models";
 import {showNodeInputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
-import {verifyBackend} from "../ReactFlow/FlowContainer";
+import {notify} from "../ReactFlow/Overlays/Notifications";
 
 
 const customNodeStyles = {
@@ -33,6 +33,20 @@ export const getOptimizationTooltip = (baseNode: BaseNode): ReactElement => {
 }
 
 
+export const handleNodeCtrlClick = (flowElement: (BaseNode | Pipe)) => {
+    if(isCtrlyKeyPressed()) {
+        if((flowElement.data.annualEnergyDemand || flowElement.data.diameter)){
+            flowElement.data.onCtrlClick(flowElement.id)
+        }
+        else if(!flowElement.data.annualEnergyDemand && !flowElement.data.diameter){
+            notify("Für dieses Element ist leider keine Optimierung verfügbar. Optimiere zunächst das Netz.")
+        }
+    }
+
+}
+
+// @ts-ignore
+export const isCtrlyKeyPressed = () => window.event?.ctrlKey
 
 export const InputNode = (node: InputNodeModel) => {
 
@@ -43,16 +57,19 @@ export const InputNode = (node: InputNodeModel) => {
         return newNode
     }
 
-    const handleClick = () => {
+    const handleDoubleClick = () => {
         showNodeInputDialog("Bearbeiten sie diesen Einspeisepunkt", getInputNode(),
             handleConfirm, () => {/*Nothing to do here*/
             }, () => node.data.onDelete(node.data.id ?? node.id))
     }
 
+
     const handleConfirm = (newNode: InputNodeModel) => {
         console.log(newNode)
         node.data.updateNode(newNode)
     }
+
+
 
     return (
         <Tooltip title={<>
@@ -60,7 +77,7 @@ export const InputNode = (node: InputNodeModel) => {
             Formel Rücklauftemperatur: {node.data.returnTemperatureTemplate} <br/>
             {node.data.annualEnergyDemand? getOptimizationTooltip(node.data): <></>}
         </>}>
-            <div style={customNodeStyles} onDoubleClick={handleClick}>
+            <div style={customNodeStyles} onDoubleClick={handleDoubleClick} onClick={() => handleNodeCtrlClick(node)}>
                 <Handle
                     type="source"
                     position={Position.Bottom}

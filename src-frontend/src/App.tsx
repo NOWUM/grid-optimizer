@@ -12,7 +12,7 @@ import {
     MassenstromResponse,
     NodeElements,
     NodeType,
-    OptimizationMetadata, OptimizationResult,
+    OptimizationMetadata,
     OutputNode,
     Pipe
 } from "./models";
@@ -51,17 +51,24 @@ function App() {
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
     const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
     const [optimizationMetadata, setOptimizationMetadata] = useState<OptimizationMetadata>(defaultOptimizationMetadata)
+    const [activeOptimizationId, setActiveOptimizationId] = useState<string | undefined>()
 
-    const [costs, setCosts] = useState<Costs|undefined>(undefined)
+
+    const [costs, setCosts] = useState<Costs | undefined>(undefined)
 
     const handleKeyDown = (e: KeyboardEvent) => {
 
-        if (e.key === KeyboardKey.ENTER || e.key === KeyboardKey.ESC){
+        if (e.key === KeyboardKey.ENTER || e.key === KeyboardKey.ESC) {
             e.preventDefault()
         }
     }
 
-    useEffect(() => console.log(pipes))
+    useEffect(() => {
+        if(activeOptimizationId !== undefined) {
+            setTabVal("5")
+        }
+        console.log("activeOptimizationId: " + activeOptimizationId)
+    },[activeOptimizationId])
 
     useEffect(() => {
         document.addEventListener('keydown', handleKeyDown, false);
@@ -118,7 +125,6 @@ function App() {
     }
 
 
-
     const getGrid = () => {
         return {pipes: (pipes as Pipe[]), ...nodeElements, temperatureSeries: temperatureKey}
     }
@@ -129,24 +135,37 @@ function App() {
 
     const isCostsComplete = () => !!costs
 
+    const handleSetActiveOptimizationId = (id: string) => {
+        console.log("Set active optimization id")
+        console.log(id)
+        setActiveOptimizationId(id)
+        // setTabVal("5")
+    }
+
+    const handleSetTabVal = (val: string) => {
+        setActiveOptimizationId(undefined)
+        setTabVal(val)
+    }
+
     return (
         <div className="App">
             <TabContext value={tabVal}>
-                {// @ts-ignore
-                }<AppBar position="static">
-                <h1 style={{userSelect: "none"}}>{getPipe()}Pipify<VersionNumber/></h1>
-                <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-                    <Tab icon={<Timeline />} label="Formel Check" value="4" />
-                    <Tab icon={<Storage />} label="Meta Daten" value="2"/>
-                    <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
-                    <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
-                    <Tab icon={<Timeline />} label="Node Detail" value="5" disabled={!isCostsComplete()} />
-                </TabList>
-            </AppBar>
+                <AppBar position="static">
+                    <h1 style={{userSelect: "none"}}>{getPipe()}Pipify<VersionNumber/></h1>
+                    <TabList onChange={(e, val) => handleSetTabVal(val)} aria-label="simple tabs example">
+                        <Tab icon={<Timeline/>} label="Formel Check" value="4"/>
+                        <Tab icon={<Storage/>} label="Meta Daten" value="2"/>
+                        <Tab icon={<Map/>} label="Editor" value="1" disabled={!isMetaDataComplete()}/>
+                        <Tab icon={<Timeline/>} label="Max Massenstrom" value="3"
+                             disabled={!isMaxMassenstromComplete()}/>
+                        <Tab icon={<Timeline/>} label="Node Detail" value="5" disabled={!isCostsComplete()}/>
+                    </TabList>
+                </AppBar>
                 <TabPanel value="1">
                     <div className="react-flow-container">
                         <FlowContainer pipes={pipes} setPipes={setPipes} nodeElements={nodeElements}
-                                       setNodeElements={setNodeElements} temperatureSeries={temperatureKey}/>
+                                       setNodeElements={setNodeElements} temperatureSeries={temperatureKey}
+                                       setActiveOptimizationId={handleSetActiveOptimizationId}/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
                         <DetermineMassFlowRateButton grid={getGrid()} onResult={setMassenstrom}/>
                         <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
@@ -167,8 +186,9 @@ function App() {
                 <TabPanel value={"4"}>
                     <FormulaCheck />
                 </TabPanel>
-                <TabPanel value={"5"}>
-                    <OptimizationNodeDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}/>
+                <TabPanel value={"5"} id={"optimization-panel"}>
+                    <OptimizationNodeDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}
+                                             activeId={activeOptimizationId}/>
                 </TabPanel>
 
             </TabContext>

@@ -32,6 +32,7 @@ import {OutputNode} from "../CustomNodes/OutputNode";
 import {baseUrl, createGrid} from "../utils/utility";
 import {notify} from "./Overlays/Notifications";
 import {DefaultEdge} from "../Components/DefaultEdge";
+import IdGenerator from "../utils/IdGenerator";
 
 const style = getComputedStyle(document.body)
 const corpColor = style.getPropertyValue('--corp-main-color')
@@ -40,7 +41,7 @@ const edgeConfiguration = {
     animated: true,
     type: 'DEFAULT_EDGE',
     arrowHeadType: ArrowHeadType.ArrowClosed,
-    style: {stroke: `rgb(${corpColor})`, strokeWidth: "3px"}
+    style: {stroke: `rgb(${corpColor})`, strokeWidth: "6px"}
 }
 
 
@@ -65,7 +66,8 @@ interface FlowContainerProperties {
     setPipes: Dispatch<SetStateAction<Elements<Pipe>>>,
     nodeElements: NodeElements,
     setNodeElements: Dispatch<SetStateAction<NodeElements>>,
-    temperatureSeries: string
+    temperatureSeries: string,
+    setActiveOptimizationId: (id: string) => void
 }
 
 export enum ResultCode {
@@ -97,7 +99,14 @@ export const verifyBackend = (grid: HotWaterGrid): Promise<boolean> => {
             return false});
 }
 
-export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, temperatureSeries}: FlowContainerProperties) => {
+export const FlowContainer = ({
+                                  pipes,
+                                  setPipes,
+                                  nodeElements,
+                                  setNodeElements,
+                                  temperatureSeries,
+                                  setActiveOptimizationId
+                              }: FlowContainerProperties) => {
 
     const [popupTarget, setPopupTarget] = useState<PopupProps | null>(null)
 
@@ -105,22 +114,27 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
     const onConnect = (params) => {
         params.animated = true;
         showEditPipeDialog("Füge ein neues Rohr hinzu",
-            (id, length1, coverageHeight) => {onConfirmPipe(params, id, length1, coverageHeight)},
+            (id, length1, coverageHeight) => {
+                onConfirmPipe(params, id, length1, coverageHeight)
+            },
             () => console.log("Nothing to do here"), params.id, undefined, undefined)
     };
 
     const onConfirmPipe = (params: any, id: string, length: number, coverageHeight: number) => {
         const pipesToVerify = [...pipes]
+        const {source, target} = params;
+        id = IdGenerator.getNextPipeId(source, target)
+
         const newPipe = {
-            source: params.source,
-            target: params.target,
+            source: source,
+            target: target,
             id, length, coverageHeight
         }
 
         pipesToVerify.push(newPipe)
         verifyBackend(createGrid(nodeElements, pipesToVerify as Pipe[], temperatureSeries)).then((verified: boolean) => {
-                if(verified) {
-                    params= {...params, ...edgeConfiguration, id, length, coverageHeight, data: {length, coverageHeight }}
+                if (verified) {
+                    params = {...params, ...edgeConfiguration, id, length, coverageHeight, data: {length, coverageHeight,}}
                     const newPipes = [...pipes]
                     newPipes.push(params)
                     setPipes(newPipes)
@@ -149,6 +163,7 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
     }
 
     const handleEditEdge = (id: string, length: number, coverageHeight: number) => {
+
         const newPipes = pipes.map(p => {
             if(p.id === id) {
                 return {...p, length, coverageHeight, data: {...p.data, length, coverageHeight}}
@@ -190,47 +205,48 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
         const outputNodes = addTypeToNodes(nodeElements.outputNodes, NodeType.OUTPUT_NODE)
         // console.log(pipes)
         const defaultPipes = pipes.map((el) => {
-            return {...el, ...edgeConfiguration}
+            return {...el, ...edgeConfiguration, data: {...el.data, onCtrlClick: setActiveOptimizationId}}
         })
 
+        const getCommonProps = (n: BaseNode) => {
+            const {annualEnergyDemand, maximalNeededPumpPower, maximalPressureLoss} = n
+
+            return {
+                updateNode, onDelete: handleDeleteNode, annualEnergyDemand, maximalNeededPumpPower, maximalPressureLoss,
+                onCtrlClick: setActiveOptimizationId
+            }
+        }
+
         inputNodes.forEach((n) => {
-            const {flowTemperatureTemplate, returnTemperatureTemplate, annualEnergyDemand,
-                maximalNeededPumpPower, maximalPressureLoss} = (n as InputNodeModel)
+            const {flowTemperatureTemplate, returnTemperatureTemplate} = (n as InputNodeModel)
             n.data = {
-                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, updateNode, onDelete: handleDeleteNode,
-                annualEnergyDemand, maximalNeededPumpPower, maximalPressureLoss
+                ...n.data, flowTemperatureTemplate, returnTemperatureTemplate, ...getCommonProps(n)
             }
         })
 
         intermediateNodes.forEach((n) => {
-            const {annualEnergyDemand, maximalNeededPumpPower, maximalPressureLoss} = n;
-            n.data = {...n.data, updateNode, onDelete: handleDeleteNode, annualEnergyDemand, maximalNeededPumpPower,
-                maximalPressureLoss}
+            n.data = {...n.data, ...getCommonProps(n)}
         })
 
         outputNodes.forEach((n) => {
-            const {thermalEnergyDemand, pressureLoss, loadProfileName, replicas, annualEnergyDemand,
-                maximalNeededPumpPower, maximalPressureLoss} = (n as OutputNodeModel)
+            const {thermalEnergyDemand, pressureLoss, loadProfileName, replicas} = (n as OutputNodeModel)
             n.data = {
                 ...n.data,
                 thermalEnergyDemand,
                 pressureLoss,
-                updateNode,
                 loadProfileName,
                 replicas,
-                onDelete: handleDeleteNode,
-                annualEnergyDemand,
-                maximalNeededPumpPower,
-                maximalPressureLoss
+                ...getCommonProps(n)
             }
         })
-
-        console.log(defaultPipes)
 
         return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
 
     const updateNode = (newNode: BaseNode) => {
+
+        //todo modify id and edge ids
+
         let nodeType;
         switch (newNode.type) {
             case NodeType.INPUT_NODE:
@@ -247,20 +263,41 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 return;
         }
 
-        console.log(nodeElements)
-        console.log(pipes)
+        const onLabelChange = (newNode: BaseNode, oldNode: BaseNode) => {
+            const oldLabel = oldNode.data.label
+            const newLabel = newNode.data.label
+            if (oldLabel !== newLabel) {
+                newNode.id = IdGenerator.getNextNodeId(newNode.data.label)
 
+                pipes.map((p: FlowElement<Pipe>) => {
+                    const {source, target} = (p as Pipe)
+                    if (source === oldLabel || target === oldLabel) {
+                        (p as Pipe).source = source === oldLabel ? newLabel : source;
+                        (p as Pipe).target = target === oldLabel ? newLabel : target
+                        const newSource = (p as Pipe).source
+                        const newTarget = (p as Pipe).target
+                        p.id = IdGenerator.getNextPipeId(source, target)
+                    }
+                    return p
+                })
+
+            }
+
+            return newNode
+        }
 
         const newNodeElements = {...nodeElements}
         // @ts-ignore
-        newNodeElements[nodeType] = nodeElements[nodeType].map((n) => {
-            if (n.id === newNode.id) {
+        newNodeElements[nodeType] = nodeElements[nodeType].map((oldNode) => {
+            if (oldNode.id === newNode.id) {
+                newNode = onLabelChange(newNode, oldNode);
                 return newNode
-            } return n
+            }
+            return oldNode
         })
 
         verifyBackend({pipes: pipes as Pipe[], ...nodeElements, temperatureSeries}).then(b => {
-            if(b){
+            if (b) {
                 setNodeElements(newNodeElements)
             }
         })

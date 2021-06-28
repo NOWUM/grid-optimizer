@@ -1,6 +1,9 @@
 import {EdgeText, getBezierPath, getMarkerEnd, Position} from "react-flow-renderer";
 import {Tooltip} from "@material-ui/core";
 import React from "react";
+import {notify} from "../ReactFlow/Overlays/Notifications";
+import {handleNodeCtrlClick} from "../CustomNodes/InputNode";
+import {Pipe} from "../models";
 
 
 export interface GetCenterParams {
@@ -88,7 +91,7 @@ export const DefaultEdge = ({
     return <>
         <Tooltip title={"Das ist ein Test"}>
             <>
-                <path id={id} style={style} className="react-flow__edge-path" markerEnd={markerEnd} d={edgePath}/>
+                <path id={id} style={style} className="react-flow__edge-path" markerEnd={markerEnd} d={edgePath} onClick={() => handleNodeCtrlClick({data,id} as Pipe)}/>
                 {/*<text>*/}
                 {/*    <textPath href={`#${id}`} style={{fontSize: '12px'}} startOffset="50%" textAnchor="middle">*/}
 
