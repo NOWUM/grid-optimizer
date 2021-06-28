@@ -20,8 +20,10 @@ class PipeTotalPressureLossDelegate<T>(private val pipe: Pipe) : LazyCalculableD
         pipe.target::pressureLoss.subscribeIfChanged(this)
     }
 
-    override fun recalculateIndexed(index: Int) = with(pipe) {
-        pipePressureLoss[index] + target.pressureLoss[index]
+    override fun recalculate(): DoubleArray {
+        val pipePressureLoss = pipe.pipePressureLoss
+        val targetPressureLoss = pipe.target.pressureLoss
+        return DoubleArray(8760) { index -> pipePressureLoss[index] + targetPressureLoss[index] }
     }
 
     override fun checkForChanges() {
