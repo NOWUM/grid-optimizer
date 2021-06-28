@@ -11,6 +11,7 @@ import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
+@Ignore
 class GridOptimizerTest {
 
     private val timeSeriesService = TemperatureTimeSeriesService(loadTemperatureTimeSeries())
