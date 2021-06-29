@@ -160,19 +160,14 @@ class GridOptimizerTest {
         )
 
         println("> Grid Statistics\n" +
-                ">> Nodes: ${grid.nodes.size} with a total energy demand of ${
-                    (grid.totalOutputEnergy / 1_000_000).round(
-                        3
-                    )
-                } MWh\n" +
+                ">> Nodes: ${grid.nodes.size} with a total energy demand of ${grid.totalOutputEnergy.toMW()} MWh\n" +
                 ">> Pipes: ${grid.pipes.size} with a total length of ${grid.pipes.sumOf { it.length }} meter\n" +
-                ">> Wärmeverlust: ${(grid.totalHeatLoss / 1_000_000).round(3)} MWh (${
-                    ((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(
-                        1
-                    )
+                ">> Wärmeverlust: ${grid.totalHeatLoss.toMW()} MWh (${
+                    ((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(1)
                 } %)\n" +
-                ">> Druckverlust: ${grid.input.pressureLoss.maxOrNull()?.round(2)} Bar (max)\n" +
-                ">> Volumenstrom: ${String.format("%.6f", grid.input.volumeFlow.maxOrNull())} m^3/s (max)\n" +
+                ">> Druckverlust: ${grid.input.pressureLoss.maxOrElse().round(2)} Bar (max)\n" +
+                ">> Massenstrom : ${grid.input.massenstrom.maxOrElse().round(3)} kg/s (max)\n" +
+                ">> Volumenstrom: ${String.format("%.6f", grid.input.volumeFlow.maxOrElse())} m^3/s (max)\n" +
                 ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n" +
                 ">> Kritischer Pfad: ${grid.criticalPath.sumOf { it.length }} m Länge mit ${
                     ((grid.input.pressureLoss.maxOrNull() ?: 0.0) * 100_000 / grid.criticalPath.sumOf { it.length }).round(
@@ -181,16 +176,20 @@ class GridOptimizerTest {
                 } Pa/m Druckverlust\n"
         )
 
-        println("> Costs\n" +
-                ">> Pipe Invest (Gesamt)   : ${optimizer.gridCosts.pipeInvestCostTotal.round(2).toString().padStart(8)} €\n" +
-                ">> Pipe Invest (Annuität) : ${optimizer.gridCosts.pipeInvestCostAnnuity.round(2).toString().padStart(8)} €\n" +
-                ">> Pipe Operation pro Jahr: ${optimizer.gridCosts.pipeOperationCost.round(2).toString().padStart(8)} €\n" +
-                ">> Pump Invest (Gesamt)   : ${optimizer.gridCosts.pumpInvestCostTotal.round(2).toString().padStart(8)} €\n" +
-                ">> Pump Invest (Annuität) : ${optimizer.gridCosts.pumpInvestCostAnnuity.round(2).toString().padStart(8)} €\n" +
-                ">> Pump Operation pro Jahr: ${optimizer.gridCosts.pumpOperationCost.round(2).toString().padStart(8)} €\n" +
-                ">> Wärmeverlust pro Jahr  : ${optimizer.gridCosts.heatLossCost.round(2).toString().padStart(8)} €\n" +
-                "\n" +
-                ">> Gesamtkosten pro Jahr  : ${optimizer.gridCosts.totalPerYear.round(2)} €")
+        with(optimizer.gridCosts) {
+            println(
+                "> Costs\n" +
+                        ">> Pipe Invest (Gesamt)   : ${pipeInvestCostTotal.toEURString()}\n" +
+                        ">> Pipe Invest (Annuität) : ${pipeInvestCostAnnuity.toEURString()}\n" +
+                        ">> Pipe Operation pro Jahr: ${pipeOperationCost.toEURString()}\n" +
+                        ">> Pump Invest (Gesamt)   : ${pumpInvestCostTotal.toEURString()}\n" +
+                        ">> Pump Invest (Annuität) : ${pumpInvestCostAnnuity.toEURString()}\n" +
+                        ">> Pump Operation pro Jahr: ${pumpOperationCost.toEURString()}\n" +
+                        ">> Wärmeverlust pro Jahr  : ${heatLossCost.toEURString()}\n" +
+                        "\n" +
+                        ">> Gesamtkosten pro Jahr  : ${totalPerYear.toEURString()}"
+            )
+        }
 
         return optimizer
     }
@@ -309,4 +308,10 @@ class GridOptimizerTest {
             PipeType(0.400, 3416.9, 0.04, 0.2)
         )
     }
+
+    private fun Double.toEURString() = this.round(2).toString().padStart(10) + " €"
+
+    private fun Double.toMW() = (this / 1_000_000).round(3).toString().padStart(7)
+
+    private fun Double.toKW() = (this / 1_000).round(3).toString().padStart(7)
 }
