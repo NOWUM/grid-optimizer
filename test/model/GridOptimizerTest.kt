@@ -79,7 +79,7 @@ class GridOptimizerTest {
     fun testGroupA4Grid() {
         val grid = createGroupA4Grid()
         val optimizer = callOptimizer(grid)
-        assertEquals(583957.4, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(582730.61, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
