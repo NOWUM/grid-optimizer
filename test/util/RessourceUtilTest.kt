@@ -8,7 +8,7 @@ class RessourceUtilTest {
     @Test
     fun loadTemperatureTimeSeriesTest() {
         val series = loadTemperatureTimeSeries()
-        assertEquals(13, series.size)
+        assertEquals(15, series.size)
     }
 
     @Test
