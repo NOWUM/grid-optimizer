@@ -55,7 +55,7 @@ export const FormulaCheck = () => {
                 marker: {
                     color: 'rgb(253 126 20)'
                 },
-                name: "Energie Heat Demand [kWh]"
+                name: "Wärmebedarf [kWh]"
             },
             {
                 y: heatDemandResult?.temperature,
@@ -64,7 +64,7 @@ export const FormulaCheck = () => {
                 marker: {
                     color: 'rgb(100 126 20)'
                 },
-                name: "Temperature [°C]"
+                name: "Außentemperatur [°C]"
             },
             {
                 y: heatDemandResult?.allokation,
@@ -82,7 +82,7 @@ export const FormulaCheck = () => {
                 marker: {
                     color: 'rgb(100 126 200)'
                 },
-                name: "Daily Heat Curve"
+                name: "Wärmeverteilung im Jahr"
             }
         ]
     }
