@@ -1,9 +1,6 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.model.math.NodeEnergyDemandDelegate
-import de.fhac.ewi.model.math.NodePressureLossDelegate
-import de.fhac.ewi.model.math.NodePumpPowerDelegate
-import de.fhac.ewi.model.math.NodeVolumeFlowDelegate
+import de.fhac.ewi.model.math.*
 import de.fhac.ewi.util.addPipeIfNeeded
 
 abstract class Node(val id: String) {
@@ -27,6 +24,8 @@ abstract class Node(val id: String) {
 
     // complex attributes
     open val energyDemand by NodeEnergyDemandDelegate()
+
+    open val massenstrom by NodeMassenstromDelegate(this)
 
     open val volumeFlow by NodeVolumeFlowDelegate(this)
 

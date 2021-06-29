@@ -57,6 +57,7 @@ class OptimizerService {
                 OptimizedPipeResponse(
                     it.id,
                     it.type.diameter,
+                    it.massenstrom,
                     it.volumeFlow,
                     it.heatLoss,
                     it.pipePressureLoss,
@@ -68,6 +69,7 @@ class OptimizerService {
                 OptimizedNodeResponse(
                     it.id,
                     it.energyDemand,
+                    it.massenstrom,
                     it.pressureLoss,
                     it.pumpPower,
                     it.flowInTemperature,
