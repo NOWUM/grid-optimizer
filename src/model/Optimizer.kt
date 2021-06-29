@@ -217,10 +217,10 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
     companion object {
         val DEFAULT_STRATEGIES = listOf(
             CriticalPathOneByOneReversed,
-            LayerDowntoOneByOne,
-            LowerPressureLoss9,
+            LayerDownToOneByOne,
+            // LowerPressureLoss9,
             // LowerHeatLoss2,
-            RepeatAllOneByOne
+            // RepeatAllOneByOne
         )
     }
 }
