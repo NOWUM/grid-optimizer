@@ -18,8 +18,6 @@ class GridService(
 
         val groundSeries = temperatureService.getSeries(request.temperatureSeries)
 
-        val copyPipesForNode = mutableMapOf<String, MutableList<String>>()
-
         request.inputNodes.forEach {
             val flowFunction =
                 catchParseError("Invalid flow in formula in node ${it.id}.") { it.flowTemperatureTemplate.toDoubleFunction() }
@@ -33,8 +31,6 @@ class GridService(
         request.outputNodes.forEach {
             val curve =
                 demandService.createCurve(it.thermalEnergyDemand * 1000, it.loadProfileName, request.temperatureSeries)
-            grid.addOutputNode(it.id, curve, it.pressureLoss)
-
 
             grid.addOutputNode(it.id, curve, it.pressureLoss, it.replicas?:1)
         }
