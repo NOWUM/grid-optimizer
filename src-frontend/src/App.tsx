@@ -26,7 +26,7 @@ import {VersionNumber} from "./VersionNumber";
 import {NodeMenuSpawnerContainer} from "./ReactFlow/OverlayButtons/NodeMenu/NodeMenuSpawnerContainer";
 import Notifications from "./ReactFlow/Overlays/Notifications";
 import {KeyboardKey} from "./Components/ConfirmationButton";
-import {Map, Storage, Timeline} from "@material-ui/icons";
+import {Functions, Map, Storage, Timeline} from "@material-ui/icons";
 import {
     defaultNodeElements,
     defaultOptimizationMetadata,
@@ -128,7 +128,7 @@ function App() {
                 }<AppBar position="static">
                 <h1 style={{userSelect: "none"}}>{getPipe()}Pipify<VersionNumber/></h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-                    <Tab icon={<Timeline />} label="Formel Check" value="4" />
+                    <Tab icon={<Functions />} label="Formel Check" value="4" />
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
                     <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
                     <Tab icon={<Timeline />} label="Optimierung" value="5" disabled={!isCostsComplete()} />
