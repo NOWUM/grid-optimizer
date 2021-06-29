@@ -53,7 +53,7 @@ body {
 
 .react-flow-container {
   /*width: 80%;*/
-  height: 100%;
+  height: 95%;
   padding: 1%;
   background: #f0f0f0;
   border: solid 1px silver;
@@ -79,7 +79,7 @@ body {
 }
 
 .MuiTabPanel-root {
-  height: 80vh;
+  height: 90vh;
   width: 100vw;
 }
 
@@ -105,14 +105,6 @@ body {
 
 .PrivateTabIndicator-colorSecondary-3 {
   background-color: rgb(var(--corp-secondary-color)) !important;
-}
-
-.MuiAppBar-root h1 {
-  margin: 20px;
-}
-
-.MuiTabs-flexContainer {
-  height: 100%;
 }
 
 h1 svg {
