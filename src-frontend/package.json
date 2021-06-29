@@ -7,30 +7,30 @@
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.58",
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.1.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.1.8",
     "@types/event-emitter": "^0.3.3",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.12.5",
+    "@types/react": "^17.0.5",
+    "@types/react-dom": "^17.0.8",
     "@types/reactour": "^1.18.1",
     "event-emitter": "^0.3.5",
-    "plotly.js": "^1.58.4",
+    "plotly.js": "^2.2.0",
     "react": "^17.0.2",
     "react-confirm-alert": "^2.7.0",
     "react-dom": "^17.0.2",
-    "react-dropzone": "^11.3.2",
-    "react-flow-renderer": "^9.5.4",
+    "react-dropzone": "^11.3.4",
+    "react-flow-renderer": "^9.6.2",
     "react-id-generator": "^3.0.1",
     "react-plotly.js": "^2.5.1",
     "react-promise-tracker": "^2.1.0",
     "react-scripts": "4.0.3",
     "reactour": "^1.18.3",
-    "styled-components": "^5.2.3",
-    "typescript": "^4.1.2",
-    "web-vitals": "^1.0.1"
+    "styled-components": "^5.3.0",
+    "typescript": "^4.3.4",
+    "web-vitals": "^2.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -58,6 +58,6 @@
   },
   "devDependencies": {
     "@types/plotly.js": "^1.54.10",
-    "@types/styled-components": "^5.1.9"
+    "@types/styled-components": "^5.1.10"
   }
 }

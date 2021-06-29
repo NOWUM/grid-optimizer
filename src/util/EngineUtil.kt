@@ -10,16 +10,16 @@ private val functions = mutableMapOf<String, DoubleFunction>()
 
 fun String.toDoubleFunction(): DoubleFunction {
     if (!matches(TEMPLATE_PATTERN))
-        throw IllegalArgumentException("Template does not match pattern ${TEMPLATE_PATTERN.pattern}.")
+        throw IllegalArgumentException("Template f(x)=$this does not match pattern ${TEMPLATE_PATTERN.pattern}.")
 
     return functions.getOrPut(this) {
 
         val functionName = "doubleFun${functions.size}"
 
         // Inserts the function
-        engine.eval("function $functionName(x) { return $this; }");
+        engine.eval("function $functionName(x) { return parseFloat($this); }");
 
-        { x: Double -> engine.eval("$functionName($x);") as Double }
+        { x: Double -> engine.eval("$functionName($x);").toString().toDouble() }
     }
 }
 

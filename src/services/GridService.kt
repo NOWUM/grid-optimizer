@@ -3,6 +3,7 @@ package de.fhac.ewi.services
 import de.fhac.ewi.dto.GridRequest
 import de.fhac.ewi.dto.MassenstromResponse
 import de.fhac.ewi.model.Grid
+import de.fhac.ewi.util.catchParseError
 import de.fhac.ewi.util.massenstrom
 import de.fhac.ewi.util.repeatEach
 import de.fhac.ewi.util.toDoubleFunction
@@ -15,20 +16,26 @@ class GridService(
     fun createByGridRequest(request: GridRequest): Grid {
         val grid = Grid()
 
+        val groundSeries = temperatureService.getSeries(request.temperatureSeries)
+
         request.inputNodes.forEach {
-            val flowFunction = it.flowTemperatureTemplate.toDoubleFunction()
-            val returnFunction = it.returnTemperatureTemplate.toDoubleFunction()
-            grid.addInputNode(it.id, flowFunction, returnFunction)
+            val flowFunction =
+                catchParseError("Invalid flow in formula in node ${it.id}.") { it.flowTemperatureTemplate.toDoubleFunction() }
+            val returnFunction =
+                catchParseError("Invalid flow out formula in node ${it.id}.") { it.returnTemperatureTemplate.toDoubleFunction() }
+            grid.addInputNode(it.id, groundSeries, flowFunction, returnFunction)
         }
         request.intermediateNodes.forEach {
             grid.addIntermediateNode(it.id)
         }
         request.outputNodes.forEach {
-            val curve = demandService.createCurve(it.thermalEnergyDemand, it.loadProfileName, request.temperatureSeries)
-            grid.addOutputNode(it.id, curve, it.pressureLoss)
+            val curve =
+                demandService.createCurve(it.thermalEnergyDemand * 1000, it.loadProfileName, request.temperatureSeries)
+
+            grid.addOutputNode(it.id, curve, it.pressureLoss, it.replicas?:1)
         }
         request.pipes.forEach {
-            grid.addPipe(it.id, it.source, it.target, it.length)
+            grid.addPipe(it.id, it.source, it.target, it.length, it.coverageHeight)
         }
 
         return grid
@@ -36,11 +43,16 @@ class GridService(
 
     fun calculateMaxMassenstrom(grid: Grid, temperatureSeries: String): MassenstromResponse {
         val tempRow = temperatureService.getSeries(temperatureSeries).temperatures.repeatEach(24)
-        val flowTemps = tempRow.map { grid.input.flowTemperature(it) }
-        val returnTemps = tempRow.map { grid.input.returnTemperature(it) }
-        val heatDemand = grid.input.connectedThermalEnergyDemand
-        val massenstroms =
-            tempRow.indices.map { index -> massenstrom(flowTemps[index], returnTemps[index], heatDemand[index]) }
-        return MassenstromResponse(tempRow, flowTemps, returnTemps, heatDemand.curve, massenstroms)
+        val heatDemand = grid.input.energyDemand // including heat losses
+        val massenstroms = tempRow.indices.map { idx ->
+            massenstrom(grid.input.flowInTemperature[idx], grid.input.flowOutTemperature[idx], heatDemand[idx])
+        }
+        return MassenstromResponse(
+            tempRow,
+            grid.input.flowInTemperature,
+            grid.input.flowOutTemperature,
+            heatDemand,
+            massenstroms
+        )
     }
 }

@@ -1,7 +1,7 @@
 import React from "react";
-import {customInputHandleStyle} from "./InputNode";
+import {customInputHandleStyle, getOptimizationTooltip} from "./InputNode";
 import {Handle, Position} from "react-flow-renderer";
-import {showNodeOutputDialog} from "../Overlays/NodeContextOverlay";
+import {showNodeOutputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
 import {OutputNode as OutputNodeModel} from "../models";
 import {Tooltip} from "@material-ui/core";
 
@@ -18,19 +18,28 @@ export const OutputNode = (node: OutputNodeModel) => {
         newNode.thermalEnergyDemand = newNode.data.thermalEnergyDemand
         newNode.pressureLoss = newNode.data.pressureLoss
         newNode.loadProfileName = newNode.data.loadProfileName
+        newNode.replicas = newNode.data.replicas
         return newNode
     }
 
     const handleClick = () => {
-        showNodeOutputDialog("Bearbeiten sie diese Node", getOutputNode(),
-            (newNode) => {node.data.updateNode(newNode)}, () => {/*Nothing to do here*/})
+        console.log(node.data.onDelete)
+        showNodeOutputDialog("Bearbeiten sie diese Entnahmestelle", getOutputNode(),
+            handleConfirm, () => {/*Nothing to do here*/}, () => node.data.onDelete(node.data.id ?? node.id))
+    }
+
+    const handleConfirm = (newNode: OutputNodeModel) => {
+         node.data.updateNode(newNode)
     }
 
     return (<Tooltip title={<>
-            Wärmebedarf: {node.data.thermalEnergyDemand}kwh<br/>
-            Druckverlust: {node.data.pressureLoss} Bar <br />
-            Lastprofil: {node.data.loadProfileName}
-    </>}>
+            Wärmebedarf: {node.data.thermalEnergyDemand} kWh<br/>
+            Druckverlust: {node.data.pressureLoss} Bar <br/>
+            Lastprofil: {node.data.loadProfileName} <br/>
+            Replicas: {node.data.replicas} <br/>
+
+            {node.data.annualEnergyDemand? getOptimizationTooltip(node.data): <></>}
+        </>}>
             <div style={customNodeStyles} onDoubleClick={handleClick}>
                 <Handle type="target" position={Position.Top} style={{...customInputHandleStyle}}/>
                 <div>{node?.data.label}</div>

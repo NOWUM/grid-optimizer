@@ -1,11 +1,12 @@
 package de.fhac.ewi.model
 
+import de.fhac.ewi.util.mapIndicesParallel
 import de.fhac.ewi.util.requireNoNaNs
 
 /**
  * Beinhaltet für jede Stunde im Jahr den Energiebedarf.
  *
- * @property curve List<Double>
+ * @property curve List<Double> - Wh per hour in year
  * @property total Double
  * @constructor
  */
@@ -15,7 +16,10 @@ class HeatDemandCurve(val curve: List<Double>) {
 
     operator fun get(index: Int) = curve[index]
 
-    operator fun plus(other: HeatDemandCurve) = HeatDemandCurve(curve.zip(other.curve).map { it.first + it.second })
+    operator fun plus(other: HeatDemandCurve) =
+        HeatDemandCurve(curve.mapIndicesParallel { curve[it] + other.curve[it] })
+
+    operator fun plus(other: List<Double>) = HeatDemandCurve(curve.mapIndicesParallel { curve[it] + other[it] })
 
     companion object {
         val ZERO = HeatDemandCurve(List(8760) { 0.0 })

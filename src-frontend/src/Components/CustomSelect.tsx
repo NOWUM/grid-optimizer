@@ -59,6 +59,7 @@ export const CustomSelect = ({value, options, onValueChange}: {value: string, op
         value={value}
         onChange={(e) => onValueChange(e.target.value as string)}
         input={<BootstrapInput/>}
+        placeholder={"Please Select"}
     >
         <MenuItem value="">
             <em>Please select</em>

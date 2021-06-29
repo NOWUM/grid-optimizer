@@ -2,12 +2,13 @@ import React, {useCallback} from "react";
 import {useDropzone} from 'react-dropzone';
 import "./file-upload.css";
 import {HotWaterGrid, instanceOfHotWaterGrid} from "../models";
-import {notify} from "../Overlays/Notifications";
-
+import {notify} from "../ReactFlow/Overlays/Notifications";
+import {Cancel} from "@material-ui/icons";
 
 
 interface UploadProps {
     loadGrid: (hwg: HotWaterGrid) => void
+    cancel: () => void
 }
 
 export const FileUpload = (props: UploadProps) => {
@@ -51,7 +52,11 @@ export const FileUpload = (props: UploadProps) => {
         }
     }
 
-
+    //@ts-ignore
+    const handleCancelClick = (e: any) => {
+        e.stopPropagation();
+        props.cancel()
+    }
 
     const handleCSVUpload = (reader: FileReader) => {
         const csvStr = mapCSVToArray(reader)
@@ -81,6 +86,8 @@ export const FileUpload = (props: UploadProps) => {
             <input {...getInputProps({
                 onClick: (event) => event.stopPropagation()
             })} className={"input-container"}/>
+            <div id={"white-bg"} />
+            <Cancel onClick={handleCancelClick} style={{color: "red"}} id={"cancel-icon"}/>
             <div className={"upload-info"}>
                 Ziehe Dokument für Upload in die Fläche
             </div>

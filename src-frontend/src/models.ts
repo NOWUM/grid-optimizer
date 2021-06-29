@@ -10,9 +10,21 @@ export interface HotWaterGrid extends NodeElements{
     temperatureSeries: string
 }
 
-export interface BaseNode extends Node{
+export interface BaseNode extends Node, NodeOptimization{
     id: string,
-    type: NodeType
+    type: NodeType,
+}
+
+export interface NodeOptimization {
+    optimizedThermalEnergyDemand?: number[],
+    connectedPressureLoss?: number[],
+    neededPumpPower?: number[],
+    flowInTemperature?: number[],
+    flowOutTemperature?: number[],
+
+    annualEnergyDemand?: number,
+    maximalNeededPumpPower?: number,
+    maximalPressureLoss?: number
 }
 
 export interface InputNode extends BaseNode{
@@ -20,22 +32,35 @@ export interface InputNode extends BaseNode{
     returnTemperatureTemplate: string // mathematical expression like `x+5` with x as outside temperature
 }
 
+export interface PipeOptimization {
+    diameter?: number;
+    isCritical?: boolean;
+
+    volumeFlow?: number[],
+    pipeHeatLoss?: number[],
+    pipePressureLoss?: number[],
+    totalPressureLoss?: number[],
+    totalPumpPower?: number[]
+}
+
 export interface IntermediateNode extends BaseNode{
     connect_limit: 3
 }
 
-export interface OutputNode extends BaseNode {
+export interface OutputNode extends BaseNode{
     thermalEnergyDemand: number, // kwh per year
     pressureLoss: number, // Bar,
-    loadProfileName: string
+    loadProfileName: string,
+    replicas?: number
 }
 
 export enum LoadProfile{
     SLP
 }
 
-export interface Pipe extends Edge{
-    length: number
+export interface Pipe extends Edge, PipeOptimization{
+    length: number,
+    coverageHeight: number
 }
 
 export enum NodeType {
@@ -52,6 +77,79 @@ export interface MassenstromResponse {
     massenstrom: number[]
 }
 
+export interface OptimizationMetadata {
+
+    pipeTypes: PipeType[],
+    gridOperatingCostTemplate: String, // f(gridInvestCost) = y [€/year]
+    pumpInvestCostTemplate: String, // f(Leistung) = y [€/kW]
+    heatGenerationCost: number, // €/kWh [for calculating heat loss]
+    lifespanOfGrid: number, // Jahre
+    lifespanOfPump: number, // Jahre
+    wacc: number, // Weighted Average Cost of Capital in %
+    electricityCost: number, // ct/kWh [for pump station]
+    electricalEfficiency: number, // for pump
+    hydraulicEfficiency: number, // for pump
+}
+
+
+export interface OptimizationRequest extends OptimizationMetadata {
+    grid: HotWaterGrid;
+}
+
+export interface OptimizationResult {
+    costs: Costs,
+    optimizedPipes: OptimizedPipe[],
+    optimizedNodes: OptimizedNode[],
+    criticalPath: string[],
+}
+
+export interface OptimizedPipe {
+    pipeId: string,
+    diameter: number
+}
+
+export interface OptimizedNode {
+    nodeId: string,
+    thermalEnergyDemand: number[],
+    connectedPressureLoss: number[],
+    neededPumpPower: number[],
+    flowInTemperature: number[],
+    flowOutTemperature: number[],
+
+    annualEnergyDemand: number,
+    maximalNeededPumpPower: number,
+    maximalPressureLoss: number
+}
+
+export interface HeatDemand {
+    temperatureSeries: string,
+    loadProfileName: string,
+    thermalEnergyDemand: number // kwh per year
+}
+export interface HeatDemandResult {
+    curve: number[],
+    temperature: number[],
+    allokation: number[],
+    dailyHeatCurve: number[]
+}
+
+export interface Costs {
+    pipeInvestCostTotal: number, // Investitionskosten Netz
+    pipeInvestCostAnnuity: number, // Investitionskosten Netz pro Jahr
+    pipeOperationCost: number, // Betriebskosten Netz per year
+    pumpInvestCostTotal: number, // Investitionskosten Pumpe
+    pumpInvestCostAnnuity: number, // Investitionskosten Pumpe pro Jahr
+    pumpOperationCost: number, // Betriebskosten Pumpe per year
+    heatLossCost: number, // Wärmeverlustkosten per year
+    totalPerYear: number // Gesamtkosten
+}
+
+export interface PipeType {
+    diameter: number, // in m
+    costPerMeter: number, // in €
+    isolationThickness: number, // in mm
+    distanceBetweenPipes: number // in mm
+}
 
 export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {
     if (!object) {
@@ -61,7 +159,6 @@ export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {
     const inputNodes = object.inputNodes && object.inputNodes.map((p: any) => instanceOfInputNode(p)).every((b: boolean) => b)
     const intermediateNodes = object.intermediateNodes && object.intermediateNodes.map((p: any) => instanceOfIntermediateNode(p)).every((b: boolean) => b)
     const outputNodes = object.outputNodes && object.outputNodes.map((p: any) => instanceOfOutputNode(p)).every((b: boolean) => b)
-    console.log(pipes && inputNodes && intermediateNodes && outputNodes)
     return pipes && inputNodes && intermediateNodes && outputNodes;
 }
 
@@ -70,10 +167,11 @@ export const instanceOfPipe = (pipe: any): pipe is Pipe => {
         return false
     }
     const length = instanceOfNumber(pipe.length)
+    const coverageHeight = instanceOfNumber(pipe.coverageHeight)
     const source = instanceOfString(pipe.source)
     const target = instanceOfString(pipe.target)
     const id = instanceOfString(pipe.id)
-    return length && source && target && id;
+    return length && coverageHeight && source && target && id;
 }
 
 export const instanceOfPosition = (position: any): position is Position => {
