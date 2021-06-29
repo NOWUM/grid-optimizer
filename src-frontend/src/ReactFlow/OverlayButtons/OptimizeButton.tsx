@@ -17,6 +17,8 @@ import {
 } from "../../models";
 import {baseUrl} from "../../utils/utility";
 import {trackPromise} from "react-promise-tracker";
+import {ResultCode} from "../FlowContainer";
+import {notify} from "../Overlays/Notifications";
 
 interface Properties {
     grid: HotWaterGrid,
@@ -41,6 +43,12 @@ export const OptimizeButton = ({grid, optimizationMetadata, setCosts, setPipes, 
         trackPromise(
             fetch(`${baseUrl}/api/optimize`, configuration)
                 .then(response => {
+                    if (response.status != ResultCode.OK) {
+                        response.text().then(text => {
+                            if (text) { notify(text) } else {notify('Unbekannter Fehler bei Aufruf der Optimierung.')}
+                        });
+                        throw 'Status code not gud.';
+                    }
                     return response.json();
                 }).then(res => onOptimize(res as OptimizationResult))
                 .catch(e => {

@@ -7,7 +7,7 @@ import Plot from 'react-plotly.js';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
-export const OptimizationNodeDetails = ({nodeElements, pipes}: { nodeElements: NodeElements, pipes: Pipe[] }) => {
+export const OptimizationDetails = ({nodeElements, pipes}: { nodeElements: NodeElements, pipes: Pipe[] }) => {
     return <>
         <h2>Input Nodes</h2>
         <OptimizationAccordionNode nodes={nodeElements.inputNodes}/>

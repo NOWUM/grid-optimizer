@@ -69,14 +69,6 @@ export enum NodeType {
     OUTPUT_NODE = "OUTPUT_NODE"
 }
 
-export interface MassenstromResponse {
-    temperatures: number[],
-    flowInTemperatures: number[],
-    flowOutTemperatures: number[],
-    energyHeatDemand: number[],
-    massenstrom: number[]
-}
-
 export interface OptimizationMetadata {
 
     pipeTypes: PipeType[],
