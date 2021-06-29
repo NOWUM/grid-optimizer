@@ -1,4 +1,4 @@
-import {MassenstromResponse, NodeElements, OptimizationMetadata} from "../models";
+import {NodeElements, OptimizationMetadata} from "../models";
 import {GridSpacing} from "@material-ui/core";
 
 export const defaultOptimizationMetadata: OptimizationMetadata = {
@@ -28,14 +28,6 @@ export const defaultOptimizationMetadata: OptimizationMetadata = {
     electricityCost: 0.3, // €/kWh [for pump station]
     electricalEfficiency: 0.9, // for pump
     hydraulicEfficiency: 0.6, // for pump
-}
-
-export const defaultMassenstrom: MassenstromResponse = {
-    temperatures: [],
-    flowInTemperatures: [],
-    flowOutTemperatures: [],
-    energyHeatDemand: [],
-    massenstrom: []
 }
 
 export const defaultNodeElements: NodeElements = {
