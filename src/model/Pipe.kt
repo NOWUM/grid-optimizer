@@ -20,6 +20,8 @@ open class Pipe(
 
     open val energyDemand by PipeEnergyDemandDelegate(this)
 
+    val massenstrom by PipeMassenstromDelegate(this)
+
     val volumeFlow by PipeVolumeFlowDelegate(this)
 
     // Strömungsgeschwindigkeit = Volumenstrom / Rohrquerschnittsfläche

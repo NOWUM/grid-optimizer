@@ -9,7 +9,7 @@ import de.fhac.ewi.util.volumeFlow
 
 /**
  * ### Volumenstrom in Rohrleitung
- * ... setzt sich aus dem Temperaturunterschied zwischen Vorlauf und Rücklauf und dem Energiebedarf des angeschlossenen Knotenpunkts zusammen.
+ * ... wird aus dem Massenstrom bestimmt.
  *
  * @param T - For Delegate
  * @property pipe Pipe - Die Rohrleitung des Delegates
@@ -17,23 +17,17 @@ import de.fhac.ewi.util.volumeFlow
  */
 class PipeVolumeFlowDelegate<T>(val pipe: Pipe) : LazyCalculableDoubleArray<T>() {
 
-    private val flowIn: DoubleArray by lazy { pipe.source.flowInTemperature.toDoubleArray() } // static
-    private val flowOut: DoubleArray by lazy { pipe.source.flowOutTemperature.toDoubleArray() } // static
-
     init {
-        pipe::heatLoss.subscribeIfChanged(this)
-        pipe.target::energyDemand.subscribeIfChanged(this)
+        pipe::massenstrom.subscribeIfChanged(this)
     }
 
     override fun recalculate(): DoubleArray {
-        val heatLoss = pipe.heatLoss
-        val targetEnergyDemand = pipe.target.energyDemand
-        return DoubleArray(8760) { index -> volumeFlow(flowIn[index], flowOut[index], heatLoss[index] + targetEnergyDemand[index]) }
+        val massenstrom = pipe.massenstrom
+        return DoubleArray(8760) { index -> volumeFlow(massenstrom[index]) }
     }
 
     override fun checkForChanges() {
-        pipe::heatLoss.updateIfNeeded() // on change it will trigger recalculation of this property
-        pipe.target::energyDemand.updateIfNeeded() // on change it will trigger recalculation of this property
+        pipe::massenstrom.updateIfNeeded() // on change it will trigger recalculation of this property
     }
 
 }

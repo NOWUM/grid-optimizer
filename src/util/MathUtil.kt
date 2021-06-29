@@ -23,14 +23,12 @@ fun massenstrom(flowIn: Double, flowOut: Double, heatDemand: Double, c: Double =
  *
  * Quelle: https://www.ingenieur.de/fachmedien/bwk/energieversorgung/dimensionierung-von-fernwaermenetzen/
  *
- * @param flowIn Double - Vorlauftemperatur in °C
- * @param flowOut Double - Rücklauftemperatur in °C
- * @param heatDemand Double - Benötigte Wärmeenergie in Wh
+ * @param massenstrom Double - Massenstrom in kg/s
  * @param p Double - Dichte des Mediums in kg/m^3
  * @return Double - Volumenstrom in m^3/s
  */
-fun volumeFlow(flowIn: Double, flowOut: Double, heatDemand: Double, p: Double = WATER_DICHTE): Double =
-    massenstrom(flowIn, flowOut, heatDemand) / p
+fun volumeFlow(massenstrom: Double, p: Double = WATER_DICHTE): Double =
+    massenstrom / p
 
 /**
  * Berechnet die Strömungsgeschwindigkeit auf Basis des Rohrdurchmessers und dem Volumenstrom.
