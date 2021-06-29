@@ -35,21 +35,21 @@ class GridOptimizerTest {
     fun testSimpleGrid() {
         val grid = createSimpleGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(5593.08, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(5593.09, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testMediumGrid() {
         val grid = createMediumGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(11986.79, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(11986.81, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
     fun testLargeGrid() {
         val grid = createLargeGrid()
         val optimizer = callOptimizer(grid)
-        assertEquals(48883.41, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(48883.56, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
@@ -79,7 +79,7 @@ class GridOptimizerTest {
     fun testGroupA4Grid() {
         val grid = createGroupA4Grid()
         val optimizer = callOptimizer(grid)
-        assertEquals(582730.61, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(582730.63, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     @Test
@@ -123,7 +123,7 @@ class GridOptimizerTest {
         }
 
         val optimizer = callOptimizer(grid, listOf(DoNothing), false)
-        assertEquals(780411.58, optimizer.gridCosts.totalPerYear.round(2))
+        assertEquals(780411.6, optimizer.gridCosts.totalPerYear.round(2))
     }
 
     /**
@@ -292,21 +292,21 @@ class GridOptimizerTest {
         // Dämmdicke: https://www.ikz.de/uploads/media/50-55_Daemmstandards.pdf
         // Seite 91 https://www.energie-zentralschweiz.ch/fileadmin/user_upload/Downloads/Planungshilfen/Planungshandbuch_Fernwarrme_V1.0x.pdf
         return listOf(
-            PipeType(0.020, 473.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.025, 479.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.032, 511.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.040, 529.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.050, 599.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.065, 650.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.080, 745.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.100, 920.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.125, 1105.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.150, 1332.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.200, 1586.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.250, 2124.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.300, 2662.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.350, 3200.0 * 0.9141, 0.04, 0.2),
-            PipeType(0.400, 3738.0 * 0.9141, 0.04, 0.2)
+            PipeType(0.020, 432.37, 0.04, 0.2),
+            PipeType(0.025, 437.85, 0.04, 0.2),
+            PipeType(0.032, 467.11, 0.04, 0.2),
+            PipeType(0.040, 483.56, 0.04, 0.2),
+            PipeType(0.050, 547.55, 0.04, 0.2),
+            PipeType(0.065, 594.17, 0.04, 0.2),
+            PipeType(0.080, 681.0, 0.04, 0.2),
+            PipeType(0.100, 840.97, 0.04, 0.2),
+            PipeType(0.125, 1010.08, 0.04, 0.2),
+            PipeType(0.150, 1217.58, 0.04, 0.2),
+            PipeType(0.200, 1449.76, 0.04, 0.2),
+            PipeType(0.250, 1941.55, 0.04, 0.2),
+            PipeType(0.300, 2433.33, 0.04, 0.2),
+            PipeType(0.350, 2925.12, 0.04, 0.2),
+            PipeType(0.400, 3416.9, 0.04, 0.2)
         )
     }
 }
