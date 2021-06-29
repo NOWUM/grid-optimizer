@@ -1,8 +1,9 @@
 package de.fhac.ewi.model
 
-import de.fhac.ewi.model.strategies.AllCombinations
-import de.fhac.ewi.model.strategies.Strategy
+import de.fhac.ewi.model.strategies.*
 import de.fhac.ewi.util.round
+import kotlin.math.max
+import kotlin.math.min
 
 class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
 
@@ -15,17 +16,17 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
     var numberOfUpdates: Int = 0
         private set
 
-    fun optimize() {
+    fun optimize(strategies: List<Strategy> = DEFAULT_STRATEGIES, resetBeforeStart: Boolean = true) {
         // Reset variables
         numberOfTypeChecks = 0
         numberOfUpdates = 0
 
-        val initial = PipeType.UNDEFINED//investParams.pipeTypes.last() //
-        // Reset all pipes to undefined type
-        grid.pipes.forEach { it.type = initial }
+        if (resetBeforeStart) {
+            val initial = PipeType.UNDEFINED//investParams.pipeTypes.last() //
+            // Reset all pipes to undefined type
+            grid.pipes.forEach { it.type = initial }
+        }
         gridCosts = investParams.calculateCosts(grid)
-
-        val strategies: List<Strategy> = listOf(AllCombinations)
 
         strategies.forEach { strategy ->
             val oldNumberOfTypeChecks = numberOfTypeChecks
@@ -60,19 +61,41 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         pipe: Pipe,
         types: List<PipeType> = investParams.pipeTypes.filterNot { it == pipe.type },
         skipIfGettingWorse: Boolean = true,
-        skipSmallerThenCurrent: Boolean = false
+        skipSmallerThenCurrent: Boolean = false,
+        skipBiggerThenCurrent: Boolean = false,
+        skipCurrentBest: Boolean = true,
+        maxDifferenceToCurrent: Int = -1,
     ): Boolean {
         val lastTypeWasUndefined = pipe.type == PipeType.UNDEFINED
         var bestType = pipe.type
         var foundBetterType = false
 
-        for (type in types) {
+        val indexOfLargestChild = types.indexOf(pipe.target.largestConnectedPipe)
+        // Skip pipes smaller then largest connected subtype
+        var fromIndex = max(0, indexOfLargestChild)
+        var toIndexExclusive = types.size
+        // If any special parameter is used we need to update the range
+        // TODO maxDifferenceToCurrent, skip**** in Data Class auslagern. Diese Methode dann mit einem Array von denen aufrufen
+        // TODO So kann die Anzahl der Aufrufe bei CrazyStrategie noch weiter reduziert werden
+        if (!lastTypeWasUndefined && (maxDifferenceToCurrent != -1 || skipSmallerThenCurrent || skipBiggerThenCurrent)) {
+            types.indexOf(pipe.type).let {
+                if (maxDifferenceToCurrent != -1) {
+                    fromIndex = max(fromIndex, it - maxDifferenceToCurrent)
+                    toIndexExclusive = min(toIndexExclusive, it + maxDifferenceToCurrent + 1)
+                }
+                if (skipSmallerThenCurrent)
+                    fromIndex = max(fromIndex, it)
 
-            // if diameter is smaller than largest connected pipe continue. This can't be good.
-            if (type.diameter < pipe.target.largestConnectedPipe?.diameter ?: 0.0)
-                continue
+                if (skipBiggerThenCurrent)
+                    toIndexExclusive = min(toIndexExclusive, it + 1)
+            }
+        }
 
-            if (skipSmallerThenCurrent && type.diameter < bestType.diameter)
+
+        for (index in fromIndex until toIndexExclusive) {
+            val type = types[index]
+
+            if (skipCurrentBest && type == bestType)
                 continue
 
             numberOfTypeChecks++
@@ -116,30 +139,70 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         types: List<PipeType> = investParams.pipeTypes,
         skipIfGettingWorse: Boolean = true,
         skipSmallerThenCurrent: Boolean = false,
+        skipBiggerThenCurrent: Boolean = false,
+        skipCurrentBest: Boolean = false,
+        maxDifferenceToCurrent: Int = -1,
         currentIdx: Int = 0
     ): Boolean {
         val currentPipe = pipes[currentIdx]
 
         // Optimize last pipe with the other fancy method
         if (currentIdx == pipes.size - 1)
-            return optimizePipe(currentPipe, types, skipIfGettingWorse)
+            return optimizePipe(
+                currentPipe,
+                types,
+                skipIfGettingWorse,
+                skipSmallerThenCurrent,
+                skipBiggerThenCurrent,
+                skipCurrentBest,
+                maxDifferenceToCurrent
+            )
 
         val lastTypeWasUndefined = currentPipe.type == PipeType.UNDEFINED
         var bestType = currentPipe.type
         var betterTypeFound = false
 
-        for (type in investParams.pipeTypes) {
+        val indexOfLargestChild = types.indexOf(currentPipe.target.largestConnectedPipe)
+        // Skip pipes smaller then largest connected subtype
+        var fromIndex = max(0, indexOfLargestChild)
+        var toIndexExclusive = types.size
+        // If any special parameter is used we need to update the range
+        // TODO maxDifferenceToCurrent, skip**** in Data Class auslagern. Diese Methode dann mit einem Array von denen aufrufen
+        // TODO So kann die Anzahl der Aufrufe bei CrazyStrategie noch weiter reduziert werden
+        if (!lastTypeWasUndefined && (maxDifferenceToCurrent != -1 || skipSmallerThenCurrent || skipBiggerThenCurrent)) {
+            types.indexOf(currentPipe.type).let {
+                if (maxDifferenceToCurrent != -1) {
+                    fromIndex = max(fromIndex, it - maxDifferenceToCurrent)
+                    toIndexExclusive = min(toIndexExclusive, it + maxDifferenceToCurrent + 1)
+                }
+                if (skipSmallerThenCurrent)
+                    fromIndex = max(fromIndex, it)
 
-            // if diameter is smaller than largest connected pipe continue. This can't be good.
-            if (type.diameter < currentPipe.target.largestConnectedPipe?.diameter ?: 0.0)
-                continue
+                if (skipBiggerThenCurrent)
+                    toIndexExclusive = min(toIndexExclusive, it + 1)
+            }
+        }
 
-            if (skipSmallerThenCurrent && type.diameter < bestType.diameter)
+
+        for (index in fromIndex until toIndexExclusive) {
+            val type = types[index]
+
+            if (skipCurrentBest && type == bestType)
                 continue
 
             currentPipe.type = type
 
-            if (optimizePipes(pipes, types, skipIfGettingWorse, skipSmallerThenCurrent, currentIdx + 1)) {
+            if (optimizePipes(
+                    pipes,
+                    types,
+                    skipIfGettingWorse,
+                    skipSmallerThenCurrent,
+                    skipBiggerThenCurrent,
+                    skipCurrentBest,
+                    maxDifferenceToCurrent,
+                    currentIdx + 1
+                )
+            ) {
                 bestType = type
                 betterTypeFound = true
             } else if (betterTypeFound && skipIfGettingWorse && !lastTypeWasUndefined)
@@ -150,4 +213,14 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         return betterTypeFound
     }
 
+
+    companion object {
+        val DEFAULT_STRATEGIES = listOf(
+            CriticalPathOneByOneReversed,
+            LayerDownToOneByOne,
+            // LowerPressureLoss9,
+            // LowerHeatLoss2,
+            // RepeatAllOneByOne
+        )
+    }
 }

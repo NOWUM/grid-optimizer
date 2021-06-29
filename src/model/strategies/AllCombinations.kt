@@ -9,7 +9,6 @@ import de.fhac.ewi.model.PipeType
  * Überprüft alle möglichen Kombinationen.
  * Dazu werden die Rohre nach ihrer Distanz zum Einspeisepunkt absteigend sortiert und jede sinnvolle Kombination getestet.
  * Sinnvoll meint hierbei, dass der Rohrdurchmesser mindestens genauso groß sein muss, wie der größte daran angeschlossene Rohrdurchmesser.
- * Sobald bei dem Versuch ein größeren Rohrdurchmesser einzusetzen ein schlechteres Ergebnis kommt, kann vorzeitig abgebrochen werden.
  */
 object AllCombinations : Strategy {
     override fun apply(optimizer: Optimizer): Unit = with(optimizer) {
