@@ -21,16 +21,19 @@ class PipeVolumeFlowDelegate<T>(val pipe: Pipe) : LazyCalculableDoubleArray<T>()
     private val flowOut: DoubleArray by lazy { pipe.source.flowOutTemperature.toDoubleArray() } // static
 
     init {
-        pipe::energyDemand.subscribeIfChanged(this)
+        pipe::heatLoss.subscribeIfChanged(this)
+        pipe.target::energyDemand.subscribeIfChanged(this)
     }
 
     override fun recalculate(): DoubleArray {
-        val energyDemand = pipe.energyDemand
-        return DoubleArray(8760) { index -> volumeFlow(flowIn[index], flowOut[index], energyDemand[index]) }
+        val heatLoss = pipe.heatLoss
+        val targetEnergyDemand = pipe.target.energyDemand
+        return DoubleArray(8760) { index -> volumeFlow(flowIn[index], flowOut[index], heatLoss[index] + targetEnergyDemand[index]) }
     }
 
     override fun checkForChanges() {
-        pipe::energyDemand.updateIfNeeded() // on change it will trigger recalculation of this property
+        pipe::heatLoss.updateIfNeeded() // on change it will trigger recalculation of this property
+        pipe.target::energyDemand.updateIfNeeded() // on change it will trigger recalculation of this property
     }
 
 }
