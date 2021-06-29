@@ -40,7 +40,7 @@ import {
 import {FormulaCheck} from "./FormulaCheck";
 import {OptimizeButton} from "./ReactFlow/OverlayButtons/OptimizeButton";
 import {CostView} from "./ReactFlow/OverlayButtons/CostView";
-import {OptimizationNodeDetails} from "./OptimizationNode/OptimizationNodeDetails";
+import {OptimizationDetails} from "./OptimizationNode/OptimizationDetails";
 
 function App() {
 
@@ -140,7 +140,7 @@ function App() {
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
                     <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
                     <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
-                    <Tab icon={<Timeline />} label="Node Detail" value="5" disabled={!isCostsComplete()} />
+                    <Tab icon={<Timeline />} label="Optimierung" value="5" disabled={!isCostsComplete()} />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
@@ -168,7 +168,7 @@ function App() {
                     <FormulaCheck />
                 </TabPanel>
                 <TabPanel value={"5"}>
-                    <OptimizationNodeDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}/>
+                    <OptimizationDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}/>
                 </TabPanel>
 
             </TabContext>
