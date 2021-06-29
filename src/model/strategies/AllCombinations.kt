@@ -14,31 +14,6 @@ import de.fhac.ewi.model.PipeType
 object AllCombinations : Strategy {
     override fun apply(optimizer: Optimizer): Unit = with(optimizer) {
         grid.pipes.forEach { it.type = investParams.pipeTypes.first() }
-        testAllCombinations(grid.pipes.sortedByDescending { it.target.pathToSource.size })
-    }
-
-    private fun Optimizer.testAllCombinations(pipes: List<Pipe>, current: Int = 0): Boolean {
-        val currentPipe = pipes[current]
-        if (current == pipes.size - 1)
-            return optimizePipe(currentPipe, investParams.pipeTypes, fastMode = true)
-
-        var bestType = currentPipe.type
-        var betterTypeFound = false
-
-        val largestChild = currentPipe.target.largestConnectedPipe
-
-        for (type in investParams.pipeTypes) {
-           if (largestChild != null && type.diameter < largestChild.diameter)
-               continue // No need to check - the diameter can not be smaller
-
-            currentPipe.type = type
-            if (testAllCombinations(pipes, current + 1)) {
-                bestType = type
-                betterTypeFound = true
-            } else if (betterTypeFound)
-                break // we are getting worse. Stop checking
-        }
-        currentPipe.type = bestType
-        return betterTypeFound
+        optimizePipes(grid.pipes.sortedByDescending { it.target.pathToSource.size })
     }
 }
