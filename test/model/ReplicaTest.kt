@@ -18,27 +18,29 @@ class ReplicaTest {
 
     @Test
     fun compareNonReplicaToReplica() {
-        val pipeType = PipeType(0.02, 10.0, 1.0, 0.5)
+        val pipeType = PipeType(0.02, 10.0, 0.5, 0.5)
         val heat = heatDemandService.createCurve(20_000.0, "EFH", "Schemm 2018")
 
+        val replicas = 10
+
         val nonReplica = createBaseGrid()
-        repeat(10) {
+        repeat(replicas) {
             nonReplica.addOutputNode("Out$it", heat, 0.6)
             nonReplica.addPipe("Pipe$it", "2", "Out$it", 10.0, 0.6)
         }
         nonReplica.pipes.forEach { it.type = pipeType }
 
         val replica = createBaseGrid()
-        replica.addOutputNode("Out", heat, 0.6, 10)
+        replica.addOutputNode("Out", heat, 0.6, replicas)
         replica.addPipe("Pipe", "2", "Out", 10.0, 0.6)
         replica.pipes.forEach { it.type = pipeType }
 
+        assertEquals(nonReplica.pipes.sumOf { it.investCost }, replica.pipes.sumOf { it.investCost }, "Pipe invest costs")
         assertEquals(nonReplica.input.pressureLoss.maxOrNull(), replica.input.pressureLoss.maxOrNull(), "Max pressure loss")
         assertEquals(nonReplica.input.volumeFlow.sum(), replica.input.volumeFlow.sum(), "Max pressure loss")
         assertEquals(nonReplica.neededPumpPower, replica.neededPumpPower, "Needed pump power")
         assertEquals(nonReplica.totalOutputEnergy, replica.totalOutputEnergy, "Total output energy")
-        assertEquals(nonReplica.totalHeatLoss.round(8), replica.totalHeatLoss.round(8), "Total heat loss")
-        assertEquals(nonReplica.pipes.sumOf { it.investCost }, replica.pipes.sumOf { it.investCost }, "Pipe invest costs")
+        assertEquals(nonReplica.totalHeatLoss.round(5), replica.totalHeatLoss.round(5), "Total heat loss")
     }
 
     private fun createBaseGrid(): Grid {
