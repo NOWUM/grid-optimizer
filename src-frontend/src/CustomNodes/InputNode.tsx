@@ -26,9 +26,9 @@ export interface CustomNodeDate {
 
 export const getOptimizationTooltip = (baseNode: BaseNode): ReactElement => {
     return <>
-        Jährlicher Energiebedarf: {baseNode?.annualEnergyDemand} W/h <br/>
-        Maximal benötigte Pumpleistung: {baseNode?.maximalNeededPumpPower} Watt <br/>
-        Maximaler Druckverust: {baseNode?.maximalPressureLoss} Bar <br/>
+        Jährlicher Energiebedarf: {baseNode?.annualEnergyDemand} Wh/a <br/>
+        Maximal benötigte Pumpleistung: {baseNode?.maximalNeededPumpPower} W <br/>
+        Maximaler Druckverlust: {baseNode?.maximalPressureLoss} Bar <br/>
     </>
 }
 
