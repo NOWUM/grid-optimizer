@@ -16,18 +16,18 @@ export const defaultOptimizationMetadata: OptimizationMetadata = {
         {diameter: 200, costPerMeter: 1449.76, isolationThickness: 40, distanceBetweenPipes: 200},
         {diameter: 250, costPerMeter: 1941.55, isolationThickness: 40, distanceBetweenPipes: 200},
         {diameter: 300, costPerMeter: 2433.33, isolationThickness: 40, distanceBetweenPipes: 200},
-        {diameter: 300, costPerMeter: 2925.12, isolationThickness: 40, distanceBetweenPipes: 200},
-        {diameter: 300, costPerMeter: 3416.9, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 350, costPerMeter: 2925.12, isolationThickness: 40, distanceBetweenPipes: 200},
+        {diameter: 400, costPerMeter: 3416.9, isolationThickness: 40, distanceBetweenPipes: 200},
     ],
-    gridOperatingCostTemplate: "x*0.001", // f(gridInvestCost) = y [€/year]
+    gridOperatingCostTemplate: "x*0.01", // f(gridInvestCost) = y [€/year]
     pumpInvestCostTemplate: "500+x*500", // f(Leistung) = y [€/kW]
-    heatGenerationCost: 0.3, // €/kWh [for calculating heat loss]
-    lifespanOfGrid: 25.0, // Jahre
+    heatGenerationCost: 0.07, // €/kWh [for calculating heat loss]
+    lifespanOfGrid: 40.0, // Jahre
     lifespanOfPump: 10.0,
-    wacc: 12.0, // Weighted Average Cost of Capital in %
+    wacc: 1.75, // Weighted Average Cost of Capital in %
     electricityCost: 0.3, // €/kWh [for pump station]
     electricalEfficiency: 0.9, // for pump
-    hydraulicEfficiency: 0.75, // for pump
+    hydraulicEfficiency: 0.6, // for pump
 }
 
 export const defaultMassenstrom: MassenstromResponse = {
