@@ -28,7 +28,11 @@ class Grid {
     val totalHeatLoss: Double
         get() = pipes.sumOf { it.annualHeatLoss }
 
-    val criticalPath: Array<Pipe> by lazy { nodes.filterIsInstance<OutputNode>().map { it.pathToSource }.maxByOrNull { path -> path.sumOf { it.length } }!! }
+    // Returns the node that has the most distance to source. This node is at the end of the longest path
+    val mostDistantNode: Node by lazy { nodes.filterIsInstance<OutputNode>().maxByOrNull { it.pathToSource.sumOf(Pipe::length) }!! }
+
+    val mostPressureLossNode: Node
+        get() = nodes.filterIsInstance<OutputNode>().maxByOrNull { it.maxPressureLossInPath }!!
 
     private fun addNode(node: Node) {
         if (_nodes.any { it.id.equals(node.id, true) })

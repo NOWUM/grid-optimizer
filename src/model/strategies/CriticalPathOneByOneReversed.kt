@@ -9,7 +9,7 @@ import de.fhac.ewi.model.Optimizer
  */
 object CriticalPathOneByOneReversed : Strategy {
     override fun apply(optimizer: Optimizer) = with(optimizer) {
-        val pipes = grid.criticalPath.reversed()
+        val pipes = grid.mostDistantNode.pathToSource.reversed()
 
         for (pipe in pipes) {
             optimizePipe(pipe)

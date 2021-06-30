@@ -2,6 +2,7 @@ package de.fhac.ewi.util
 
 import de.fhac.ewi.model.Grid
 import de.fhac.ewi.model.Node
+import de.fhac.ewi.model.Pipe
 
 fun Grid.gridTreeString() = buildString {
     appendLine("Einspeisepunkt ${input.id}")
@@ -25,3 +26,20 @@ private fun StringBuilder.nodeTreeString(node: Node, indent: Int = 0) {
     }
 
 }
+
+fun Array<Pipe>.pathLength(): Double = sumOf(Pipe::length)
+
+/**
+ *
+ * @receiver Array<Pipe>
+ * @return Double - Druckverlust entlang des Pfades [Bar]
+ */
+fun Array<Pipe>.maxPipePressureLoss(): Double = sumOf { it.pipePressureLoss.maxOrElse() }
+
+/**
+ * Druckverlust im Pfad.
+ *
+ * @receiver Array<Pipe>
+ * @return Double - Druckverlust pro Meter entlang des Pfades [Pa/m]
+ */
+fun Array<Pipe>.maxPipePressureLossPerMeter(): Double = maxPipePressureLoss() / pathLength() * 100_000

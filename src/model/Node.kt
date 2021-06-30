@@ -47,6 +47,16 @@ abstract class Node(val id: String) {
         connectedPipes.single { it.target == this }.let { arrayOf(it, *it.source.pathToSource) }
     }
 
+    /**
+     * Returns the pressure loss in Bar in the node combined with the pipe pressure loss to source.
+     */
+    open val maxPressureLossInPath: Double
+        get() {
+            val pipePressureLosses = pathToSource.map { it.pipePressureLoss }
+            val nodePressureLoss = pressureLoss
+            return nodePressureLoss.indices.maxOf { idx -> nodePressureLoss[idx] + pipePressureLosses.sumOf { it[idx] } }
+        }
+
     open val largestConnectedPipe: PipeType?
         get() = connectedPipes.filter { it.source == this && it.type != PipeType.UNDEFINED }.maxByOrNull { it.type.diameter }?.type
 
