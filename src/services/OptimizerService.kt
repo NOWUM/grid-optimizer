@@ -102,7 +102,7 @@ class OptimizerService {
         val optimizer = optimizations[id] ?: throw IllegalArgumentException("No optimizer found for id $id.")
         return OptimizationOverviewResponse(
             optimizer.gridCosts,
-            optimizer.grid.criticalPath.map { it.id },
+            optimizer.grid.mostPressureLossNode.pathToSource.map { it.id },
             optimizer.grid.pipes.map { OptimizedPipeTypeResponse(it.id, it.type.diameter) }
         )
     }

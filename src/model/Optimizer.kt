@@ -1,6 +1,7 @@
 package de.fhac.ewi.model
 
 import de.fhac.ewi.model.strategies.*
+import de.fhac.ewi.util.maxPipePressureLossPerMeter
 import de.fhac.ewi.util.round
 import kotlin.math.max
 import kotlin.math.min
@@ -38,7 +39,9 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
             println("> Applied strategy ${strategy.javaClass.simpleName}. Grid costs now ${gridCosts.totalPerYear.round(2)} €\n" +
                     ">> Number of type checks: ${numberOfTypeChecks - oldNumberOfTypeChecks} times ($numberOfTypeChecks total)\n" +
                     ">> Number of type update: ${numberOfUpdates - oldNumberOfUpdates} times ($numberOfUpdates total)\n" +
-                    ">> Maximum pressure loss: ${grid.input.pressureLoss.maxOrNull()} Bar (${(grid.input.pressureLoss.maxOrNull()?:0.0) * 100_000 / grid.criticalPath.sumOf { it.length }} Pa/m)")
+                    ">> Maximum pressure loss: ${grid.input.pressureLoss.maxOrNull()} Bar\n" +
+                    ">>> Längster Pfad       : ${grid.mostDistantNode.pathToSource.maxPipePressureLossPerMeter().round(3)} Pa/m\n" +
+                    ">>> Kritischer Pfad     : ${grid.mostPressureLossNode.pathToSource.maxPipePressureLossPerMeter().round(3)} Pa/m")
         }
         completed = true
     }
