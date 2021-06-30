@@ -22,11 +22,11 @@ class Grid {
 
     // Returns energy demand of all outputs in Wh
     val totalOutputEnergy: Double
-        get() = nodes.filterIsInstance<OutputNode>().sumOf { it.energyDemand.sum() }
+        get() = nodes.filterIsInstance<OutputNode>().sumOf { it.annualEnergyDemand }
 
     // Returns total heat loss in all pipes in Wh
     val totalHeatLoss: Double
-        get() = pipes.sumOf { it.heatLoss.sum() }
+        get() = pipes.sumOf { it.annualHeatLoss }
 
     val criticalPath: Array<Pipe> by lazy { nodes.filterIsInstance<OutputNode>().map { it.pathToSource }.maxByOrNull { path -> path.sumOf { it.length } }!! }
 
@@ -49,8 +49,11 @@ class Grid {
         addNode(InputNode(id, groundSeries.temperatures.repeatEach(24), flowTemperature, returnTemperature))
     }
 
-    fun addOutputNode(id: String, thermalEnergyDemand: HeatDemandCurve, pressureLoss: Double) {
-        addNode(OutputNode(id, thermalEnergyDemand, pressureLoss))
+    fun addOutputNode(id: String, thermalEnergyDemand: HeatDemandCurve, pressureLoss: Double, replicas: Int = 1) {
+        if (replicas > 1)
+            addNode(ReplicaOutputNode(id, thermalEnergyDemand, pressureLoss, replicas))
+        else
+            addNode(OutputNode(id, thermalEnergyDemand, pressureLoss))
     }
 
     fun addIntermediateNode(id: String) {
@@ -68,7 +71,9 @@ class Grid {
         val target = _nodes.find { it.id == targetId }
             ?: throw IllegalArgumentException("Node for target $targetId not found.")
 
-        val pipe = Pipe(id, source, target, length, pipeLayingDepth)
+        val pipe = if (target is ReplicaOutputNode)
+            ReplicaPipe(id, source, target, length, pipeLayingDepth)
+        else Pipe(id, source, target, length, pipeLayingDepth)
         source.connectChild(pipe)
         _pipes += pipe
     }

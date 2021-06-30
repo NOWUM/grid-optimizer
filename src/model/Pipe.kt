@@ -3,7 +3,7 @@ package de.fhac.ewi.model
 import de.fhac.ewi.model.delegate.SubscribableProperty
 import de.fhac.ewi.model.math.*
 
-data class Pipe(
+open class Pipe(
     val id: String,
     val source: Node,
     val target: Node,
@@ -15,7 +15,12 @@ data class Pipe(
 
     val heatLoss by PipeHeatLossDelegate(this)
 
-    val energyDemand by PipeEnergyDemandDelegate(this)
+    open val annualHeatLoss: Double
+        get() = heatLoss.sum()
+
+    open val energyDemand by PipeEnergyDemandDelegate(this)
+
+    val massenstrom by PipeMassenstromDelegate(this)
 
     val volumeFlow by PipeVolumeFlowDelegate(this)
 
@@ -28,6 +33,9 @@ data class Pipe(
     val totalPressureLoss by PipeTotalPressureLossDelegate(this)
 
     val totalPumpPower by PipePumpPowerDelegate(this)
+
+    open val investCost: Double
+        get() = type.costPerMeter * length
 
     init {
         if (id.isBlank())

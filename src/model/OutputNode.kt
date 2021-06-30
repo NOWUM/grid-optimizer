@@ -1,6 +1,6 @@
 package de.fhac.ewi.model
 
-class OutputNode(
+open class OutputNode(
     id: String,
     val thermalEnergyDemand: HeatDemandCurve, // Wh per hour in year year
     val staticPressureLoss: Double // Bar
@@ -17,6 +17,9 @@ class OutputNode(
     override val pressureLoss: DoubleArray = DoubleArray(8760) { staticPressureLoss }
 
     override val energyDemand = thermalEnergyDemand.curve.toDoubleArray()
+
+    open val annualEnergyDemand: Double
+        get() = thermalEnergyDemand.curve.sum()
 
     override fun connectChild(pipe: Pipe) =
         throw IllegalArgumentException("Output node $id can't have child nodes. Pipe ${pipe.id} invalid.")

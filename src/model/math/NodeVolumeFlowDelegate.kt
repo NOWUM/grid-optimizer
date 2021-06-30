@@ -9,7 +9,7 @@ import de.fhac.ewi.util.volumeFlow
 
 /**
  * ### Volumenstrom in Knotenpunkt
- * ... setzt sich aus dem Temperaturunterschied zwischen Vorlauf und Rücklauf und dem Energiebedarf des Knotenpunkts und allem was daran angeschlossen ist zusammen.
+ * ... wird aus dem Massenstrom bestimmt.
  *
  * @param T - For Delegate
  * @property node Node - Die Knotenpunkt des Delegates
@@ -17,18 +17,16 @@ import de.fhac.ewi.util.volumeFlow
  */
 class NodeVolumeFlowDelegate<T>(val node: Node) : LazyCalculableDoubleArray<T>() {
 
-    private val flowIn: DoubleArray by lazy { node.flowInTemperature.toDoubleArray() } // static
-    private val flowOut: DoubleArray by lazy { node.flowOutTemperature.toDoubleArray() } // static
-
     init {
-        node::energyDemand.subscribeIfChanged(this)
+        node::massenstrom.subscribeIfChanged(this)
     }
 
-    override fun recalculateIndexed(index: Int) = with(node) {
-        volumeFlow(flowIn[index], flowOut[index], energyDemand[index])
+    override fun recalculate(): DoubleArray {
+        val massenstrom = node.massenstrom
+        return DoubleArray(8760) { index -> volumeFlow(massenstrom[index]) }
     }
 
     override fun checkForChanges() {
-        node::energyDemand.updateIfNeeded() // on change it will trigger recalculation of this property
+        node::massenstrom.updateIfNeeded() // on change it will trigger recalculation of this property
     }
 }

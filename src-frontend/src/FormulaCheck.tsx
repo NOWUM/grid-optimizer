@@ -53,25 +53,25 @@ export const FormulaCheck = () => {
                 type: "scattergl",
                 mode: 'lines+markers',
                 marker: {
-                    color: 'rgb(253 126 20)'
+                    color: 'red'
                 },
-                name: "Energie Heat Demand [kWh]"
+                name: "Wärmebedarf [kWh]"
             },
             {
                 y: heatDemandResult?.temperature,
                 type: "scattergl",
                 mode: 'lines+markers',
                 marker: {
-                    color: 'rgb(100 126 20)'
+                    color: 'orange'
                 },
-                name: "Temperature [°C]"
+                name: "Außentemperatur [°C]"
             },
             {
                 y: heatDemandResult?.allokation,
                 type: "scattergl",
                 mode: 'lines+markers',
                 marker: {
-                    color: 'rgb(100 50 20)'
+                    color: 'green'
                 },
                 name: "Allokation [°C]"
             },
@@ -80,9 +80,9 @@ export const FormulaCheck = () => {
                 type: "scattergl",
                 mode: 'lines+markers',
                 marker: {
-                    color: 'rgb(100 126 200)'
+                    color: 'purple'
                 },
-                name: "Daily Heat Curve"
+                name: "Wärmeverteilung im Jahr"
             }
         ]
     }

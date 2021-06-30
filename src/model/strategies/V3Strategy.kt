@@ -13,18 +13,16 @@ import de.fhac.ewi.model.Pipe
  */
 object V3Strategy : Strategy {
     override fun apply(optimizer: Optimizer) = with(optimizer) {
-        // TODO sortedByDescending ist in Medium Grid besser
-        val pipes = grid.nodes.filterIsInstance<OutputNode>().sortedBy { it.pathToSource.sumOf(Pipe::length) }.flatMap { it.pathToSource.toList().reversed() }.distinct()
-        //val pipes = grid.pipes.sortedBy { it.source.pathToSource.size }
+        val pipes = grid.nodes.filterIsInstance<OutputNode>().sortedByDescending { it.pathToSource.sumOf(Pipe::length) }.flatMap { it.pathToSource.toList().reversed() }.distinct()
         var anyPipeUpdated: Boolean
         do {
             anyPipeUpdated = false
             for (pipe in pipes) {
-                if (optimizePipe(pipe, fastMode = true)) {
+                if (optimizePipe(pipe)) {
                     anyPipeUpdated = true
-                    // Wenn ein Update gefunden wurde, nochmal fix den Pfad zum Input Node aktualisieren
+                    // Wenn ein Update gefunden wurde, nochmal fix den Pfad zum Input Node (Pipe für Pipe) aktualisieren
                     for (parent in pipe.source.pathToSource)
-                        optimizePipe(pipe, fastMode = true)
+                        optimizePipe(pipe)
                 }
             }
         } while (anyPipeUpdated)

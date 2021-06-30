@@ -20,8 +20,10 @@ class NodePumpPowerDelegate<T>(private val node: Node) : LazyCalculableDoubleArr
         // volumeFlow does not need subscription, because it is in totalPressureLoss included
     }
 
-    override fun recalculateIndexed(index: Int) = with(node) {
-        neededPumpPower(pressureLoss[index], volumeFlow[index])
+    override fun recalculate(): DoubleArray {
+        val pressureLoss = node.pressureLoss
+        val volumeFlow = node.volumeFlow
+        return DoubleArray(8760) { index -> neededPumpPower(pressureLoss[index], volumeFlow[index]) }
     }
 
     override fun checkForChanges() {

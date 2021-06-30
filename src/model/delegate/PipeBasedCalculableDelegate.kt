@@ -17,12 +17,14 @@ abstract class PipeBasedCalculableDelegate<T> : LazyCalculableDoubleArray<T>() {
         onPipeConnect(pipe)
     }
 
-    override fun recalculateIndexed(index: Int) = recalculateIndexed(index, connectedPipes)
+    override fun recalculate() = recalculate(connectedPipes)
+
+    abstract fun recalculate(pipes: List<Pipe>): DoubleArray
 
     // Needed to prevent exception due circular call
     override fun lazyInitialValue() = recalculate()
 
-    abstract fun recalculateIndexed(index: Int, pipes: List<Pipe>): Double
+
     abstract fun onPipeConnect(pipe: Pipe)
 
     abstract fun onPossiblePipeUpdate(pipe: Pipe)

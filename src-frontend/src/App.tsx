@@ -9,7 +9,6 @@ import {
     HotWaterGrid,
     InputNode,
     IntermediateNode,
-    MassenstromResponse,
     NodeElements,
     NodeType,
     OptimizationMetadata, OptimizationResult,
@@ -26,13 +25,9 @@ import {getPipe} from "./pipe";
 import {VersionNumber} from "./VersionNumber";
 import {NodeMenuSpawnerContainer} from "./ReactFlow/OverlayButtons/NodeMenu/NodeMenuSpawnerContainer";
 import Notifications from "./ReactFlow/Overlays/Notifications";
-import {OptimizationResults} from "./OptimizationResults";
-import {DetermineMassFlowRateButton} from "./ReactFlow/OverlayButtons/NodeMenu/DetermineMassFlowRateButton";
-import Backdrop from "./Backdrop";
 import {KeyboardKey} from "./Components/ConfirmationButton";
-import {Map, Storage, Timeline} from "@material-ui/icons";
+import {Functions, Map, Storage, Timeline} from "@material-ui/icons";
 import {
-    defaultMassenstrom,
     defaultNodeElements,
     defaultOptimizationMetadata,
     defaultTemperatureKey
@@ -40,13 +35,12 @@ import {
 import {FormulaCheck} from "./FormulaCheck";
 import {OptimizeButton} from "./ReactFlow/OverlayButtons/OptimizeButton";
 import {CostView} from "./ReactFlow/OverlayButtons/CostView";
-import {OptimizationNodeDetails} from "./OptimizationNode/OptimizationNodeDetails";
+import {OptimizationDetails} from "./OptimizationNode/OptimizationDetails";
 
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
     const [tabVal, setTabVal] = useState("2")
-    const [massenstrom, setMassenstrom] = useState<MassenstromResponse>(defaultMassenstrom)
     const [nodeElements, setNodeElements] = useState<NodeElements>(defaultNodeElements);
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
     const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
@@ -125,8 +119,6 @@ function App() {
 
     const isMetaDataComplete = () => temperatureKey !== ""
 
-    const isMaxMassenstromComplete = () => massenstrom.temperatures.length !== 0
-
     const isCostsComplete = () => !!costs
 
     return (
@@ -136,11 +128,10 @@ function App() {
                 }<AppBar position="static">
                 <h1 style={{userSelect: "none"}}>{getPipe()}Pipify<VersionNumber/></h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-                    <Tab icon={<Timeline />} label="Formel Check" value="4" />
+                    <Tab icon={<Functions />} label="Formel Check" value="4" />
                     <Tab icon={<Storage />} label="Meta Daten" value="2"/>
                     <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
-                    <Tab icon={<Timeline />} label="Max Massenstrom" value="3" disabled={!isMaxMassenstromComplete()} />
-                    <Tab icon={<Timeline />} label="Node Detail" value="5" disabled={!isCostsComplete()} />
+                    <Tab icon={<Timeline />} label="Optimierung" value="5" disabled={!isCostsComplete()} />
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
@@ -148,7 +139,6 @@ function App() {
                         <FlowContainer pipes={pipes} setPipes={setPipes} nodeElements={nodeElements}
                                        setNodeElements={setNodeElements} temperatureSeries={temperatureKey}/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
-                        <DetermineMassFlowRateButton grid={getGrid()} onResult={setMassenstrom}/>
                         <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
                                         setPipes={setPipes} setNodeElements={setNodeElements}/>
                         <CostView costs={costs}/>
@@ -159,16 +149,11 @@ function App() {
                                        optimizationMetadata={optimizationMetadata}
                                        setOptimizationMetadata={setOptimizationMetadata}/>
                 </TabPanel>
-                <TabPanel value={"3"}>
-                    <Suspense fallback={<Backdrop open={true}/>}>
-                        <OptimizationResults massenstrom={massenstrom}/>
-                    </Suspense>
-                </TabPanel>
                 <TabPanel value={"4"}>
                     <FormulaCheck />
                 </TabPanel>
                 <TabPanel value={"5"}>
-                    <OptimizationNodeDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}/>
+                    <OptimizationDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}/>
                 </TabPanel>
 
             </TabContext>

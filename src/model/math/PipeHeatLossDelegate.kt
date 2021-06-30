@@ -18,21 +18,41 @@ class PipeHeatLossDelegate<T>(private val pipe: Pipe) : LazyCalculableDoubleArra
     private val flowIn: DoubleArray by lazy { pipe.source.flowInTemperature.toDoubleArray() } // static
     private val flowOut: DoubleArray by lazy { pipe.source.flowOutTemperature.toDoubleArray() } // static
 
+    private val tempsAllTheSame: Boolean by lazy { flowIn.all { it == flowIn.first() } && flowOut.all { it == flowOut.first() } }
+
     init {
         pipe::type.subscribeIfChanged(this)
     }
 
-    override fun recalculateIndexed(index: Int) = with(pipe) {
-        pipeHeatLoss(
-            flowIn[index],
-            flowOut[index],
-            10.0,
-            type.diameter,
-            type.isolationThickness,
-            coverageHeight,
-            type.distanceBetweenPipes,
-            length
-        )
+    override fun recalculate(): DoubleArray {
+        if (tempsAllTheSame) {
+            val heatLoss = pipeHeatLoss(
+                flowIn.first(),
+                flowOut.first(),
+                10.0,
+                pipe.type.diameter,
+                pipe.type.isolationThickness,
+                pipe.coverageHeight,
+                pipe.type.distanceBetweenPipes,
+                pipe.length
+            )
+            return DoubleArray(8760) { heatLoss }
+        }else {
+            return DoubleArray(8760) { index ->
+                pipeHeatLoss(
+                    flowIn[index],
+                    flowOut[index],
+                    10.0,
+                    pipe.type.diameter,
+                    pipe.type.isolationThickness,
+                    pipe.coverageHeight,
+                    pipe.type.distanceBetweenPipes,
+                    pipe.length
+                )
+            }
+        }
+
+
     }
 
 

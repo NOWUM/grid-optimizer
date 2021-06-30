@@ -21,8 +21,9 @@ class PipePressureLossDelegate<T>(private val pipe: Pipe) : LazyCalculableDouble
         pipe::type.subscribeIfChanged(this)
     }
 
-    override fun recalculateIndexed(index: Int) = with(pipe) {
-        pipePressureLoss(flowRate[index], length, type.diameter) * 2
+    override fun recalculate(): DoubleArray {
+        val flowRate = pipe.flowRate
+        return DoubleArray(8760) { index -> pipePressureLoss(flowRate[index], pipe.length, pipe.type.diameter) * 2 }
     }
 
     override fun checkForChanges() {

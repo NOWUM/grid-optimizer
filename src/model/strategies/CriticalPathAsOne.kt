@@ -9,6 +9,6 @@ import de.fhac.ewi.model.Optimizer
 object CriticalPathAsOne : Strategy {
     override fun apply(optimizer: Optimizer): Unit = with(optimizer) {
         val pipes = grid.criticalPath.toList()
-        optimizePipePath(pipes)
+        optimizePipes(pipes)
     }
 }
