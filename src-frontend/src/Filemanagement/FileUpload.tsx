@@ -1,9 +1,10 @@
 import React, {useCallback} from "react";
 import {useDropzone} from 'react-dropzone';
 import "./file-upload.css";
-import {HotWaterGrid, instanceOfHotWaterGrid} from "../models";
+import {BaseNode, HotWaterGrid, instanceOfHotWaterGrid, Pipe} from "../models";
 import {notify} from "../ReactFlow/Overlays/Notifications";
 import {Cancel} from "@material-ui/icons";
+import IdGenerator from "../utils/IdGenerator";
 
 
 interface UploadProps {
@@ -46,6 +47,7 @@ export const FileUpload = (props: UploadProps) => {
         const jsonResult = mapToJSON(reader);
         console.log(instanceOfHotWaterGrid(jsonResult))
         if(instanceOfHotWaterGrid(jsonResult)) {
+            determineHighestId(jsonResult as HotWaterGrid)
             props.loadGrid(jsonResult)
         } else {
             notify("Die Eingabedatei ist leider nicht valide")
@@ -60,6 +62,41 @@ export const FileUpload = (props: UploadProps) => {
 
     const handleCSVUpload = (reader: FileReader) => {
         const csvStr = mapCSVToArray(reader)
+    }
+
+    const getMaxPipeId = (pipes: Pipe[]) => {
+        const pipeIdNumbers: number[] = pipes.map(p => {
+            let idStr
+            if(p.id.match("##\\d+##") && p.id.match("##\\d+##")![0]) {
+                const idPart = p.id.match("##\\d+##")![0]
+                idStr = idPart.match("\\d+")![0]
+            }
+            return Number.parseInt(idStr ?? "0")
+        })
+
+        return Math.max(...pipeIdNumbers)
+    }
+
+    const getMaxNodeId = (nodes: BaseNode[]) => {
+        const pipeIdNumbers: number[] = nodes.map(n => {
+            let idStr
+            console.log(n.id)
+            if(n.id.match("\\d+\+")) {
+                const idPart = n.id.match("\d+\+")![0]
+                idStr = idPart.match("\d+")![0]
+            }
+            return Number.parseInt(idStr ?? "0")
+        })
+
+        return Math.max(...pipeIdNumbers)
+    }
+
+    const determineHighestId = (grid: HotWaterGrid) => {
+        const maxPipeId = getMaxPipeId(grid.pipes)
+        const maxNodeId = 0//getMaxNodeId([...grid.inputNodes, ...grid.intermediateNodes, ...grid.outputNodes])
+        const maxId = Math.max(maxPipeId, maxNodeId)
+        alert(maxId)
+        IdGenerator.setNextId(maxId + 1)
     }
 
     const onDrop = useCallback((acceptedFiles) => {
