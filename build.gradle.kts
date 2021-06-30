@@ -18,6 +18,7 @@ application {
 repositories {
     mavenLocal()
     jcenter()
+    maven(url = "https://jitpack.io")
     maven { url = uri("https://kotlin.bintray.com/ktor") }
 }
 
@@ -37,6 +38,8 @@ dependencies {
 
 
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:$csv_version")
+
+    implementation("com.github.EvanRupert:ExcelKt:v0.1.1")
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.insert-koin:koin-test:$koin_version")

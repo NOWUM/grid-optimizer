@@ -317,9 +317,4 @@ class GridOptimizerTest {
         )
     }
 
-    private fun Double.toEURString() = this.round(2).toString().padStart(10) + " €"
-
-    private fun Double.toMW() = (this / 1_000_000).round(3).toString().padStart(7)
-
-    private fun Double.toKW() = (this / 1_000).round(3).toString().padStart(7)
 }

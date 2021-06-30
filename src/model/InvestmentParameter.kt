@@ -8,8 +8,8 @@ class InvestmentParameter(
     val pipeOperationCostFunc: DoubleFunction, // annual operation cost for a grid as f(sum of pipeInvestCost) = €
     val pumpInvestCostFunc: DoubleFunction, // invest costs (1x) for a pump as f(Leistung in kW) = €
     val heatGenerationCost: Double, // costs for generating heat losses
-    lifespanOfGrid: Double, // Lifespan of grid in years. Needed for invest cost calculation
-    lifespanOfPump: Double, // Lifespan of pump in years. Needed for invest cost calculation
+    val lifespanOfGrid: Double, // Lifespan of grid in years. Needed for invest cost calculation
+    val lifespanOfPump: Double, // Lifespan of pump in years. Needed for invest cost calculation
     val wacc: Double, // Zinsen
     val electricityCost: Double, // €/kWh [for pump station]
     val electricalEfficiency: Double, // for pump
