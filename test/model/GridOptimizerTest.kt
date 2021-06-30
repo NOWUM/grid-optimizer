@@ -173,9 +173,9 @@ class GridOptimizerTest {
         }
 
         println(
-            "> Grid Statistics\n" +
-                    ">> Nodes: ${grid.nodes.size} with a total energy demand of ${grid.totalOutputEnergy.toMW()} MWh\n" +
-                    ">> Pipes: ${grid.pipes.size} with a total length of ${grid.pipes.sumOf { it.length }.round(2)} m\n" +
+            "> Netzstatistiken\n" +
+                    ">> Netzelemente: ${grid.nodes.size} mit einem Energiebedarf von ${grid.totalOutputEnergy.toMW()} MWh\n" +
+                    ">> Leitungen   : ${grid.pipes.size} mit einer Länge von ${grid.pipes.sumOf { it.length }.round(2)} m\n" +
                     ">> Wärmeverlust: ${grid.totalHeatLoss.toMW()} MWh (${
                         ((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(1)
                     } %)\n" +
@@ -187,7 +187,7 @@ class GridOptimizerTest {
 
         with(optimizer.gridCosts) {
             println(
-                "> Costs\n" +
+                "> Kosten\n" +
                         ">> Pipe Invest (Gesamt)   : ${pipeInvestCostTotal.toEURString()}\n" +
                         ">> Pipe Invest (Annuität) : ${pipeInvestCostAnnuity.toEURString()}\n" +
                         ">> Pipe Operation pro Jahr: ${pipeOperationCost.toEURString()}\n" +
