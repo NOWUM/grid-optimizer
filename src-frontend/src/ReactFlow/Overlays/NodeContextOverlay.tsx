@@ -1,6 +1,6 @@
 import {confirmAlert} from "react-confirm-alert";
 import React, {useState} from "react";
-import {BaseNode, InputNode, IntermediateNode, NodeType, OutputNode} from "../../models";
+import {BaseNode, InputNode, IntermediateNode, NodeType, OutputNode} from "../../models/models";
 import {Grid, TextField} from "@material-ui/core";
 import {notify} from "./Notifications";
 import {baseUrl} from "../../utils/utility";

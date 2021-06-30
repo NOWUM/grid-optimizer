@@ -1,5 +1,6 @@
-import {NodeElements, OptimizationMetadata} from "../models";
+import {NodeElements} from "../models/models";
 import {GridSpacing} from "@material-ui/core";
+import {OptimizationMetadata} from "../models/dto-models";
 
 export const defaultOptimizationMetadata: OptimizationMetadata = {
     pipeTypes: [

@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import {FlowContainer, verifyBackend} from "./ReactFlow/FlowContainer";
 import {FileUpload} from "./Filemanagement/FileUpload";
@@ -11,10 +11,9 @@ import {
     IntermediateNode,
     NodeElements,
     NodeType,
-    OptimizationMetadata, OptimizationResult,
     OutputNode,
     Pipe
-} from "./models";
+} from "./models/models";
 import {FileDownload} from "./Filemanagement/FileDownload";
 import {Elements} from "react-flow-renderer";
 import {UserTour} from "./UserTour/UserTour";
@@ -36,6 +35,8 @@ import {FormulaCheck} from "./FormulaCheck";
 import {OptimizeButton} from "./ReactFlow/OverlayButtons/OptimizeButton";
 import {CostView} from "./ReactFlow/OverlayButtons/CostView";
 import {OptimizationDetails} from "./OptimizationNode/OptimizationDetails";
+import {OptimizationMetadata, OptimizationStatusResponse} from "./models/dto-models";
+import {OptimizationStatusIndicator} from "./OptimizationNode/OptimizationStatusIndicator";
 
 function App() {
 
@@ -45,8 +46,9 @@ function App() {
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
     const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
     const [optimizationMetadata, setOptimizationMetadata] = useState<OptimizationMetadata>(defaultOptimizationMetadata)
-
     const [costs, setCosts] = useState<Costs|undefined>(undefined)
+    const [optimizationStatus, setOptimizationStatus] = useState<OptimizationStatusResponse|undefined>()
+
 
     const handleKeyDown = (e: KeyboardEvent) => {
 
@@ -140,7 +142,9 @@ function App() {
                                        setNodeElements={setNodeElements} temperatureSeries={temperatureKey}/>
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
                         <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
-                                        setPipes={setPipes} setNodeElements={setNodeElements}/>
+                                        setPipes={setPipes} setNodeElements={setNodeElements}
+                                        optimizationStatus={optimizationStatus} setOptimizationStatus={setOptimizationStatus}
+                        />
                         <CostView costs={costs}/>
                     </div>
                 </TabPanel>
@@ -166,6 +170,8 @@ function App() {
                     }}
                 /> : <></>
             }
+
+            <OptimizationStatusIndicator status={optimizationStatus?.completed} />
 
             {/* @ts-ignore*/}
             <FileDownload grid={{...nodeElements, pipes}} setRenderUpload={(val: boolean) => setRenderUpload(val)}/>

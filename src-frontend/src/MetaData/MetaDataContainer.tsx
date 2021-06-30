@@ -10,10 +10,11 @@ import {
     Typography
 } from "@material-ui/core";
 import {TemperatureDropdown} from "./TemperatureDropdown";
-import {OptimizationMetadata, PipeType} from "../models";
+import {PipeType} from "../models/models";
 import {DEFAULT_GRID_SPACING} from "../utils/defaults";
 import {GridItemsAlignment} from "@material-ui/core/Grid/Grid";
 import {PipeTypeForm} from "./PipeTypeForm";
+import {OptimizationMetadata} from "../models/dto-models";
 
 interface Properties {
     temperatureKey: string,

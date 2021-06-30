@@ -1,7 +1,7 @@
 import {Dispatch} from "react";
 
 import {Browser, getBrowser} from "./BrowserChecker";
-import {HotWaterGrid, NodeElements, Pipe} from "../models";
+import {HotWaterGrid, NodeElements, Pipe} from "../models/models";
 
 export const uploadDropboxInit = (renderUpload: boolean, setRenderUpload: Dispatch<boolean>) => {
     window.addEventListener("dragover", (e) => {

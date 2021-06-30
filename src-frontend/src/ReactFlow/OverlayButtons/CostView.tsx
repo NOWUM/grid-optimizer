@@ -1,4 +1,4 @@
-import {Costs} from "../../models";
+import {Costs} from "../../models/models";
 import "./cost-view.css"
 import {DEFAULT_GRID_SPACING} from "../../utils/defaults";
 import {Grid, Typography} from "@material-ui/core";

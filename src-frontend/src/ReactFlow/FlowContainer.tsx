@@ -25,7 +25,7 @@ import {
     OutputNode as OutputNodeModel,
     OutputNode as OutputNodeProp,
     Pipe
-} from "../models";
+} from "../models/models";
 import {InputNode} from '../CustomNodes/InputNode';
 import {IntermediateNode} from "../CustomNodes/IntermediateNode";
 import {OutputNode} from "../CustomNodes/OutputNode";
