@@ -13,6 +13,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.util.*
 
+@DelicateCoroutinesApi
 class OptimizerService {
 
     private val optimizations = mutableMapOf<String, Optimizer>()
@@ -53,7 +54,7 @@ class OptimizerService {
         val optimizer = Optimizer(grid, investmentParameter)
         val uuid = UUID.randomUUID().toString()
         optimizations[uuid] = optimizer
-        launch {
+        GlobalScope.launch {
             optimizer.optimize()
         }
         return@coroutineScope uuid
