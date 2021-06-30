@@ -13,3 +13,9 @@ fun List<Double>.requireNoNaNs(): List<Double> {
 }
 
 fun Double.ifNaN(block: () -> Double) = if (isNaN()) block() else this
+
+fun Double.toEURString() = this.round(2).toString().padStart(10) + " €"
+
+fun Double.toMW() = (this / 1_000_000).round(3)
+
+fun Double.toKW() = (this / 1_000).round(3)
