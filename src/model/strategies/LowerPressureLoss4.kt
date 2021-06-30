@@ -3,6 +3,7 @@
 package de.fhac.ewi.model.strategies
 
 import de.fhac.ewi.model.Optimizer
+import de.fhac.ewi.model.Pipe
 import de.fhac.ewi.util.maxOrElse
 
 /**
@@ -21,7 +22,7 @@ object LowerPressureLoss4 : Strategy {
         val ns = listOf(10)
         for (n in ns) {
             val criticalPressure =
-                grid.criticalPath.sumOf { it.pipePressureLoss.maxOrElse() } / grid.criticalPath.sumOf { it.length }
+                grid.mostPressureLossNode.maxPressureLossInPath / grid.mostPressureLossNode.pathToSource.sumOf(Pipe::length)
             var lowerPressureLossFound: Boolean
             do {
                 val pipes = grid.pipes
