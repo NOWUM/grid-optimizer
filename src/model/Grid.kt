@@ -21,8 +21,7 @@ class Grid {
             ?: throw IllegalStateException("Needed pump power could not retrieved from grid.")
 
     // Returns energy demand of all outputs in Wh
-    val totalOutputEnergy: Double
-        get() = nodes.filterIsInstance<OutputNode>().sumOf { it.annualEnergyDemand }
+    val totalOutputEnergy: Double by lazy { nodes.filterIsInstance<OutputNode>().sumOf { it.annualEnergyDemand } }
 
     // Returns total heat loss in all pipes in Wh
     val totalHeatLoss: Double
