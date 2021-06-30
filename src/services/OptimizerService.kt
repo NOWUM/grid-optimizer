@@ -103,6 +103,7 @@ class OptimizerService {
         return OptimizationOverviewResponse(
             optimizer.gridCosts,
             optimizer.grid.mostPressureLossNode.pathToSource.map { it.id },
+            optimizer.grid.mostDistantNode.pathToSource.map { it.id },
             optimizer.grid.pipes.map { OptimizedPipeTypeResponse(it.id, it.type.diameter) }
         )
     }
