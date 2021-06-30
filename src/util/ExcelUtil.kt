@@ -1,26 +1,24 @@
 package de.fhac.ewi.util
 
-import de.fhac.ewi.model.Grid
-import de.fhac.ewi.model.Node
-import de.fhac.ewi.model.OutputNode
+import de.fhac.ewi.model.*
 import excelkt.Sheet
 import excelkt.Workbook
 import excelkt.workbook
 import java.io.File
 
-fun Grid.toExcel(filename: String): File {
+fun createExcelFile(filename: String, optimizer: Optimizer): File {
     val file = File(filename)
     file.createOrEmptyFile()
     workbook {
 
         // Allgemein
-        addGridLayoutSheet(this@toExcel)
+        addGridLayoutSheet(optimizer.grid)
 
         // Übersicht
         addDataSheet(
             "Knoten",
             listOf("Typ", "ID", "Energiebedarf [MW/a]", "Energiebedarf Peak [MW]", "Max Massenstrom [kg/s]"),
-            nodes.map {
+            optimizer.grid.nodes.map {
                 listOf(
                     it.javaClass.simpleName,
                     it.id,
@@ -42,7 +40,7 @@ fun Grid.toExcel(filename: String): File {
                 "Wärmeverlust [kWh/a]",
                 "Kosten [€]"
             ),
-            pipes.map {
+            optimizer.grid.pipes.map {
                 listOf(
                     it.id,
                     it.length,
@@ -55,6 +53,7 @@ fun Grid.toExcel(filename: String): File {
             transpose = false
         )
 
+        addGridCostSheet(optimizer.gridCosts, optimizer.investParams)
        /* addDataSheet("Wärmebedarf Knoten",
             nodes.map { it.id },
             nodes.map { it.energyDemand.toList() })
@@ -67,6 +66,58 @@ fun Grid.toExcel(filename: String): File {
     return file
 }
 
+private fun Workbook.addGridCostSheet(gridCosts: Costs, investParams: InvestmentParameter) {
+    sheet("Kosten") {
+        addTitle("Kosten")
+
+        row {
+            cell("")
+            cell("Gesamt")
+            cell("Lebensdauer")
+            cell("Annuitätsfaktor")
+            cell("Kosten/a")
+        }
+        row {            cell("Investitionen")        }
+        row {
+            cell("Leitungen")
+            cell(gridCosts.pipeInvestCostTotal.round(2))
+            cell(investParams.lifespanOfGrid)
+            cell(investParams.pipeAnnuityFactor)
+            cell(gridCosts.pipeInvestCostAnnuity.round(2))
+        }
+        row {
+            cell("Pumpe")
+            cell(gridCosts.pumpInvestCostTotal.round(2))
+            cell(investParams.lifespanOfPump)
+            cell(investParams.pumpAnnuityFactor)
+            cell(gridCosts.pumpInvestCostAnnuity.round(2))
+        }
+        row { cell("Betriebskosten") }
+        row {
+            cell("Leitungen")
+            repeat(3) { cell("") }
+            cell(gridCosts.pipeOperationCost.round(2))
+        }
+        row {
+            cell("Pumpe")
+            repeat(3) { cell("") }
+            cell(gridCosts.pumpOperationCost.round(2))
+        }
+        row {
+            cell("Wärmeverlust")
+            repeat(3) { cell("") }
+            cell(gridCosts.heatLossCost.round(2))
+        }
+        row {  }
+        row {
+            repeat(3) {cell("")}
+            cell("Summe")
+            cell(gridCosts.totalPerYear.round(2))
+        }
+    }
+
+}
+
 /**
  * Erstellt ein Sheet mit dem Trassenplan.
  *
@@ -77,7 +128,7 @@ fun Workbook.addGridLayoutSheet(grid: Grid) {
     sheet("Trassenplan") {
         addTitle("Trassenplan")
 
-        val maxDepth = grid.criticalPath.size + 3
+        val maxDepth = grid.mostDistantNode.pathToSource.size + 3
         row {
             repeat(maxDepth) { cell("") }
             cell("Wärmebedarf [MWh/a]")
@@ -89,7 +140,7 @@ fun Workbook.addGridLayoutSheet(grid: Grid) {
         row {
             cell("+ === Pumpe")
             cell(
-                "${(grid.neededPumpPower / 1000).round(3)} kW (für ${
+                "${grid.neededPumpPower.toKW().round(3)} kW (für ${
                     grid.input.pressureLoss.maxOrElse().round(2)
                 } Bar)"
             )
@@ -158,9 +209,9 @@ private fun Sheet.drawNode(node: Node, maxDepth: Int, depth: Int = 0) {
         if (node is OutputNode) {
             repeat(maxDepth - depth - 2) { cell("") }
             // Energiebedarf
-            cell(node.annualEnergyDemand) // TODO toMW
+            cell(node.annualEnergyDemand.toMW())
             // Druckverlust
-            cell(node.staticPressureLoss + node.pathToSource.sumOf { it.pipePressureLoss.maxOrElse() })
+            cell((node.staticPressureLoss + node.pathToSource.sumOf { it.pipePressureLoss.maxOrElse() }).round(3))
 
         }
     }
