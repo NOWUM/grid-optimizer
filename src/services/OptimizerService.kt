@@ -6,11 +6,13 @@ import de.fhac.ewi.model.InvestmentParameter
 import de.fhac.ewi.model.Optimizer
 import de.fhac.ewi.model.PipeType
 import de.fhac.ewi.util.catchParseError
+import de.fhac.ewi.util.createExcelFile
 import de.fhac.ewi.util.toDoubleFunction
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
 
 @DelicateCoroutinesApi
@@ -114,5 +116,10 @@ class OptimizerService {
             optimizer.grid.mostDistantNode.pathToSource.map { it.id },
             optimizer.grid.pipes.map { OptimizedPipeTypeResponse(it.id, it.type.diameter) }
         )
+    }
+
+    fun getExcelFile(id: String?): File {
+        val optimizer = optimizations[id] ?: throw IllegalArgumentException("No optimizer found for id $id.")
+        return createExcelFile("temp/$id.xlsx", optimizer)
     }
 }

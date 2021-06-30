@@ -1,3 +1,5 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package de.fhac.ewi.routes
 
 import de.fhac.ewi.dto.OptimizationRequest
@@ -8,6 +10,7 @@ import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 fun Route.optimize(gridService: GridService, optimizerService: OptimizerService) {
     route("optimize") {
@@ -37,7 +40,10 @@ fun Route.optimize(gridService: GridService, optimizerService: OptimizerService)
             get("/overview") {
                 val id = call.parameters["id"]
                 call.respond(optimizerService.getOverview(id))
-
+            }
+            get("/download") {
+                val id = call.parameters["id"]
+                call.respondFile(optimizerService.getExcelFile(id))
             }
         }
     }
