@@ -1,7 +1,7 @@
 import React from "react";
 import {NodeSpawner} from "./NodeMenuSpawnerContainer";
 import {Button} from "@material-ui/core";
-import {IntermediateNode, NodeType} from "../../../models";
+import {IntermediateNode, NodeType} from "../../../models/models";
 import {generateUniqueID} from "web-vitals/dist/modules/lib/generateUniqueID";
 import {showNodeIntermediateDialog} from "../../Overlays/NodeContextOverlay";
 

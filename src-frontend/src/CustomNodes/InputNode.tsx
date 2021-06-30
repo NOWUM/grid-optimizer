@@ -1,7 +1,7 @@
 import {Handle, Position} from "react-flow-renderer";
 import {Tooltip} from "@material-ui/core";
 import React, {ReactElement} from "react";
-import {BaseNode, InputNode as InputNodeModel} from "../models";
+import {BaseNode, InputNode as InputNodeModel} from "../models/models";
 import {showNodeInputDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
 import {verifyBackend} from "../ReactFlow/FlowContainer";
 

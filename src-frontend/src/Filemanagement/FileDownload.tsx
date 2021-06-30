@@ -1,4 +1,4 @@
-import {HotWaterGrid} from "../models";
+import {HotWaterGrid} from "../models/models";
 import {CloudDownload, CloudUpload} from "@material-ui/icons";
 import "./file-download.css"
 import {notify} from "../ReactFlow/Overlays/Notifications";

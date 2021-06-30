@@ -1,4 +1,4 @@
-import {BaseNode, NodeElements, Pipe} from "../models";
+import {BaseNode, NodeElements, Pipe} from "../models/models";
 import React from "react";
 import {Accordion, AccordionDetails, AccordionSummary} from "@material-ui/core";
 // @ts-ignore

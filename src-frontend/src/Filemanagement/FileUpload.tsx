@@ -1,7 +1,7 @@
 import React, {useCallback} from "react";
 import {useDropzone} from 'react-dropzone';
 import "./file-upload.css";
-import {HotWaterGrid, instanceOfHotWaterGrid} from "../models";
+import {HotWaterGrid, instanceOfHotWaterGrid} from "../models/models";
 import {notify} from "../ReactFlow/Overlays/Notifications";
 import {Cancel} from "@material-ui/icons";
 

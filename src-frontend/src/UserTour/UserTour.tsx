@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import Tour from 'reactour'
-import {HotWaterGrid} from "../models";
+import {HotWaterGrid} from "../models/models";
 
 
 const timeout = (ms: number) => new Promise(res => setTimeout(res, ms))

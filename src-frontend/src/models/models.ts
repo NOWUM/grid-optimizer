@@ -1,4 +1,5 @@
 import {Edge, Node, Position} from 'react-flow-renderer';
+import {PipeOptimization} from "./dto-models";
 
 export interface NodeElements {
     inputNodes: InputNode[],
@@ -32,16 +33,6 @@ export interface InputNode extends BaseNode{
     returnTemperatureTemplate: string // mathematical expression like `x+5` with x as outside temperature
 }
 
-export interface PipeOptimization {
-    diameter?: number;
-    isCritical?: boolean;
-
-    volumeFlow?: number[],
-    pipeHeatLoss?: number[],
-    pipePressureLoss?: number[],
-    totalPressureLoss?: number[],
-    totalPumpPower?: number[]
-}
 
 export interface IntermediateNode extends BaseNode{
     connect_limit: 3
@@ -67,32 +58,6 @@ export enum NodeType {
     INPUT_NODE = "INPUT_NODE",
     INTERMEDIATE_NODE = "INTERMEDIATE_NODE",
     OUTPUT_NODE = "OUTPUT_NODE"
-}
-
-export interface OptimizationMetadata {
-
-    pipeTypes: PipeType[],
-    gridOperatingCostTemplate: String, // f(gridInvestCost) = y [€/year]
-    pumpInvestCostTemplate: String, // f(Leistung) = y [€/kW]
-    heatGenerationCost: number, // €/kWh [for calculating heat loss]
-    lifespanOfGrid: number, // Jahre
-    lifespanOfPump: number, // Jahre
-    wacc: number, // Weighted Average Cost of Capital in %
-    electricityCost: number, // ct/kWh [for pump station]
-    electricalEfficiency: number, // for pump
-    hydraulicEfficiency: number, // for pump
-}
-
-
-export interface OptimizationRequest extends OptimizationMetadata {
-    grid: HotWaterGrid;
-}
-
-export interface OptimizationResult {
-    costs: Costs,
-    optimizedPipes: OptimizedPipe[],
-    optimizedNodes: OptimizedNode[],
-    criticalPath: string[],
 }
 
 export interface OptimizedPipe {
