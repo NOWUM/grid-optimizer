@@ -62,7 +62,14 @@ class OptimizerService {
 
     fun getStatus(id: String?): OptimizationStatusResponse {
         val optimizer = optimizations[id] ?: throw IllegalArgumentException("No optimizer found for id $id.")
-        return OptimizationStatusResponse(id!!, optimizer.completed, optimizer.numberOfTypeChecks, optimizer.numberOfUpdates)
+        return OptimizationStatusResponse(
+            id!!, optimizer.completed, optimizer.numberOfTypeChecks, optimizer.numberOfUpdates,
+            optimizer.grid.mostPressureLossNode.pathToSource.map { it.id },
+            optimizer.grid.mostDistantNode.pathToSource.map { it.id },
+            optimizer.grid.totalOutputEnergy,
+            optimizer.grid.totalHeatLoss,
+            optimizer.grid.neededPumpPower
+        )
     }
 
     fun getPipe(id: String?, pipeId: String?): OptimizedPipeResponse {
