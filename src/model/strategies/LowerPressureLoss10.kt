@@ -18,7 +18,7 @@ import de.fhac.ewi.util.maxOrElse
  */
 object LowerPressureLoss10 : Strategy {
     override fun apply(optimizer: Optimizer): Unit = with(optimizer) {
-        while (grid.criticalPath.sumOf { it.pipePressureLoss.maxOrElse() } / grid.criticalPath.sumOf { it.length } >= 0.003) {
+        while (grid.mostDistantNode.maxPressureLossInPath / grid.mostDistantNode.pathToSource.sumOf(Pipe::length) >= 0.003) {
 
         }
     }

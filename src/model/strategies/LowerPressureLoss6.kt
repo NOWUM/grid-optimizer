@@ -21,8 +21,7 @@ object LowerPressureLoss6 : Strategy {
     override fun apply(optimizer: Optimizer): Unit = with(optimizer) {
         val ns = listOf(10)
         for (n in ns) {
-            val criticalPressure =
-                grid.criticalPath.sumOf { it.pipePressureLoss.maxOrElse() } / grid.criticalPath.size
+            val criticalPressure = grid.mostDistantNode.maxPressureLossInPath / grid.mostDistantNode.pathToSource.size
             var lowerPressureLossFound: Boolean
             do {
                 val pipes = grid.pipes

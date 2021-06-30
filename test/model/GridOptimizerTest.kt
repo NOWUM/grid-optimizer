@@ -148,8 +148,6 @@ class GridOptimizerTest {
         if (grid.pipes.size < 30)
             println("> Grid Layout\n${grid.gridTreeString()}\n")
 
-        println("> Critical Path\n${grid.criticalPath.reversed().map { "${it.id} (${it.length} m)" }}\n")
-
         println(
             "> Perfekt Pipes\n${
                 grid.pipes.joinToString("\n") {
@@ -158,22 +156,32 @@ class GridOptimizerTest {
                 }
             }\n"
         )
+        with(grid.mostPressureLossNode) {
+            println("> Critical Path (most pressure loss)\n" +
+                    ">> Länge       : ${pathToSource.pathLength().round(2)} m\n" +
+                    ">> Druckverlust: ${maxPressureLossInPath.round(3)} Bar gesamt, ${pathToSource.maxPipePressureLossPerMeter().round(3)} Pa/m im Pfad\n" +
+                    ">> Pfad : ${pathToSource.reversed().map { "${it.id} (${it.length} m)" }}\n"
+            )
+        }
+        with(grid.mostDistantNode) {
+            println("> Longest Path\n" +
+                    ">> Länge       : ${pathToSource.pathLength().round(2)} m\n" +
+                    ">> Druckverlust: ${maxPressureLossInPath.round(3)} Bar gesamt, ${pathToSource.maxPipePressureLossPerMeter().round(3)} Pa/m im Pfad\n" +
+                    ">> Pfad : ${pathToSource.reversed().map { "${it.id} (${it.length} m)" }}\n"
+            )
+        }
 
-        println("> Grid Statistics\n" +
-                ">> Nodes: ${grid.nodes.size} with a total energy demand of ${grid.totalOutputEnergy.toMW()} MWh\n" +
-                ">> Pipes: ${grid.pipes.size} with a total length of ${grid.pipes.sumOf { it.length }} meter\n" +
-                ">> Wärmeverlust: ${grid.totalHeatLoss.toMW()} MWh (${
-                    ((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(1)
-                } %)\n" +
-                ">> Druckverlust: ${grid.input.pressureLoss.maxOrElse().round(2)} Bar (max)\n" +
-                ">> Massenstrom : ${grid.input.massenstrom.maxOrElse().round(3)} kg/s (max)\n" +
-                ">> Volumenstrom: ${String.format("%.6f", grid.input.volumeFlow.maxOrElse())} m^3/s (max)\n" +
-                ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n" +
-                ">> Kritischer Pfad: ${grid.criticalPath.sumOf { it.length }} m Länge mit ${
-                    ((grid.input.pressureLoss.maxOrNull() ?: 0.0) * 100_000 / grid.criticalPath.sumOf { it.length }).round(
-                        3
-                    )
-                } Pa/m Druckverlust\n"
+        println(
+            "> Grid Statistics\n" +
+                    ">> Nodes: ${grid.nodes.size} with a total energy demand of ${grid.totalOutputEnergy.toMW()} MWh\n" +
+                    ">> Pipes: ${grid.pipes.size} with a total length of ${grid.pipes.sumOf { it.length }} meter\n" +
+                    ">> Wärmeverlust: ${grid.totalHeatLoss.toMW()} MWh (${
+                        ((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(1)
+                    } %)\n" +
+                    ">> Druckverlust: ${grid.input.pressureLoss.maxOrElse().round(2)} Bar (max)\n" +
+                    ">> Massenstrom : ${grid.input.massenstrom.maxOrElse().round(3)} kg/s (max)\n" +
+                    ">> Volumenstrom: ${String.format("%.6f", grid.input.volumeFlow.maxOrElse())} m^3/s (max)\n" +
+                    ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n"
         )
 
         with(optimizer.gridCosts) {

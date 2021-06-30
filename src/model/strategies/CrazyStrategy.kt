@@ -15,8 +15,9 @@ object CrazyStrategy : Strategy {
         val ns = listOf(15)
         for (n in ns) {
             val criticalPressure =
-                grid.criticalPath.sumOf { it.pipePressureLoss.maxOrElse() } / grid.criticalPath.sumOf { it.length }
-            val criticalHeatLoss = grid.criticalPath.sumOf { it.heatLoss.sum() } / grid.criticalPath.sumOf { it.length }
+                grid.mostDistantNode.pathToSource.sumOf { it.pipePressureLoss.maxOrElse() } / grid.mostDistantNode.pathToSource.sumOf { it.length }
+            val criticalHeatLoss =
+                grid.mostDistantNode.pathToSource.sumOf { it.heatLoss.sum() } / grid.mostDistantNode.pathToSource.sumOf { it.length }
             var betterCombinationFound: Boolean
             do {
                 val pipes = grid.pipes
