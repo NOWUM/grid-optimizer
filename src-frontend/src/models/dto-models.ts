@@ -43,7 +43,10 @@ export interface OptimizationStatusResponse {
     id: string,
     completed: boolean,
     numberOfChecks: number,
-    numberOfUpdates: number
+    numberOfUpdates: number,
+    totalEnergyDemand: number,
+    totalHeatLoss: number,
+    neededPumpPower: number
 }
 
 export interface OptimizationOverviewResponse {
