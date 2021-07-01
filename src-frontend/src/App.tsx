@@ -127,7 +127,10 @@ function App() {
                 }<AppBar position="static">
                 <h1 style={{userSelect: "none"}}>{getPipe()}
                     Pipify<VersionNumber/>
-                    <HelpOutline onClick={() => setUserTourActive(true)}/>
+                    <HelpOutline onClick={() => setUserTourActive(true)} style={{
+                        marginTop: "-1.5rem",
+                        marginLeft: "-4.5rem"
+                    }}/>
                 </h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
                     <Tab icon={<Functions/>} label="Formel Check" value="4"/>
