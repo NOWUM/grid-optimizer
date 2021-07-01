@@ -20,7 +20,8 @@ import {
     OptimizationOverviewResponse,
     OptimizationRequest,
     OptimizationResult,
-    OptimizationStatusResponse, OptimizedNode,
+    OptimizationStatusResponse,
+    OptimizedNode,
     PipeOptimization,
 } from "../../models/dto-models";
 
@@ -51,8 +52,6 @@ export const OptimizeButton = ({
         console.log("new interval")
         if (optimizationStatus?.id && optimizationStatus?.completed === false) {
             interval = setInterval(fetchUpdate, 1000)
-        } else {
-            getFinalResult()
         }
         return () => {
             clearInterval(interval)
@@ -149,6 +148,9 @@ export const OptimizeButton = ({
 
     const onOptimize = (res: OptimizationStatusResponse) => {
         setOptimizationStatus(res)
+        if (res.completed) {
+            getFinalResult()
+        }
         // setNodeElements(mapResultToNodeElements(res))
     }
 
