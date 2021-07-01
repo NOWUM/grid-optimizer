@@ -125,7 +125,7 @@ function App() {
             <TabContext value={tabVal}>
                 {// @ts-ignore
                 }<AppBar position="static">
-                <h1 style={{userSelect: "none"}}>{getPipe()}
+                <h1 style={{userSelect: "none", minWidth: "10%", textAlign: "left"}}>{getPipe()}
                     Pipify<VersionNumber/>
                     <HelpOutline onClick={() => setUserTourActive(true)} style={{
                         marginTop: "-1.5rem",
