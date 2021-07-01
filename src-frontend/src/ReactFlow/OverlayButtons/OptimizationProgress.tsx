@@ -31,10 +31,10 @@ export const OptimizationProgress = ({optimizationsStatus, optimizationStarted}:
         label: "ID",
         value: optimizationsStatus?.id
     }, {
-        label: "Anzahl der Checks",
+        label: "Anzahl untersuchte Möglichkeiten",
         value: optimizationsStatus?.numberOfChecks
     }, {
-        label: "Anzahl der Updates",
+        label: "Anzahl aktualisierte Rohrtypen",
         value: optimizationsStatus?.numberOfUpdates
     }, {
         label: "Wartezeit",
@@ -45,9 +45,21 @@ export const OptimizationProgress = ({optimizationsStatus, optimizationStarted}:
     }, {
         label: "Wärmeverlust",
         value: `${(optimizationsStatus?.totalHeatLoss / 1000000)?.toFixed(2)} MWh/a`
+    }, {
+        label: "Massenstrom",
+        value: `${optimizationsStatus?.massenstromInput?.toFixed(3)} kg/s`
     },{
+        label: "Druckverlust",
+        value: `${optimizationsStatus?.totalPressureLoss?.toFixed(3)} Bar`
+    }, {
         label: "Benötigte Pumpleistung",
-        value: `${(optimizationsStatus?.neededPumpPower / 1000)?.toFixed(3)} KW`
+        value: `${(optimizationsStatus?.neededPumpPower / 1000)?.toFixed(3)} kW`
+    }, {
+        label: "Druckverlust längster Pfad",
+        value: `${optimizationsStatus?.pressureLossLongest?.toFixed(1)} Pa/m`
+    }, {
+        label: "Druckverlust kritischer Pfad",
+        value: `${optimizationsStatus?.pressureLossCritical?.toFixed(1)} Pa/m`
     },]
 
     const getCostElement = (label: string, value: (number | string)) => {
