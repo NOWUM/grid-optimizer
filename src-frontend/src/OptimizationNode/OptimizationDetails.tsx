@@ -166,7 +166,7 @@ export const OptimizationAccordionNode = ({node, optId}: { node: BaseNode, optId
         <Accordion TransitionProps={{unmountOnExit: true}}
                    onChange={(event: React.ChangeEvent<{}>, expanded: boolean) => fetchGraph(event, expanded, node.id)}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
-                {node.data?.label} ({node.id})
+                <b>{node.data?.label}</b> &nbsp; ({node.id})
             </AccordionSummary>
             <AccordionDetails>
                 {nodeOptimization ? getGraph(nodeOptimization): <NoDetailsAvailable />}
