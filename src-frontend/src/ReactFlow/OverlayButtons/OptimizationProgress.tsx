@@ -38,8 +38,17 @@ export const OptimizationProgress = ({optimizationsStatus, optimizationStarted}:
         value: optimizationsStatus?.numberOfUpdates
     }, {
         label: "Wartezeit",
-        value: getWaitingTime(optimizationStarted) ? `${getWaitingTime(optimizationStarted)} Sek`: "nicht gestartet"
-    }]
+        value: getWaitingTime(optimizationStarted) ? `${getWaitingTime(optimizationStarted)} s` : "nicht gestartet"
+    }, {
+        label: "Energiebedarf",
+        value: `${(optimizationsStatus?.totalEnergyDemand / 1000000)?.toFixed(2)} MWh/a`
+    }, {
+        label: "Wärmeverlust",
+        value: `${(optimizationsStatus?.totalHeatLoss / 1000000)?.toFixed(2)} MWh/a`
+    },{
+        label: "Benötigte Pumpleistung",
+        value: `${(optimizationsStatus?.neededPumpPower / 1000)?.toFixed(3)} KW`
+    },]
 
     const getCostElement = (label: string, value: (number | string)) => {
         return <Grid container
@@ -47,7 +56,7 @@ export const OptimizationProgress = ({optimizationsStatus, optimizationStarted}:
                      alignContent="center"
 
                      justify="space-between" item xs={12} spacing={DEFAULT_GRID_SPACING}>
-            <Grid item xs={2} style={{textAlign: "start"}}>
+            <Grid item xs={6} style={{textAlign: "start"}}>
                 {label}:
             </Grid>
 
