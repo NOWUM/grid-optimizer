@@ -5,9 +5,7 @@ import de.fhac.ewi.model.Grid
 import de.fhac.ewi.model.InvestmentParameter
 import de.fhac.ewi.model.Optimizer
 import de.fhac.ewi.model.PipeType
-import de.fhac.ewi.util.catchParseError
-import de.fhac.ewi.util.createExcelFile
-import de.fhac.ewi.util.toDoubleFunction
+import de.fhac.ewi.util.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.coroutineScope
@@ -70,7 +68,11 @@ class OptimizerService {
             optimizer.grid.mostDistantNode.pathToSource.map { it.id },
             optimizer.grid.totalOutputEnergy,
             optimizer.grid.totalHeatLoss,
-            optimizer.grid.neededPumpPower
+            optimizer.grid.neededPumpPower,
+            optimizer.grid.input.pressureLoss.maxOrElse(),
+            optimizer.grid.mostPressureLossNode.pathToSource.maxPipePressureLossPerMeter(),
+            optimizer.grid.mostDistantNode.pathToSource.maxPipePressureLossPerMeter(),
+            optimizer.grid.input.massenstrom.maxOrElse()
         )
     }
 

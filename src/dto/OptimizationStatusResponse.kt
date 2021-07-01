@@ -9,5 +9,9 @@ data class OptimizationStatusResponse(
     val longestPath: List<String>,
     val totalEnergyDemand: Double,
     val totalHeatLoss: Double,
-    val neededPumpPower: Double
+    val neededPumpPower: Double,
+    val totalPressureLoss: Double,
+    val pressureLossCritical: Double,
+    val pressureLossLongest: Double,
+    val massenstromInput: Double,
 )

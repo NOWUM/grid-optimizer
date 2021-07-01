@@ -46,7 +46,11 @@ export interface OptimizationStatusResponse {
     numberOfUpdates: number,
     totalEnergyDemand: number,
     totalHeatLoss: number,
-    neededPumpPower: number
+    neededPumpPower: number,
+    totalPressureLoss: number,
+    pressureLossCritical: number,
+    pressureLossLongest: number,
+    massenstromInput: number
 }
 
 export interface OptimizationOverviewResponse {
