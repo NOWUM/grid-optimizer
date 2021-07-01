@@ -1,4 +1,4 @@
-import {BaseNode, NodeElements, NodeOptimization, Pipe} from "../models/models";
+import {BaseNode, Costs, NodeElements, NodeOptimization, Pipe} from "../models/models";
 import React, {useState} from "react";
 import {Accordion, AccordionDetails, AccordionSummary} from "@material-ui/core";
 // @ts-ignore
@@ -10,14 +10,20 @@ import {ResultCode} from "../ReactFlow/FlowContainer";
 import {notify} from "../ReactFlow/Overlays/Notifications";
 import {PipeOptimization} from "../models/dto-models";
 import {getConfiguration} from "../ReactFlow/OverlayButtons/OptimizeButton";
+import {CostView} from "./CostView";
 
+interface Properties {
+    nodeElements: NodeElements,
+    pipes: Pipe[],
+    optId: string,
+    costs: Costs
+}
 
-export const OptimizationDetails = ({
-                                        nodeElements,
-                                        pipes,
-                                        optId
-                                    }: { nodeElements: NodeElements, pipes: Pipe[], optId: string }) => {
+export const OptimizationDetails = ({nodeElements, pipes, optId, costs}: Properties) => {
     return <>
+        <h2>Kosten</h2>
+        <CostView costs={costs}/>
+
         <h2>Input Nodes</h2>
         <OptimizationAccordionNodeContainer nodes={nodeElements.inputNodes} optId={optId}/>
 

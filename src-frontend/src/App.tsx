@@ -158,7 +158,7 @@ function App() {
                 </TabPanel>
                 <TabPanel value={"5"}>
                     <OptimizationDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}
-                                         optId={optimizationStatus?.id!}/>
+                                         optId={optimizationStatus?.id!} costs={costs!}/>
                 </TabPanel>
             </TabContext>
             {renderUpload ?
