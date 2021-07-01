@@ -18,6 +18,7 @@ export interface BaseNode extends Node, NodeOptimization{
 
 export interface NodeOptimization {
     optimizedThermalEnergyDemand?: number[],
+    massenstrom?: number[],
     connectedPressureLoss?: number[],
     neededPumpPower?: number[],
     flowInTemperature?: number[],

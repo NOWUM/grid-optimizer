@@ -12,6 +12,7 @@ import {PipeOptimization} from "../models/dto-models";
 import {getConfiguration} from "../ReactFlow/OverlayButtons/OptimizeButton";
 import {CostView} from "./CostView";
 import {XLSXDownload} from "../Filemanagement/XLSXDownload";
+import {inflate} from "zlib";
 
 interface Properties {
     nodeElements: NodeElements,
@@ -84,6 +85,14 @@ export const OptimizationAccordionNode = ({node, optId}: { node: BaseNode, optId
                 marker: {color: 'red'},
                 name: "Angeschlossener Wärmebedarf [Wh]"
             }]
+        const plotDataMassenstrom = [
+            {
+                x: "date",
+                y: n.massenstrom!,
+                type: "scattergl",
+                marker: {color: 'red'},
+                name: "Massenstrom [kg/s]"
+            }]
         const plotDataPressure = [
             {
                 y: n.connectedPressureLoss!,
@@ -105,13 +114,13 @@ export const OptimizationAccordionNode = ({node, optId}: { node: BaseNode, optId
                 y: n.flowOutTemperature,
                 type: "scatter",
                 marker: {color: 'blue'},
-                name: "Rücklauftemperatur [Wh]"
+                name: "Rücklauf [°C]"
             }, {
                 y: n.flowInTemperature,
                 type: "scatter",
                 fill: 'tonexty',
                 marker: {color: 'red'},
-                name: "Vorlauftemperatur [Wh]"
+                name: "Vorlauf [°C]"
             },
         ]
 
@@ -125,6 +134,19 @@ export const OptimizationAccordionNode = ({node, optId}: { node: BaseNode, optId
                 layout={{
                     autosize: true,
                     title: 'Angeschlossener Wärmebedarf [Wh]',
+                    xaxis: {title: 'Stunde im Jahr'},
+                    legend: {
+                        x: 1,
+                        xanchor: 'right',
+                        y: 1
+                    }
+                }}/>
+            <Plot
+                data={plotDataMassenstrom}
+                style={{width: '500px', height: '400px'}}
+                layout={{
+                    autosize: true,
+                    title: 'Massenstrom [kg/s]',
                     xaxis: {title: 'Stunde im Jahr'},
                     legend: {
                         x: 1,
@@ -155,7 +177,7 @@ export const OptimizationAccordionNode = ({node, optId}: { node: BaseNode, optId
 
             <Plot
                 data={plotFlowTemperature}
-                style={{width: '650px', height: '400px'}}
+                style={{width: '500px', height: '400px'}}
                 layout={{
                     autosize: true, title: 'Wasser Temperatur [°C]', xaxis: {title: 'Stunde im Jahr'}
                 }}/>

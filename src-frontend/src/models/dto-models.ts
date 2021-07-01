@@ -69,6 +69,7 @@ export interface OptimizedPipeTypeResponse {
 export interface OptimizedNode {
     nodeId: string,
     thermalEnergyDemand: number[],
+    massenstrom: number[],
     connectedPressureLoss: number[],
     neededPumpPower: number[],
     flowInTemperature: number[],
