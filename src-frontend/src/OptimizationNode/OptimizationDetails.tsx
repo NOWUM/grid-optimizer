@@ -11,6 +11,7 @@ import {notify} from "../ReactFlow/Overlays/Notifications";
 import {PipeOptimization} from "../models/dto-models";
 import {getConfiguration} from "../ReactFlow/OverlayButtons/OptimizeButton";
 import {CostView} from "./CostView";
+import {XLSDownload} from "../Filemanagement/XLSDownload";
 
 interface Properties {
     nodeElements: NodeElements,
@@ -21,6 +22,9 @@ interface Properties {
 
 export const OptimizationDetails = ({nodeElements, pipes, optId, costs}: Properties) => {
     return <>
+        <h2>Download Excel</h2>
+        <XLSDownload optId={optId}/>
+
         <h2>Kosten</h2>
         <CostView costs={costs}/>
 
