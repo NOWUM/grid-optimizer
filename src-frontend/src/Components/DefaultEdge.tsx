@@ -74,8 +74,13 @@ export const DefaultEdge = ({
         </>
     }
 
-    if (data?.isCritical) {
+    if(data?.isCritical && data?.isLongest){
+        style = {...style, stroke: "purple"}
+    } else if (data?.isCritical) {
         style = {...style, stroke: "red"}
+    } else if (data?.isLongest) {
+        console.log(style)
+        style = {...style, stroke: "blue"}
     }
 
     const text = (data?.diameter || data?.length) ? (
@@ -89,6 +94,8 @@ export const DefaultEdge = ({
         <Tooltip title={"Das ist ein Test"}>
             <>
                 <path id={id} style={style} className="react-flow__edge-path" markerEnd={markerEnd} d={edgePath}/>
+
+                {/*<path id={id} style={style} className="react-flow__edge-path" markerEnd={markerEnd} d={edgePath}/>*/}
                 {/*<text>*/}
                 {/*    <textPath href={`#${id}`} style={{fontSize: '12px'}} startOffset="50%" textAnchor="middle">*/}
 

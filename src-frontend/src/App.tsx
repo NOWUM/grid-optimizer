@@ -26,17 +26,12 @@ import {NodeMenuSpawnerContainer} from "./ReactFlow/OverlayButtons/NodeMenu/Node
 import Notifications from "./ReactFlow/Overlays/Notifications";
 import {KeyboardKey} from "./Components/ConfirmationButton";
 import {Functions, Map, Storage, Timeline} from "@material-ui/icons";
-import {
-    defaultNodeElements,
-    defaultOptimizationMetadata,
-    defaultTemperatureKey
-} from "./utils/defaults";
+import {defaultNodeElements, defaultOptimizationMetadata, defaultTemperatureKey} from "./utils/defaults";
 import {FormulaCheck} from "./FormulaCheck";
 import {OptimizeButton} from "./ReactFlow/OverlayButtons/OptimizeButton";
-import {CostView} from "./ReactFlow/OverlayButtons/CostView";
 import {OptimizationDetails} from "./OptimizationNode/OptimizationDetails";
 import {OptimizationMetadata, OptimizationStatusResponse} from "./models/dto-models";
-import {OptimizationStatusIndicator} from "./OptimizationNode/OptimizationStatusIndicator";
+import {OptimizationProgress} from "./ReactFlow/OverlayButtons/OptimizationProgress";
 
 function App() {
 
@@ -46,18 +41,19 @@ function App() {
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
     const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
     const [optimizationMetadata, setOptimizationMetadata] = useState<OptimizationMetadata>(defaultOptimizationMetadata)
-    const [costs, setCosts] = useState<Costs|undefined>(undefined)
-    const [optimizationStatus, setOptimizationStatus] = useState<OptimizationStatusResponse|undefined>()
+    const [costs, setCosts] = useState<Costs | undefined>(undefined)
+    const [optimizationStatus, setOptimizationStatus] = useState<OptimizationStatusResponse | undefined>()
+    const [optimizationStarted, setOptimizationStarted] = useState<Date | undefined>()
 
 
     const handleKeyDown = (e: KeyboardEvent) => {
 
-        if (e.key === KeyboardKey.ENTER || e.key === KeyboardKey.ESC){
+        if (e.key === KeyboardKey.ENTER || e.key === KeyboardKey.ESC) {
             e.preventDefault()
         }
     }
 
-    useEffect(() => console.log(pipes))
+    // useEffect(() => console.log(optimizationStarted))
 
     useEffect(() => {
         document.addEventListener('keydown', handleKeyDown, false);
@@ -70,9 +66,9 @@ function App() {
         uploadDropboxInit(renderUpload, setRenderUpload)
     }, []);
 
-    useEffect(() => {
-        console.log(nodeElements.outputNodes)
-    }, [nodeElements])
+    // useEffect(() => {
+    //     console.log(nodeElements.outputNodes)
+    // }, [nodeElements])
 
     const getNodeElements = (hwg: HotWaterGrid): NodeElements => {
         return {inputNodes: hwg.inputNodes, intermediateNodes: hwg.intermediateNodes, outputNodes: hwg.outputNodes}
@@ -121,7 +117,7 @@ function App() {
 
     const isMetaDataComplete = () => temperatureKey !== ""
 
-    const isCostsComplete = () => !!costs
+    const isOptimizationStarted = () => !!optimizationStatus;
 
     return (
         <div className="App">
@@ -130,10 +126,10 @@ function App() {
                 }<AppBar position="static">
                 <h1 style={{userSelect: "none"}}>{getPipe()}Pipify<VersionNumber/></h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-                    <Tab icon={<Functions />} label="Formel Check" value="4" />
-                    <Tab icon={<Storage />} label="Meta Daten" value="2"/>
-                    <Tab icon={<Map />} label="Editor" value="1" disabled={!isMetaDataComplete()} />
-                    <Tab icon={<Timeline />} label="Optimierung" value="5" disabled={!isCostsComplete()} />
+                    <Tab icon={<Functions/>} label="Formel Check" value="4"/>
+                    <Tab icon={<Storage/>} label="Meta Daten" value="2"/>
+                    <Tab icon={<Map/>} label="Editor" value="1" disabled={!isMetaDataComplete()}/>
+                    <Tab icon={<Timeline/>} label="Optimierung" value="5" disabled={!isOptimizationStarted()}/>
                 </TabList>
             </AppBar>
                 <TabPanel value="1">
@@ -143,9 +139,13 @@ function App() {
                         <NodeMenuSpawnerContainer onNewNode={handleNewNode}/>
                         <OptimizeButton grid={getGrid()} optimizationMetadata={optimizationMetadata} setCosts={setCosts}
                                         setPipes={setPipes} setNodeElements={setNodeElements}
-                                        optimizationStatus={optimizationStatus} setOptimizationStatus={setOptimizationStatus}
+                                        optimizationStatus={optimizationStatus}
+                                        setOptimizationStatus={setOptimizationStatus}
+                                        setOptimizationStarted={setOptimizationStarted}
                         />
-                        <CostView costs={costs}/>
+                        {/*<CostView costs={costs}/>*/}
+                        <OptimizationProgress optimizationsStatus={optimizationStatus}
+                                              optimizationStarted={optimizationStarted}/>
                     </div>
                 </TabPanel>
                 <TabPanel value="2">
@@ -154,12 +154,12 @@ function App() {
                                        setOptimizationMetadata={setOptimizationMetadata}/>
                 </TabPanel>
                 <TabPanel value={"4"}>
-                    <FormulaCheck />
+                    <FormulaCheck/>
                 </TabPanel>
                 <TabPanel value={"5"}>
-                    <OptimizationDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}/>
+                    <OptimizationDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}
+                                         optId={optimizationStatus?.id!}/>
                 </TabPanel>
-
             </TabContext>
             {renderUpload ?
                 <FileUpload
@@ -170,9 +170,6 @@ function App() {
                     }}
                 /> : <></>
             }
-
-            <OptimizationStatusIndicator status={optimizationStatus?.completed} />
-
             {/* @ts-ignore*/}
             <FileDownload grid={{...nodeElements, pipes}} setRenderUpload={(val: boolean) => setRenderUpload(val)}/>
             <UserTour endTest={clearGrid} startTest={insertGrid}/>

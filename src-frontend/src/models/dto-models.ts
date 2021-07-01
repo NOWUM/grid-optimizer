@@ -1,4 +1,5 @@
-import {Costs, HotWaterGrid, OptimizedNode, OptimizedPipe, PipeType} from "./models";
+import {Costs, HotWaterGrid, OptimizedPipe, PipeType} from "./models";
+import {List} from "@material-ui/core";
 
 export interface OptimizationMetadata {
     pipeTypes: PipeType[],
@@ -21,6 +22,7 @@ export interface OptimizationRequest extends OptimizationMetadata {
 export interface PipeOptimization {
     diameter?: number;
     isCritical?: boolean;
+    isLongest?: boolean;
 
     volumeFlow?: number[],
     pipeHeatLoss?: number[],
@@ -42,4 +44,30 @@ export interface OptimizationStatusResponse {
     completed: boolean,
     numberOfChecks: number,
     numberOfUpdates: number
+}
+
+export interface OptimizationOverviewResponse {
+    costs: Costs,
+    criticalPath: string[],
+    longestPath: string[],
+    optimizedPipes: OptimizedPipeTypeResponse[]
+}
+
+export interface OptimizedPipeTypeResponse {
+    pipeId: string,
+    diameter: number
+}
+
+
+export interface OptimizedNode {
+    nodeId: string,
+    thermalEnergyDemand: number[],
+    connectedPressureLoss: number[],
+    neededPumpPower: number[],
+    flowInTemperature: number[],
+    flowOutTemperature: number[],
+
+    annualEnergyDemand: number,
+    maximalNeededPumpPower: number,
+    maximalPressureLoss: number
 }

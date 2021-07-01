@@ -55,3 +55,5 @@ export const isPositiveNumber = (value: any) => {
 
 
 export const baseUrl = `${window.location.protocol.split(':')[0]}://${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`
+
+export const moneyFormatter = (val: number) => `${val?.toFixed(2) ?? "0.00"}€`

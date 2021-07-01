@@ -1,44 +1,71 @@
-import {BaseNode, NodeElements, Pipe} from "../models/models";
-import React from "react";
+import {BaseNode, NodeElements, NodeOptimization, Pipe} from "../models/models";
+import React, {useState} from "react";
 import {Accordion, AccordionDetails, AccordionSummary} from "@material-ui/core";
 // @ts-ignore
 import Plot from 'react-plotly.js';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import {baseUrl} from "../utils/utility";
+import {ResultCode} from "../ReactFlow/FlowContainer";
+import {notify} from "../ReactFlow/Overlays/Notifications";
+import {PipeOptimization} from "../models/dto-models";
+import {getConfiguration} from "../ReactFlow/OverlayButtons/OptimizeButton";
 
 
-export const OptimizationDetails = ({nodeElements, pipes}: { nodeElements: NodeElements, pipes: Pipe[] }) => {
+export const OptimizationDetails = ({
+                                        nodeElements,
+                                        pipes,
+                                        optId
+                                    }: { nodeElements: NodeElements, pipes: Pipe[], optId: string }) => {
     return <>
         <h2>Input Nodes</h2>
-        <OptimizationAccordionNode nodes={nodeElements.inputNodes}/>
+        <OptimizationAccordionNodeContainer nodes={nodeElements.inputNodes} optId={optId}/>
 
         <h2>Intermediate Nodes</h2>
-        <OptimizationAccordionNode nodes={nodeElements.intermediateNodes}/>
+        <OptimizationAccordionNodeContainer nodes={nodeElements.intermediateNodes} optId={optId}/>
 
         <h2>Output Nodes</h2>
-        <OptimizationAccordionNode nodes={nodeElements.outputNodes}/>
+        <OptimizationAccordionNodeContainer nodes={nodeElements.outputNodes} optId={optId}/>
 
         <h2>Pipes</h2>
-        <OptimizationAccordionPipe pipes={pipes}/>
+        <OptimizationAccordionPipeContainer pipes={pipes} optId={optId}/>
     </>
 }
 
-export const OptimizationAccordionNode = ({nodes}: { nodes: BaseNode[] }) => {
-    const getAccordionNode = (n: BaseNode) => {
-        return <>
-            <Accordion TransitionProps={{unmountOnExit: true}}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
-                    {n.data?.label} ({n.id})
-                </AccordionSummary>
-                <AccordionDetails>
-                    {getGraph(n)}
-                </AccordionDetails>
+export const OptimizationAccordionNodeContainer = ({nodes, optId}: { nodes: BaseNode[], optId: string }) => {
 
-            </Accordion>
-        </>
+    return <>{nodes.map(n => <OptimizationAccordionNode node={n} optId={optId}/>)
+    }</>
+}
+
+export const OptimizationAccordionNode = ({node, optId}: { node: BaseNode, optId: string }) => {
+
+    const [nodeOptimization, setNodeOptimization] = useState<NodeOptimization | undefined>()
+
+    const fetchGraph = (event: React.ChangeEvent<{}>, expanded: boolean, pid: string) => {
+        if (expanded) {
+            fetch(`${baseUrl}/api/optimize/${optId}/node/${pid}`, getConfiguration)
+                .then(response => {
+                    if (response.status !== ResultCode.OK) {
+                        response.text().then(text => {
+                            if (text) {
+                                notify(text)
+                            } else {
+                                notify('Unbekannter Fehler beim Aufruf der Optimierungsergebnisse.')
+                            }
+                        });
+                        throw 'Status code not good.';
+                    }
+                    return response.json();
+                }).then((res) => setNodeOptimization({...res,
+                optimizedThermalEnergyDemand: res.thermalEnergyDemand}))
+                .catch(e => {
+                    console.error(e)
+                })
+        }
     }
 
-    const getGraph = (n: BaseNode) => {
+    const getGraph = (n: NodeOptimization) => {
         const plotDataHeat = [
             {
                 x: "date",
@@ -77,6 +104,7 @@ export const OptimizationAccordionNode = ({nodes}: { nodes: BaseNode[] }) => {
                 name: "Vorlauftemperatur [Wh]"
             },
         ]
+
 
         return <div
             style={{justifyContent: 'center', flexDirection: 'row', flexWrap: "wrap", display: 'flex', width: "100%"}}>
@@ -124,28 +152,53 @@ export const OptimizationAccordionNode = ({nodes}: { nodes: BaseNode[] }) => {
         </div>
     }
 
-    return <>{nodes.filter(n => n.optimizedThermalEnergyDemand)
-        .map(n => getAccordionNode(n))
+    return <>
+        <Accordion TransitionProps={{unmountOnExit: true}}
+                   onChange={(event: React.ChangeEvent<{}>, expanded: boolean) => fetchGraph(event, expanded, node.id)}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
+                {node.data?.label} ({node.id})
+            </AccordionSummary>
+            <AccordionDetails>
+                {nodeOptimization ? getGraph(nodeOptimization): <NoDetailsAvailable />}
+            </AccordionDetails>
+
+        </Accordion>
+    </>
+}
+
+export const OptimizationAccordionPipeContainer = ({pipes, optId}: { pipes: Pipe[], optId: string }) => {
+
+    return <>{pipes.filter((p: Pipe) => p.diameter)
+        .map(p => <OptimizationAccordionPipe pipe={p} optId={optId}/>)
     }</>
 }
 
+export const OptimizationAccordionPipe = ({pipe, optId}: { pipe: Pipe, optId: string }) => {
+    const [pipeOptimization, setPipeOptimization] = useState<PipeOptimization | undefined>()
 
-export const OptimizationAccordionPipe = ({pipes}: { pipes: Pipe[] }) => {
-    const getAccordionPipe = (p: Pipe) => {
-        return <>
-            <Accordion TransitionProps={{unmountOnExit: true}}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
-                    {p.data?.label} ({p.id})
-                </AccordionSummary>
-                <AccordionDetails>
-                    {getGraph(p)}
-                </AccordionDetails>
-
-            </Accordion>
-        </>
+    const fetchGraph = (event: React.ChangeEvent<{}>, expanded: boolean, pid: string) => {
+        if (expanded) {
+            fetch(`${baseUrl}/api/optimize/${optId}/pipe/${pid}`, getConfiguration)
+                .then(response => {
+                    if (response.status !== ResultCode.OK) {
+                        response.text().then(text => {
+                            if (text) {
+                                notify(text)
+                            } else {
+                                notify('Unbekannter Fehler beim Aufruf der Optimierungsergebnisse.')
+                            }
+                        });
+                        throw 'Status code not good.';
+                    }
+                    return response.json();
+                }).then((res: PipeOptimization) => setPipeOptimization(res))
+                .catch(e => {
+                    console.error(e)
+                })
+        }
     }
 
-    const getGraph = (p: Pipe) => {
+    const getGraph = (p: PipeOptimization) => {
         const plotVolumeFlow = [
             {
                 y: p.volumeFlow!,
@@ -217,7 +270,10 @@ export const OptimizationAccordionPipe = ({pipes}: { pipes: Pipe[] }) => {
                 data={plotPipePressureLoss}
                 style={{width: '500px', height: '400px'}}
                 layout={{
-                    autosize: true, title: "Druckverlust in Rohrleitung [Bar]", xaxis: {title: 'Stunde im Jahr'}, legend: {
+                    autosize: true,
+                    title: "Druckverlust in Rohrleitung [Bar]",
+                    xaxis: {title: 'Stunde im Jahr'},
+                    legend: {
                         x: 1,
                         xanchor: 'right',
                         y: 1
@@ -240,7 +296,20 @@ export const OptimizationAccordionPipe = ({pipes}: { pipes: Pipe[] }) => {
         </div>
     }
 
-    return <>{pipes.filter((p: Pipe) => p.diameter)
-        .map(p => getAccordionPipe(p))
-    }</>
+    return <>
+        <Accordion onChange={(event: React.ChangeEvent<{}>, expanded: boolean) => fetchGraph(event, expanded, pipe.id)}
+                   TransitionProps={{unmountOnExit: true}}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon/>} aria-controls="panel1a-content" id="panel1a-header">
+                {pipe.data?.label} ({pipe.id})
+            </AccordionSummary>
+            <AccordionDetails>
+                {pipeOptimization ? getGraph(pipeOptimization) : <NoDetailsAvailable/>}
+            </AccordionDetails>
+
+        </Accordion>
+    </>
+}
+
+export const NoDetailsAvailable = () => {
+    return <div>Keine Details verfügbar</div>
 }

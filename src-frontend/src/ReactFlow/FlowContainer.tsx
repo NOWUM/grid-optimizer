@@ -224,9 +224,6 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 maximalPressureLoss
             }
         })
-
-        console.log(defaultPipes)
-
         return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
 

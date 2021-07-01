@@ -1,16 +1,15 @@
 import {Costs} from "../../models/models";
-import "./cost-view.css"
 import {DEFAULT_GRID_SPACING} from "../../utils/defaults";
-import {Grid, Typography} from "@material-ui/core";
+import {Grid} from "@material-ui/core";
 import React from "react";
+import {moneyFormatter} from "../../utils/utility";
 
-export const CostView = ({costs}: {costs?: Costs}) => {
 
-    if(!costs){
+export const CostView = ({costs}: { costs?: Costs }) => {
+
+    if (!costs) {
         return <></>
     }
-
-    const moneyFormatter = (val: number) => `${val?.toFixed(2) ?? "0.00"}€`
 
     const costsData = [{
         label: "Investitionskosten Leitungen (Gesamt)",

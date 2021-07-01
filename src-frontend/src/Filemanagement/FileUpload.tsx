@@ -34,7 +34,7 @@ export const FileUpload = (props: UploadProps) => {
     }
 
     const handleStateUpdate = (reader: FileReader, fileType: string) => {
-        console.log(fileType)
+        // console.log(fileType)
         if(fileType === "text/csv") {
             handleCSVUpload(reader)
         } else if (fileType === "application/json") {
@@ -44,7 +44,7 @@ export const FileUpload = (props: UploadProps) => {
 
     const handleJSONUpload = (reader: FileReader) => {
         const jsonResult = mapToJSON(reader);
-        console.log(instanceOfHotWaterGrid(jsonResult))
+        // console.log(instanceOfHotWaterGrid(jsonResult))
         if(instanceOfHotWaterGrid(jsonResult)) {
             props.loadGrid(jsonResult)
         } else {
@@ -81,7 +81,7 @@ export const FileUpload = (props: UploadProps) => {
     return (
         <div {...getRootProps({
             // onClick: (event) => event.stopPropagation(),
-            onDragEnter: (event) => console.log("DRAG ENTER")
+            // onDragEnter: (event) => console.log("DRAG ENTER")
         })} className={"upload-container"}>
             <input {...getInputProps({
                 onClick: (event) => event.stopPropagation()

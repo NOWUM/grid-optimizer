@@ -29,7 +29,7 @@ export const OptimizationStatusIndicator = ({status}: { status?: boolean }) => {
     if (status === undefined) {
         return <></>
     } else {
-        return <div id={"opt-status-indicator-container"}>
+        return <div>
             {getStatusMessage()}
         </div>
     }

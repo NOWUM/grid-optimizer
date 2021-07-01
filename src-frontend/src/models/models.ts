@@ -65,18 +65,6 @@ export interface OptimizedPipe {
     diameter: number
 }
 
-export interface OptimizedNode {
-    nodeId: string,
-    thermalEnergyDemand: number[],
-    connectedPressureLoss: number[],
-    neededPumpPower: number[],
-    flowInTemperature: number[],
-    flowOutTemperature: number[],
-
-    annualEnergyDemand: number,
-    maximalNeededPumpPower: number,
-    maximalPressureLoss: number
-}
 
 export interface HeatDemand {
     temperatureSeries: string,
