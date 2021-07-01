@@ -4,6 +4,10 @@ import de.fhac.ewi.model.*
 import excelkt.Sheet
 import excelkt.Workbook
 import excelkt.workbook
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.xssf.usermodel.XSSFSheet
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 
 fun createExcelFile(filename: String, optimizer: Optimizer): File {
@@ -54,19 +58,34 @@ fun createExcelFile(filename: String, optimizer: Optimizer): File {
         )
 
         addGridCostSheet(optimizer.gridCosts, optimizer.investParams)
-       /* addDataSheet("Wärmebedarf Knoten",
-            nodes.map { it.id },
-            nodes.map { it.energyDemand.toList() })
 
-         addDataSheet("Massenstrom Knoten",
-            nodes.map { it.id },
-            nodes.map { it.massenstrom.toList() }) */
-
+        xssfWorkbook.autoSizeColumns()
     }.write(file.outputStream())
     return file
 }
 
+fun XSSFWorkbook.autoSizeColumns() {
+    val numberOfSheets: Int = numberOfSheets
+    for (i in 0 until numberOfSheets) {
+        val sheet: XSSFSheet = getSheetAt(i)?: continue
+        if (sheet.physicalNumberOfRows > 0) {
+            val row: Row = sheet.getRow(sheet.firstRowNum+3)
+            val cellIterator: Iterator<Cell> = row.cellIterator()
+            while (cellIterator.hasNext()) {
+                val cell: Cell = cellIterator.next()
+                val columnIndex: Int = cell.columnIndex
+                sheet.autoSizeColumn(columnIndex)
+                val currentColumnWidth: Int = sheet.getColumnWidth(columnIndex)
+                sheet.setColumnWidth(columnIndex, currentColumnWidth + 2500)
+            }
+        }
+    }
+}
+
 private fun Workbook.addGridCostSheet(gridCosts: Costs, investParams: InvestmentParameter) {
+    val moneyStyle = createCellStyle {
+        dataFormat = 5
+    }
     sheet("Kosten") {
         addTitle("Kosten")
 
@@ -80,39 +99,39 @@ private fun Workbook.addGridCostSheet(gridCosts: Costs, investParams: Investment
         row {            cell("Investitionen")        }
         row {
             cell("Leitungen")
-            cell(gridCosts.pipeInvestCostTotal.round(2))
+            cell(gridCosts.pipeInvestCostTotal.round(2), moneyStyle)
             cell(investParams.lifespanOfGrid)
             cell(investParams.pipeAnnuityFactor)
-            cell(gridCosts.pipeInvestCostAnnuity.round(2))
+            cell(gridCosts.pipeInvestCostAnnuity.round(2), moneyStyle)
         }
         row {
             cell("Pumpe")
-            cell(gridCosts.pumpInvestCostTotal.round(2))
+            cell(gridCosts.pumpInvestCostTotal.round(2), moneyStyle)
             cell(investParams.lifespanOfPump)
             cell(investParams.pumpAnnuityFactor)
-            cell(gridCosts.pumpInvestCostAnnuity.round(2))
+            cell(gridCosts.pumpInvestCostAnnuity.round(2), moneyStyle)
         }
         row { cell("Betriebskosten") }
         row {
             cell("Leitungen")
             repeat(3) { cell("") }
-            cell(gridCosts.pipeOperationCost.round(2))
+            cell(gridCosts.pipeOperationCost.round(2), moneyStyle)
         }
         row {
             cell("Pumpe")
             repeat(3) { cell("") }
-            cell(gridCosts.pumpOperationCost.round(2))
+            cell(gridCosts.pumpOperationCost.round(2), moneyStyle)
         }
         row {
             cell("Wärmeverlust")
             repeat(3) { cell("") }
-            cell(gridCosts.heatLossCost.round(2))
+            cell(gridCosts.heatLossCost.round(2), moneyStyle)
         }
         row {  }
         row {
             repeat(3) {cell("")}
             cell("Summe")
-            cell(gridCosts.totalPerYear.round(2))
+            cell(gridCosts.totalPerYear.round(2), moneyStyle)
         }
     }
 
