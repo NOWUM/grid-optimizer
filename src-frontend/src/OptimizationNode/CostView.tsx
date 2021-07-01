@@ -38,7 +38,7 @@ export const CostView = ({costs}: {costs?: Costs}) => {
 
     const getCostElement = (label: string, value: number) => {
         return <div style={{width: "100%", display: "flex", justifyContent: "center"}}>
-            <div style={{maxWidth: "400px", width: "100%"}}>
+            <div style={{maxWidth: "700px", width: "100%"}}>
                 <Grid container
                       direction="row"
                       alignContent="center"

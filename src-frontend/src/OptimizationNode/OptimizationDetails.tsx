@@ -22,7 +22,7 @@ interface Properties {
 
 export const OptimizationDetails = ({nodeElements, pipes, optId, costs}: Properties) => {
     return <>
-        <h2>Download Excel</h2>
+        <h2>Downloads</h2>
         <XLSXDownload optId={optId}/>
 
         <h2>Kosten</h2>
