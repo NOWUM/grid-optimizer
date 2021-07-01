@@ -26,7 +26,7 @@ export const XLSDownload = ({optId}: {optId: string}) => {
                         throw 'Status code not good.';
                     }
                     return response.blob();
-                }).then((res) => handleDownloadAsFile(res, getFileName(), "xls"))
+                }).then((res) => handleDownloadAsFile(res, "Report", "xls"))
                 .catch(e => {
                     console.error(e)
                 })
