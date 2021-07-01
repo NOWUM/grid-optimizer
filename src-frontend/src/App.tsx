@@ -25,7 +25,7 @@ import {VersionNumber} from "./VersionNumber";
 import {NodeMenuSpawnerContainer} from "./ReactFlow/OverlayButtons/NodeMenu/NodeMenuSpawnerContainer";
 import Notifications from "./ReactFlow/Overlays/Notifications";
 import {KeyboardKey} from "./Components/ConfirmationButton";
-import {Functions, Map, Storage, Timeline} from "@material-ui/icons";
+import {Functions, HelpOutline, Map, Storage, Timeline} from "@material-ui/icons";
 import {defaultNodeElements, defaultOptimizationMetadata, defaultTemperatureKey} from "./utils/defaults";
 import {FormulaCheck} from "./FormulaCheck";
 import {OptimizeButton} from "./ReactFlow/OverlayButtons/OptimizeButton";
@@ -44,6 +44,7 @@ function App() {
     const [costs, setCosts] = useState<Costs | undefined>(undefined)
     const [optimizationStatus, setOptimizationStatus] = useState<OptimizationStatusResponse | undefined>()
     const [optimizationStarted, setOptimizationStarted] = useState<Date | undefined>()
+    const [userTourActive, setUserTourActive] = useState(false)
 
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -124,7 +125,10 @@ function App() {
             <TabContext value={tabVal}>
                 {// @ts-ignore
                 }<AppBar position="static">
-                <h1 style={{userSelect: "none"}}>{getPipe()}Pipify<VersionNumber/></h1>
+                <h1 style={{userSelect: "none"}}>{getPipe()}
+                    Pipify<VersionNumber/>
+                    <HelpOutline onClick={() => setUserTourActive(true)}/>
+                </h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
                     <Tab icon={<Functions/>} label="Formel Check" value="4"/>
                     <Tab icon={<Storage/>} label="Meta Daten" value="2"/>
@@ -172,7 +176,7 @@ function App() {
             }
             {/* @ts-ignore*/}
             <FileDownload grid={{...nodeElements, pipes}} setRenderUpload={(val: boolean) => setRenderUpload(val)}/>
-            <UserTour endTest={clearGrid} startTest={insertGrid}/>
+            <UserTour endTest={clearGrid} startTest={insertGrid} userTourActive={userTourActive} setUserTourActive={setUserTourActive}/>
             <Notifications />
         </div>
     );
