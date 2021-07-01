@@ -7,7 +7,7 @@ import de.fhac.ewi.model.Optimizer
  *
  * Die Leitungen auf dem längste Pfad werden von Einspeisepunkt bis hin zur Entnahmestelle nacheinander optimiert.
  */
-object CriticalPathOneByOneReversed : Strategy {
+object LongestPathOneByOneReversed : Strategy {
     override fun apply(optimizer: Optimizer) = with(optimizer) {
         val pipes = grid.mostDistantNode.pathToSource.reversed()
 
