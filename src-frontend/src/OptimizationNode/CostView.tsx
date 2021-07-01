@@ -37,19 +37,22 @@ export const CostView = ({costs}: {costs?: Costs}) => {
     }]
 
     const getCostElement = (label: string, value: number) => {
-        return <Grid container
-                     direction="row"
-                     alignContent="center"
+        return <div style={{width: "100%", display: "flex", justifyContent: "center"}}>
+            <div style={{maxWidth: "400px", width: "100%"}}>
+                <Grid container
+                      direction="row"
+                      alignContent="center"
+                      item xs={12} spacing={DEFAULT_GRID_SPACING}>
+                    <Grid item xs={6} style={{textAlign: "start"}}>
+                        {label}:
+                    </Grid>
 
-                     justify="space-between" item xs={12} spacing={DEFAULT_GRID_SPACING}>
-            <Grid item xs={6} style={{textAlign: "start"}}>
-                {label}:
-            </Grid>
-
-            <Grid item xs={6} style={{textAlign: "end"}}>
-                {moneyFormatter(value)}
-            </Grid>
-        </Grid>
+                    <Grid item xs={6} style={{textAlign: "end"}}>
+                        {moneyFormatter(value)}
+                    </Grid>
+                </Grid>
+            </div>
+        </div>
     }
 
 

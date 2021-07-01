@@ -9,8 +9,14 @@ const timeout = (ms: number) => new Promise(res => setTimeout(res, ms))
 let haveStartedTest = false
 const mock = require("../mock/GridMock.json")
 
-export const UserTour = ({startTest, endTest}: { startTest: (mock: HotWaterGrid) => void, endTest: () => void }) => {
-    const [isTourOpen, setIsTourOpen] = useState(false);
+interface Properties {
+    startTest: (mock: HotWaterGrid) => void,
+    endTest: () => void,
+    userTourActive: boolean,
+    setUserTourActive: (a: boolean) => void
+}
+
+export const UserTour = ({startTest, endTest, userTourActive, setUserTourActive}: Properties) => {
 
     const steps = [
         {
@@ -40,18 +46,16 @@ export const UserTour = ({startTest, endTest}: { startTest: (mock: HotWaterGrid)
                 }},
             selector: '.file-download-container',
             content: 'Hier kannst du das Projekt dann herunterladen',
-        },
-        // ...
+        }
     ];
 
 
     return (
         <>
-            { /* other stuff */}
             <Tour
                 steps={steps}
-                isOpen={isTourOpen}
-                onRequestClose={() => setIsTourOpen(false)}
+                isOpen={userTourActive}
+                onRequestClose={() => setUserTourActive(false)}
             />
         </>
     )
