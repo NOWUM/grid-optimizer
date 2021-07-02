@@ -22,7 +22,7 @@
     "react-confirm-alert": "^2.7.0",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.4",
-    "react-flow-renderer": "^9.6.2",
+    "react-flow-renderer": "^9.6.3",
     "react-id-generator": "^3.0.1",
     "react-plotly.js": "^2.5.1",
     "react-promise-tracker": "^2.1.0",
