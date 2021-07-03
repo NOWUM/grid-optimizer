@@ -27,7 +27,7 @@ dependencies {
     implementation("io.ktor:ktor-gson:1.6.1")
     testImplementation("io.ktor:ktor-server-tests:1.6.1")
 
-    implementation("ch.qos.logback:logback-classic:1.2.1")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
 
     implementation("io.insert-koin:koin-core:3.1.2")
     implementation("io.insert-koin:koin-ktor:3.1.2")
