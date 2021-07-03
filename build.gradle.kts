@@ -1,12 +1,3 @@
-object Versions {
-    const val KTOR = "1.5.4"
-    const val KOTLIN = "1.5.0"
-    const val LOGBACK = "1.2.1"
-    const val KOIN = "3.0.1"
-    const val CSV = "0.15.2"
-}
-val excelKt = "v0.1.1"
-
 plugins {
     application
     kotlin("jvm") version "1.5.20"
@@ -26,25 +17,27 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.KOTLIN}")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.KOTLIN}")
-    implementation("io.ktor:ktor-server-netty:${Versions.KTOR}")
-    implementation("ch.qos.logback:logback-classic:${Versions.LOGBACK}")
-    implementation("io.ktor:ktor-server-core:${Versions.KTOR}")
-    implementation("io.ktor:ktor-server-host-common:${Versions.KTOR}")
-    implementation("io.ktor:ktor-server-sessions:${Versions.KTOR}")
-    implementation("io.ktor:ktor-gson:${Versions.KTOR}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
 
-    implementation("io.insert-koin:koin-core:${Versions.KOIN}")
-    implementation("io.insert-koin:koin-ktor:${Versions.KOIN}")
+    implementation("io.ktor:ktor-server-netty:1.5.4")
+    implementation("io.ktor:ktor-server-core:1.5.4")
+    implementation("io.ktor:ktor-server-host-common:1.5.4")
+    implementation("io.ktor:ktor-server-sessions:1.5.4")
+    implementation("io.ktor:ktor-gson:1.5.4")
+    testImplementation("io.ktor:ktor-server-tests:1.5.4")
+
+    implementation("ch.qos.logback:logback-classic:1.2.1")
+
+    implementation("io.insert-koin:koin-core:3.0.1")
+    implementation("io.insert-koin:koin-ktor:3.0.1")
+    testImplementation("io.insert-koin:koin-test:3.0.1")
 
 
-    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:${Versions.CSV}")
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
 
-    implementation("com.github.EvanRupert:ExcelKt:$excelKt")
+    implementation("com.github.EvanRupert:ExcelKt:v0.1.1")
 
-    testImplementation("io.ktor:ktor-server-tests:${Versions.KTOR}")
-    testImplementation("io.insert-koin:koin-test:${Versions.KOIN}")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
