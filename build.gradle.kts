@@ -31,7 +31,7 @@ dependencies {
 
     implementation("io.insert-koin:koin-core:3.0.1")
     implementation("io.insert-koin:koin-ktor:3.0.1")
-    testImplementation("io.insert-koin:koin-test:3.0.1")
+    testImplementation("io.insert-koin:koin-test:3.1.2")
 
 
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
