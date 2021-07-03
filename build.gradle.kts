@@ -29,7 +29,7 @@ dependencies {
 
     implementation("ch.qos.logback:logback-classic:1.2.1")
 
-    implementation("io.insert-koin:koin-core:3.0.1")
+    implementation("io.insert-koin:koin-core:3.1.2")
     implementation("io.insert-koin:koin-ktor:3.0.1")
     testImplementation("io.insert-koin:koin-test:3.0.1")
 
