@@ -1,59 +1,77 @@
 import React, {useState} from 'react'
-import Tour from 'reactour'
-import {HotWaterGrid} from "../models/models";
+import Tour, {ReactourStep} from 'reactour'
+import {HotWaterGrid, TabEnum} from "../models/models";
+import {MetaDataChapter} from "./UserTourChapters/UserTour_MetaData";
+import {EditorAfterOpen, EditorBeforeClose, EditorChapter} from "./UserTourChapters/UserTour_Editor";
+import {OptimizationChapter} from "./UserTourChapters/UserTour_Optimization";
+import {notify} from "../ReactFlow/Overlays/Notifications";
+import {OptimizationStatusResponse} from "../models/dto-models";
 
 
 const timeout = (ms: number) => new Promise(res => setTimeout(res, ms))
 
-
-let haveStartedTest = false
 const mock = require("../mock/GridMock.json")
 
 interface Properties {
-    startTest: (mock: HotWaterGrid) => void,
-    endTest: () => void,
-    userTourActive: boolean,
+    userTourSetting: (mock: HotWaterGrid, optimizationStatus?: OptimizationStatusResponse) => void,
     setUserTourActive: (a: boolean) => void
+    activeTab: TabEnum,
+    grid: HotWaterGrid,
+    userTourActive: boolean,
+    optimizationStatus?: OptimizationStatusResponse
 }
 
-export const UserTour = ({startTest, endTest, userTourActive, setUserTourActive}: Properties) => {
+export const UserTour = ({userTourSetting, userTourActive, setUserTourActive, activeTab, grid, optimizationStatus}: Properties) => {
 
-    const steps = [
-        {
-            selector: '.App',
-            content: 'Ziehe ein bestehendes Dokument auf die Webseite',
-        },
-        {
-            selector: '.react-flow-container',
-            content: 'Hier kannst du später dein Grid bearbeiten',
-        }, {
-            action: () => {
-                if (!haveStartedTest) {
-                    startTest(mock)
-                    haveStartedTest = true
-                }
-            },
-            selector: '.react-flow-container',
-            content: 'Wir haben jetzt schon mal ein Beispiel Grid erstellt',
-        }, {
-            selector: '.react-flow-container',
-            content: 'Die Knotenpunkte könnt ihr an den kleinen Nubsis verbinden. Rot ist Eingang, blau ist Ausgang',
-        }, {
-            action: () => {
-                if (haveStartedTest) {
-                    endTest()
-                    haveStartedTest = false
-                }},
-            selector: '.file-download-container',
-            content: 'Hier kannst du das Projekt dann herunterladen',
+    const [currStep, setCurrStep] = useState(0)
+
+    const getSteps = (): ReactourStep[] => {
+        switch (activeTab) {
+            case TabEnum.FORMULA_CHECK:
+                return [];
+            case TabEnum.META_DATA:
+                return MetaDataChapter();
+            case TabEnum.EDITOR:
+                return EditorChapter();
+            case TabEnum.OPTIMIZATION:
+                return OptimizationChapter();
         }
-    ];
+    }
 
+    const handleAfterOpen = (): void => {
+        switch (activeTab) {
+            case TabEnum.FORMULA_CHECK:
+                break;
+            case TabEnum.META_DATA:
+                break;
+            case TabEnum.EDITOR:
+                EditorAfterOpen(userTourSetting, grid, optimizationStatus);
+                break;
+            case TabEnum.OPTIMIZATION:
+        }
+    }
+
+    const handleBeforeClose = (): void => {
+        switch (activeTab) {
+            case TabEnum.FORMULA_CHECK:
+                break;
+            case TabEnum.META_DATA:
+                break;
+            case TabEnum.EDITOR:
+                EditorBeforeClose(userTourSetting);
+                break;
+            case TabEnum.OPTIMIZATION:
+                break;
+        }
+    }
 
     return (
         <>
             <Tour
-                steps={steps}
+                startAt={0}
+                onAfterOpen={handleAfterOpen}
+                onBeforeClose={handleBeforeClose}
+                steps={getSteps()}
                 isOpen={userTourActive}
                 onRequestClose={() => setUserTourActive(false)}
             />

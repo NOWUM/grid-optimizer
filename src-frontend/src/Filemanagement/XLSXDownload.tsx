@@ -32,5 +32,5 @@ export const XLSXDownload = ({optId}: {optId: string}) => {
                 })
     }
 
-    return <Button onClick={handleClick}>Report XLSX</Button>
+    return <Button className={"download-report"} onClick={handleClick}>Report XLSX</Button>
 }

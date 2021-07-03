@@ -87,7 +87,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
     }
 
     return <>
-        <Grid {...defaultGridSkeletonProps}>
+        <Grid {...defaultGridSkeletonProps} className={"metadata"}>
             <Grid container
                   direction="row"
                   alignContent="center"
@@ -161,22 +161,9 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
 
                 </Grid>
             </Grid>
+
+
             <Grid container
-                  direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
-                <Grid item xs={6}>
-                    <InputLabel>Auslegungszeit der Pumpe [a]</InputLabel>
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField id="outlined-basic" type="text" variant="outlined" placeholder="25"
-                               value={lifespanOfPump}
-                               onChange={(e) => dispatchChange(e.target.value, "lifespanOfPump")}/>
-
-                </Grid>
-            </Grid>
-
-
-
-        <Grid container
               direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
             <Grid item xs={6}>
                 <InputLabel>Weighted Average Cost of Capital [%]</InputLabel>
@@ -190,10 +177,22 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
         </Grid>
         </Grid>
         <Divider style={{margin: "10px"}}/>
-        <Grid {...defaultGridSkeletonProps}>
+        <Grid {...defaultGridSkeletonProps} className={"metadata-pump"}>
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <h3>Parameter für Pumpe</h3>
+            </Grid>
+
+            <Grid container
+                  direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
+                <Grid item xs={6}>
+                    <InputLabel>Auslegungszeit der Pumpe [a]</InputLabel>
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField id="outlined-basic" type="text" variant="outlined" placeholder="25"
+                               value={lifespanOfPump}
+                               onChange={(e) => dispatchChange(e.target.value, "lifespanOfPump")}/>
+                </Grid>
             </Grid>
 
             <Grid container
@@ -238,7 +237,7 @@ export const MetaDataContainer = ({temperatureKey, setTemperatureKey, optimizati
 
         <Divider style={{margin: "10px", height: "1.5px"}} />
 
-        <Grid {...defaultGridSkeletonProps} style={{marginBottom: "10vh"}}>
+        <Grid {...defaultGridSkeletonProps} style={{marginBottom: "10vh"}} className={"metadata-pipe-type"}>
             <Grid container
                   direction="row" item xs={7} spacing={DEFAULT_GRID_SPACING}>
                 <h3>Rohrtypen</h3>

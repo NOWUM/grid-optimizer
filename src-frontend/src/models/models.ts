@@ -97,6 +97,13 @@ export interface PipeType {
     distanceBetweenPipes: number // in mm
 }
 
+export enum TabEnum {
+    FORMULA_CHECK= "0",
+    META_DATA = "1",
+    EDITOR = "2",
+    OPTIMIZATION = "3"
+}
+
 export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {
     if (!object) {
         return false

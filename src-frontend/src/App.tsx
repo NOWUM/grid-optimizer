@@ -12,7 +12,8 @@ import {
     NodeElements,
     NodeType,
     OutputNode,
-    Pipe
+    Pipe,
+    TabEnum
 } from "./models/models";
 import {FileDownload} from "./Filemanagement/FileDownload";
 import {Elements} from "react-flow-renderer";
@@ -36,7 +37,7 @@ import {OptimizationProgress} from "./ReactFlow/OverlayButtons/OptimizationProgr
 function App() {
 
     const [renderUpload, setRenderUpload] = useState<boolean>(false);
-    const [tabVal, setTabVal] = useState("2")
+    const [tabVal, setTabVal] = useState<TabEnum>(TabEnum.META_DATA)
     const [nodeElements, setNodeElements] = useState<NodeElements>(defaultNodeElements);
     const [pipes, setPipes] = useState<Elements<Pipe>>([])
     const [temperatureKey, setTemperatureKey] = useState<string>(defaultTemperatureKey)
@@ -110,7 +111,10 @@ function App() {
             })
     }
 
-
+    const handleUserTourSetting = (grid: HotWaterGrid, o?: OptimizationStatusResponse) => {
+        insertGrid(grid)
+        setOptimizationStatus(o)
+    }
 
     const getGrid = () => {
         return {pipes: (pipes as Pipe[]), ...nodeElements, temperatureSeries: temperatureKey}
@@ -118,7 +122,7 @@ function App() {
 
     const isMetaDataComplete = () => temperatureKey !== ""
 
-    const isOptimizationStarted = () => !!optimizationStatus;
+    const isOptimizationCompleted = () => optimizationStatus?.completed === true;
 
     return (
         <div className="App">
@@ -129,17 +133,18 @@ function App() {
                     Pipify<VersionNumber/>
                     <HelpOutline onClick={() => setUserTourActive(true)} style={{
                         marginTop: "-1.5rem",
-                        marginLeft: "-4.5rem"
+                        marginLeft: "-2rem"
                     }}/>
                 </h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
-                    <Tab icon={<Functions/>} label="Formel Check" value="4"/>
-                    <Tab icon={<Storage/>} label="Meta Daten" value="2"/>
-                    <Tab icon={<Map/>} label="Editor" value="1" disabled={!isMetaDataComplete()}/>
-                    <Tab icon={<Timeline/>} label="Optimierung" value="5" disabled={!isOptimizationStarted()}/>
+                    <Tab icon={<Functions/>} label="Formel Check" value={TabEnum.FORMULA_CHECK}/>
+                    <Tab icon={<Storage/>} label="Metadaten" value={TabEnum.META_DATA}/>
+                    <Tab icon={<Map/>} label="Editor" value={TabEnum.EDITOR} disabled={!isMetaDataComplete()}/>
+                    <Tab className={"optimization-tab"} icon={<Timeline/>} label="Optimierung"
+                         value={TabEnum.OPTIMIZATION} disabled={!isOptimizationCompleted()}/>
                 </TabList>
             </AppBar>
-                <TabPanel value="1">
+                <TabPanel value={TabEnum.EDITOR}>
                     <div className="react-flow-container">
                         <FlowContainer pipes={pipes} setPipes={setPipes} nodeElements={nodeElements}
                                        setNodeElements={setNodeElements} temperatureSeries={temperatureKey}/>
@@ -155,15 +160,15 @@ function App() {
                                               optimizationStarted={optimizationStarted}/>
                     </div>
                 </TabPanel>
-                <TabPanel value="2">
+                <TabPanel value={TabEnum.META_DATA}>
                     <MetaDataContainer temperatureKey={temperatureKey} setTemperatureKey={setTemperatureKey}
                                        optimizationMetadata={optimizationMetadata}
                                        setOptimizationMetadata={setOptimizationMetadata}/>
                 </TabPanel>
-                <TabPanel value={"4"}>
+                <TabPanel value={TabEnum.FORMULA_CHECK}>
                     <FormulaCheck/>
                 </TabPanel>
-                <TabPanel value={"5"}>
+                <TabPanel value={TabEnum.OPTIMIZATION}>
                     <OptimizationDetails nodeElements={nodeElements} pipes={pipes as Pipe[]}
                                          optId={optimizationStatus?.id!} costs={costs!}/>
                 </TabPanel>
@@ -179,8 +184,10 @@ function App() {
             }
             {/* @ts-ignore*/}
             <FileDownload grid={{...nodeElements, pipes}} setRenderUpload={(val: boolean) => setRenderUpload(val)}/>
-            <UserTour endTest={clearGrid} startTest={insertGrid} userTourActive={userTourActive} setUserTourActive={setUserTourActive}/>
-            <Notifications />
+            <UserTour grid={getGrid()} activeTab={tabVal} userTourSetting={handleUserTourSetting}
+                      optimizationStatus={optimizationStatus} userTourActive={userTourActive}
+                      setUserTourActive={setUserTourActive}/>
+            <Notifications/>
         </div>
     );
 }

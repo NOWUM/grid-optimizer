@@ -56,7 +56,7 @@ export const CostView = ({costs}: {costs?: Costs}) => {
     }
 
 
-    return <div>
+    return <div className={"costs"}>
         <Grid
             container
             direction="row"

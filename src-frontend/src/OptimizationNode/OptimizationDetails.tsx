@@ -12,7 +12,6 @@ import {PipeOptimization} from "../models/dto-models";
 import {getConfiguration} from "../ReactFlow/OverlayButtons/OptimizeButton";
 import {CostView} from "./CostView";
 import {XLSXDownload} from "../Filemanagement/XLSXDownload";
-import {inflate} from "zlib";
 
 interface Properties {
     nodeElements: NodeElements,
@@ -28,18 +27,19 @@ export const OptimizationDetails = ({nodeElements, pipes, optId, costs}: Propert
 
         <h2>Kosten</h2>
         <CostView costs={costs}/>
+        <div className={"optimization-graphs"}>
+            <h2>Input Nodes</h2>
+            <OptimizationAccordionNodeContainer nodes={nodeElements.inputNodes} optId={optId}/>
 
-        <h2>Input Nodes</h2>
-        <OptimizationAccordionNodeContainer nodes={nodeElements.inputNodes} optId={optId}/>
+            <h2>Intermediate Nodes</h2>
+            <OptimizationAccordionNodeContainer nodes={nodeElements.intermediateNodes} optId={optId}/>
 
-        <h2>Intermediate Nodes</h2>
-        <OptimizationAccordionNodeContainer nodes={nodeElements.intermediateNodes} optId={optId}/>
+            <h2>Output Nodes</h2>
+            <OptimizationAccordionNodeContainer nodes={nodeElements.outputNodes} optId={optId}/>
 
-        <h2>Output Nodes</h2>
-        <OptimizationAccordionNodeContainer nodes={nodeElements.outputNodes} optId={optId}/>
-
-        <h2>Pipes</h2>
-        <OptimizationAccordionPipeContainer pipes={pipes} optId={optId}/>
+            <h2>Pipes</h2>
+            <OptimizationAccordionPipeContainer pipes={pipes} optId={optId}/>
+        </div>
     </>
 }
 
