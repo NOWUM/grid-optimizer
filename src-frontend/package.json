@@ -13,7 +13,7 @@
     "@types/event-emitter": "^0.3.3",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.12.5",
-    "@types/react": "^17.0.5",
+    "@types/react": "^17.0.13",
     "@types/react-dom": "^17.0.8",
     "@types/reactour": "^1.18.1",
     "event-emitter": "^0.3.5",
@@ -22,7 +22,7 @@
     "react-confirm-alert": "^2.7.0",
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.4",
-    "react-flow-renderer": "^9.6.2",
+    "react-flow-renderer": "^9.6.3",
     "react-id-generator": "^3.0.1",
     "react-plotly.js": "^2.5.1",
     "react-promise-tracker": "^2.1.0",
@@ -30,7 +30,7 @@
     "reactour": "^1.18.3",
     "styled-components": "^5.3.0",
     "typescript": "^4.3.5",
-    "web-vitals": "^2.0.1"
+    "web-vitals": "^2.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
