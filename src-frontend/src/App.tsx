@@ -129,13 +129,13 @@ function App() {
             <TabContext value={tabVal}>
                 {// @ts-ignore
                 }<AppBar position="static">
-                <h1 style={{userSelect: "none", minWidth: "226px", textAlign: "left"}}>
+                <h1 style={{userSelect: "none", minWidth: "250px", textAlign: "left"}}>
                     {getPipe()}
-                    Pipify<VersionNumber/>
+                    Pipify
                     <HelpOutline onClick={() => setUserTourActive(true)} style={{
-                        marginTop: "-1.5rem",
-                        marginLeft: "-4.5rem"
+                        position: "absolute"
                     }}/>
+                    <VersionNumber/>
                 </h1>
                 <TabList onChange={(e, val) => setTabVal(val)} aria-label="simple tabs example">
                     <Tab icon={<Functions/>} label="Formel Check" value={TabEnum.FORMULA_CHECK}/>
