@@ -25,7 +25,7 @@ dependencies {
     implementation("io.ktor:ktor-server-host-common:1.5.4")
     implementation("io.ktor:ktor-server-sessions:1.5.4")
     implementation("io.ktor:ktor-gson:1.5.4")
-    testImplementation("io.ktor:ktor-server-tests:1.5.4")
+    testImplementation("io.ktor:ktor-server-tests:1.6.1")
 
     implementation("ch.qos.logback:logback-classic:1.2.1")
 
