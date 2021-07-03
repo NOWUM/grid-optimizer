@@ -5,6 +5,7 @@ object Versions {
     const val KOIN = "3.0.1"
     const val CSV = "0.15.2"
 }
+val excelKt = "v0.1.1"
 
 plugins {
     application
@@ -40,7 +41,7 @@ dependencies {
 
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:${Versions.CSV}")
 
-    implementation("com.github.EvanRupert:ExcelKt:v0.1.1")
+    implementation("com.github.EvanRupert:ExcelKt:$excelKt")
 
     testImplementation("io.ktor:ktor-server-tests:${Versions.KTOR}")
     testImplementation("io.insert-koin:koin-test:${Versions.KOIN}")
