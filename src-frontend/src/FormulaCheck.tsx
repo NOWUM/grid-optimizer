@@ -3,7 +3,7 @@ import {TemperatureDropdown} from "./MetaData/TemperatureDropdown";
 import React, {useState} from "react";
 import {DEFAULT_GRID_SPACING} from "./utils/defaults";
 import {LoadProfileSelect} from "./Components/LoadProfileSelect";
-import {HeatDemand, HeatDemandResult} from "./models";
+import {HeatDemand, HeatDemandResult} from "./models/models";
 import {notify} from "./ReactFlow/Overlays/Notifications";
 import {trackPromise} from "react-promise-tracker";
 import {baseUrl} from "./utils/utility";

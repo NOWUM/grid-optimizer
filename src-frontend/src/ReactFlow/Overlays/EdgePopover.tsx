@@ -2,7 +2,7 @@ import {Popover, Tooltip} from "@material-ui/core";
 import React from "react";
 import {AddCircleOutline, DeleteForeverOutlined, Edit} from "@material-ui/icons";
 import {showEditPipeDialog,} from "./EdgeContextOverlay";
-import {Pipe} from "../../models";
+import {Pipe} from "../../models/models";
 
 export const EdgePopover = ({target, onSplitEdge, onEditEdge, pipe, onRemoveEdge}: {
                                 target: (Element | null),

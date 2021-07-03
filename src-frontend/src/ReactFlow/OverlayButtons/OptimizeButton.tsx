@@ -1,5 +1,5 @@
 import {Button} from "@material-ui/core";
-import React from "react";
+import React, {useEffect} from "react";
 import "./optimization-button.css";
 import {
     BaseNode,
@@ -8,31 +8,59 @@ import {
     InputNode,
     IntermediateNode,
     NodeElements,
-    OptimizationMetadata,
-    OptimizationRequest,
-    OptimizationResult,
-    OptimizedNode,
     OutputNode,
-    Pipe, PipeOptimization
-} from "../../models";
+    Pipe,
+} from "../../models/models";
 import {baseUrl} from "../../utils/utility";
 import {trackPromise} from "react-promise-tracker";
 import {ResultCode} from "../FlowContainer";
 import {notify} from "../Overlays/Notifications";
+import {
+    OptimizationMetadata,
+    OptimizationOverviewResponse,
+    OptimizationRequest,
+    OptimizationResult,
+    OptimizationStatusResponse,
+    OptimizedNode,
+    PipeOptimization,
+} from "../../models/dto-models";
 
 interface Properties {
     grid: HotWaterGrid,
     optimizationMetadata: OptimizationMetadata,
     setCosts: (c: Costs) => void,
     setNodeElements: (n: NodeElements) => void,
-    setPipes: (p: Pipe[]) => void
+    setPipes: (p: Pipe[]) => void,
+    optimizationStatus?: OptimizationStatusResponse,
+    setOptimizationStatus: (o: OptimizationStatusResponse) => void,
+    setOptimizationStarted: (d: Date) => void
 }
 
+let interval: NodeJS.Timer
+export const getConfiguration = {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+}
 
-export const OptimizeButton = ({grid, optimizationMetadata, setCosts, setPipes, setNodeElements}: Properties) => {
-
+export const OptimizeButton = ({
+                                   grid, optimizationMetadata, setCosts, setPipes, setNodeElements,
+                                   optimizationStatus, setOptimizationStatus, setOptimizationStarted
+                               }: Properties) => {
+    useEffect(() => {
+        console.log("new interval")
+        if (optimizationStatus?.id && optimizationStatus?.completed === false) {
+            interval = setInterval(fetchUpdate, 1000)
+        }
+        return () => {
+            clearInterval(interval)
+        }
+    }, [optimizationStatus?.completed])
 
     const optimize = () => {
+
+        setOptimizationStarted(new Date())
         const configuration = {
             method: 'POST',
             headers: {
@@ -45,32 +73,85 @@ export const OptimizeButton = ({grid, optimizationMetadata, setCosts, setPipes, 
                 .then(response => {
                     if (response.status != ResultCode.OK) {
                         response.text().then(text => {
-                            if (text) { notify(text) } else {notify('Unbekannter Fehler bei Aufruf der Optimierung.')}
+                            if (text) {
+                                notify(text)
+                            } else {
+                                notify('Unbekannter Fehler bei Aufruf der Optimierung.')
+                            }
                         });
                         throw 'Status code not gud.';
                     }
                     return response.json();
-                }).then(res => onOptimize(res as OptimizationResult))
+                }).then(res => onOptimize(res as OptimizationStatusResponse))
                 .catch(e => {
                     console.error(e)
-                }));
+                })
+        );
     }
 
-    const onOptimize = (res: OptimizationResult) => {
-        console.log(res)
-        setCosts(res.costs)
+    const fetchUpdate = () => {
+        fetch(`${baseUrl}/api/optimize/${optimizationStatus?.id}`, getConfiguration)
+            .then(response => {
+                if (response.status !== ResultCode.OK) {
+                    response.text().then(text => {
+                        if (text) {
+                            notify(text)
+                        } else {
+                            notify('Unbekannter Fehler bei Aufruf der Optimierung.')
+                        }
+                    });
+                    throw 'Status code not good.';
+                }
+                return response.json();
+            }).then(res => onOptimize(res as OptimizationStatusResponse))
+            .catch(e => {
+                console.error(e)
+            })
+    }
 
+    const getFinalResult = () => {
+
+        fetch(`${baseUrl}/api/optimize/${optimizationStatus?.id}/overview`, getConfiguration)
+            .then(response => {
+                if (response.status !== ResultCode.OK) {
+                    response.text().then(text => {
+                        if (text) {
+                            notify(text)
+                        } else {
+                            notify('Unbekannter Fehler bei Aufruf der Optimierung.')
+                        }
+                    });
+                    throw 'Status code not good.';
+                }
+                return response.json();
+            }).then(res => onFinalResult(res as OptimizationOverviewResponse))
+            .catch(e => {
+                console.error(e)
+            })
+    }
+
+    const onFinalResult = (res: OptimizationOverviewResponse) => {
+        setCosts(res.costs)
         const newPipes = grid.pipes.map(p => {
             const opt: PipeOptimization = res.optimizedPipes.find(el => el.pipeId === p.id) ?? {};
-            const {diameter, volumeFlow, pipeHeatLoss, pipePressureLoss,totalPressureLoss,totalPumpPower} = opt;
-            const isCritical = !!res.criticalPath.find(el => el === p.id );  // if this id is part of the critical path its true, otherwise its false
-            return {...p, diameter, isCritical, volumeFlow, pipeHeatLoss, pipePressureLoss,totalPressureLoss,totalPumpPower,
-                data: {...p.data, diameter, isCritical, volumeFlow, pipeHeatLoss, pipePressureLoss,totalPressureLoss,totalPumpPower}}
+            const {diameter} = opt;
+            const isCritical = !!res.criticalPath.find(el => el === p.id);  // if this id is part of the critical path its true, otherwise its false
+            const isLongest = !!res.longestPath.find(el => el === p.id);
+            return {
+                ...p, diameter, isCritical, isLongest,
+                data: {...p.data, diameter, isCritical, isLongest}
+            }
         })
 
-        setNodeElements(mapResultToNodeElements(res))
-
         setPipes(newPipes)
+    }
+
+    const onOptimize = (res: OptimizationStatusResponse) => {
+        setOptimizationStatus(res)
+        if (res.completed) {
+            getFinalResult()
+        }
+        // setNodeElements(mapResultToNodeElements(res))
     }
 
     const mapResultToNodeElements = (res: OptimizationResult): NodeElements => {
@@ -83,7 +164,8 @@ export const OptimizeButton = ({grid, optimizationMetadata, setCosts, setPipes, 
     const mapResultToNodeElement = (n: BaseNode[], optNodes: OptimizedNode[]) => {
         return n.map(n => {
             const resultNode: (OptimizedNode | undefined) = optNodes.find(r => r.nodeId === n.id);
-            return {...n,
+            return {
+                ...n,
                 optimizedThermalEnergyDemand: resultNode?.thermalEnergyDemand,
                 connectedPressureLoss: resultNode?.connectedPressureLoss,
                 neededPumpPower: resultNode?.neededPumpPower,

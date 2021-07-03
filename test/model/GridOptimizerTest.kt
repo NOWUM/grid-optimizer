@@ -10,6 +10,7 @@ import de.fhac.ewi.services.LoadProfileService
 import de.fhac.ewi.services.TemperatureTimeSeriesService
 import de.fhac.ewi.util.*
 import org.junit.Test
+import java.util.*
 import kotlin.test.assertEquals
 
 class GridOptimizerTest {
@@ -172,21 +173,21 @@ class GridOptimizerTest {
         }
 
         println(
-            "> Grid Statistics\n" +
-                    ">> Nodes: ${grid.nodes.size} with a total energy demand of ${grid.totalOutputEnergy.toMW()} MWh\n" +
-                    ">> Pipes: ${grid.pipes.size} with a total length of ${grid.pipes.sumOf { it.length }} meter\n" +
+            "> Netzstatistiken\n" +
+                    ">> Netzelemente: ${grid.nodes.size} mit einem Energiebedarf von ${grid.totalOutputEnergy.toMW()} MWh\n" +
+                    ">> Leitungen   : ${grid.pipes.size} mit einer Länge von ${grid.pipes.sumOf { it.length }.round(2)} m\n" +
                     ">> Wärmeverlust: ${grid.totalHeatLoss.toMW()} MWh (${
                         ((grid.totalHeatLoss / (grid.totalHeatLoss + grid.totalOutputEnergy)) * 100).round(1)
                     } %)\n" +
                     ">> Druckverlust: ${grid.input.pressureLoss.maxOrElse().round(2)} Bar (max)\n" +
                     ">> Massenstrom : ${grid.input.massenstrom.maxOrElse().round(3)} kg/s (max)\n" +
-                    ">> Volumenstrom: ${String.format("%.6f", grid.input.volumeFlow.maxOrElse())} m^3/s (max)\n" +
+                    ">> Volumenstrom: ${String.format(Locale.ENGLISH, "%.6f", grid.input.volumeFlow.maxOrElse())} m^3/s (max)\n" +
                     ">> Pumpleistung: ${(grid.neededPumpPower / 1_000).round(3)} kW (max)\n"
         )
 
         with(optimizer.gridCosts) {
             println(
-                "> Costs\n" +
+                "> Kosten\n" +
                         ">> Pipe Invest (Gesamt)   : ${pipeInvestCostTotal.toEURString()}\n" +
                         ">> Pipe Invest (Annuität) : ${pipeInvestCostAnnuity.toEURString()}\n" +
                         ">> Pipe Operation pro Jahr: ${pipeOperationCost.toEURString()}\n" +

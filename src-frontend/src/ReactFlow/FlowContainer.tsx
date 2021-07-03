@@ -25,7 +25,7 @@ import {
     OutputNode as OutputNodeModel,
     OutputNode as OutputNodeProp,
     Pipe
-} from "../models";
+} from "../models/models";
 import {InputNode} from '../CustomNodes/InputNode';
 import {IntermediateNode} from "../CustomNodes/IntermediateNode";
 import {OutputNode} from "../CustomNodes/OutputNode";
@@ -224,9 +224,6 @@ export const FlowContainer = ({pipes, setPipes, nodeElements, setNodeElements, t
                 maximalPressureLoss
             }
         })
-
-        console.log(defaultPipes)
-
         return [...inputNodes, ...intermediateNodes, ...outputNodes, ...defaultPipes]
     }
 

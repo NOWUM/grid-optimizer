@@ -1,7 +1,7 @@
 import {Handle, Position} from "react-flow-renderer";
 import {customInputHandleStyle, customOutputHandleStyle, getOptimizationTooltip} from "./InputNode";
 import {showNodeIntermediateDialog} from "../ReactFlow/Overlays/NodeContextOverlay";
-import {IntermediateNode as IntermediateNodeModel} from "../models";
+import {IntermediateNode as IntermediateNodeModel} from "../models/models";
 import {Tooltip} from "@material-ui/core";
 import React from "react";
 

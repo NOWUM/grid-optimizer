@@ -1,4 +1,5 @@
 import {Edge, Node, Position} from 'react-flow-renderer';
+import {PipeOptimization} from "./dto-models";
 
 export interface NodeElements {
     inputNodes: InputNode[],
@@ -17,6 +18,7 @@ export interface BaseNode extends Node, NodeOptimization{
 
 export interface NodeOptimization {
     optimizedThermalEnergyDemand?: number[],
+    massenstrom?: number[],
     connectedPressureLoss?: number[],
     neededPumpPower?: number[],
     flowInTemperature?: number[],
@@ -32,16 +34,6 @@ export interface InputNode extends BaseNode{
     returnTemperatureTemplate: string // mathematical expression like `x+5` with x as outside temperature
 }
 
-export interface PipeOptimization {
-    diameter?: number;
-    isCritical?: boolean;
-
-    volumeFlow?: number[],
-    pipeHeatLoss?: number[],
-    pipePressureLoss?: number[],
-    totalPressureLoss?: number[],
-    totalPumpPower?: number[]
-}
 
 export interface IntermediateNode extends BaseNode{
     connect_limit: 3
@@ -69,49 +61,11 @@ export enum NodeType {
     OUTPUT_NODE = "OUTPUT_NODE"
 }
 
-export interface OptimizationMetadata {
-
-    pipeTypes: PipeType[],
-    gridOperatingCostTemplate: String, // f(gridInvestCost) = y [€/year]
-    pumpInvestCostTemplate: String, // f(Leistung) = y [€/kW]
-    heatGenerationCost: number, // €/kWh [for calculating heat loss]
-    lifespanOfGrid: number, // Jahre
-    lifespanOfPump: number, // Jahre
-    wacc: number, // Weighted Average Cost of Capital in %
-    electricityCost: number, // ct/kWh [for pump station]
-    electricalEfficiency: number, // for pump
-    hydraulicEfficiency: number, // for pump
-}
-
-
-export interface OptimizationRequest extends OptimizationMetadata {
-    grid: HotWaterGrid;
-}
-
-export interface OptimizationResult {
-    costs: Costs,
-    optimizedPipes: OptimizedPipe[],
-    optimizedNodes: OptimizedNode[],
-    criticalPath: string[],
-}
-
 export interface OptimizedPipe {
     pipeId: string,
     diameter: number
 }
 
-export interface OptimizedNode {
-    nodeId: string,
-    thermalEnergyDemand: number[],
-    connectedPressureLoss: number[],
-    neededPumpPower: number[],
-    flowInTemperature: number[],
-    flowOutTemperature: number[],
-
-    annualEnergyDemand: number,
-    maximalNeededPumpPower: number,
-    maximalPressureLoss: number
-}
 
 export interface HeatDemand {
     temperatureSeries: string,
@@ -141,6 +95,13 @@ export interface PipeType {
     costPerMeter: number, // in €
     isolationThickness: number, // in mm
     distanceBetweenPipes: number // in mm
+}
+
+export enum TabEnum {
+    FORMULA_CHECK= "0",
+    META_DATA = "1",
+    EDITOR = "2",
+    OPTIMIZATION = "3"
 }
 
 export const instanceOfHotWaterGrid = (object: any): object is HotWaterGrid => {

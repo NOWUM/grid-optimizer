@@ -1,17 +1,22 @@
 package de.fhac.ewi.services
 
-import de.fhac.ewi.dto.OptimizationRequest
-import de.fhac.ewi.dto.OptimizationResponse
-import de.fhac.ewi.dto.OptimizedNodeResponse
-import de.fhac.ewi.dto.OptimizedPipeResponse
+import de.fhac.ewi.dto.*
 import de.fhac.ewi.model.Grid
 import de.fhac.ewi.model.InvestmentParameter
 import de.fhac.ewi.model.Optimizer
 import de.fhac.ewi.model.PipeType
-import de.fhac.ewi.util.catchParseError
-import de.fhac.ewi.util.toDoubleFunction
+import de.fhac.ewi.util.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import java.io.File
+import java.util.*
 
+@DelicateCoroutinesApi
 class OptimizerService {
+
+    private val optimizations = mutableMapOf<String, Optimizer>()
 
     fun createByOptimizationRequest(request: OptimizationRequest): InvestmentParameter {
         val pipeTypes =
@@ -45,40 +50,78 @@ class OptimizerService {
     }
 
 
-    fun optimize(grid: Grid, investmentParameter: InvestmentParameter): OptimizationResponse {
+    suspend fun optimize(grid: Grid, investmentParameter: InvestmentParameter): String = coroutineScope {
         val optimizer = Optimizer(grid, investmentParameter)
-        optimizer.optimize()
-        println("> Checked ${optimizer.numberOfTypeChecks} pipe types and made ${optimizer.numberOfUpdates} for perfect grid. (grid had ${grid.pipes.size} pipes)")
-        println("> Grid costs now ${optimizer.gridCosts}")
-        return OptimizationResponse(
-            optimizer.gridCosts,
-            grid.mostPressureLossNode.pathToSource.map { it.id },
-            grid.pipes.map {
-                OptimizedPipeResponse(
-                    it.id,
-                    it.type.diameter,
-                    it.massenstrom,
-                    it.volumeFlow,
-                    it.heatLoss,
-                    it.pipePressureLoss,
-                    it.totalPressureLoss,
-                    it.totalPumpPower
-                )
-            },
-            grid.nodes.map {
-                OptimizedNodeResponse(
-                    it.id,
-                    it.energyDemand,
-                    it.massenstrom,
-                    it.pressureLoss,
-                    it.pumpPower,
-                    it.flowInTemperature,
-                    it.flowOutTemperature,
-                    it.energyDemand.sum(),
-                    it.pumpPower.maxOrNull()!!,
-                    it.pressureLoss.maxOrNull()!!
-                )
-            }
+        val uuid = UUID.randomUUID().toString()
+        optimizations[uuid] = optimizer
+        GlobalScope.launch {
+            optimizer.optimize()
+        }
+        return@coroutineScope uuid
+    }
+
+    fun getStatus(id: String?): OptimizationStatusResponse {
+        val optimizer = optimizations[id] ?: throw IllegalArgumentException("No optimizer found for id $id.")
+        return OptimizationStatusResponse(
+            id!!, optimizer.completed, optimizer.numberOfTypeChecks, optimizer.numberOfUpdates,
+            optimizer.grid.mostPressureLossNode.pathToSource.map { it.id },
+            optimizer.grid.mostDistantNode.pathToSource.map { it.id },
+            optimizer.grid.totalOutputEnergy,
+            optimizer.grid.totalHeatLoss,
+            optimizer.grid.neededPumpPower,
+            optimizer.grid.input.pressureLoss.maxOrElse(),
+            optimizer.grid.mostPressureLossNode.pathToSource.maxPipePressureLossPerMeter(),
+            optimizer.grid.mostDistantNode.pathToSource.maxPipePressureLossPerMeter(),
+            optimizer.grid.input.massenstrom.maxOrElse()
         )
+    }
+
+    fun getPipe(id: String?, pipeId: String?): OptimizedPipeResponse {
+        val optimizer = optimizations[id] ?: throw IllegalArgumentException("No optimizer found for id $id.")
+        val pipe = optimizer.grid.pipes.singleOrNull { it.id == pipeId }
+            ?: throw IllegalArgumentException("Pipe $pipeId not found.")
+        return OptimizedPipeResponse(
+            pipe.id,
+            pipe.type.diameter,
+            pipe.massenstrom,
+            pipe.volumeFlow,
+            pipe.heatLoss,
+            pipe.pipePressureLoss,
+            pipe.totalPressureLoss,
+            pipe.totalPumpPower
+        )
+    }
+
+    fun getNode(id: String?, nodeId: String?): OptimizedNodeResponse {
+        val optimizer = optimizations[id] ?: throw IllegalArgumentException("No optimizer found for id $id.")
+        val node = optimizer.grid.nodes.singleOrNull { it.id == nodeId }
+            ?: throw IllegalArgumentException("Node $nodeId not found.")
+        return OptimizedNodeResponse(
+            node.id,
+            node.energyDemand,
+            node.massenstrom,
+            node.pressureLoss,
+            node.pumpPower,
+            node.flowInTemperature,
+            node.flowOutTemperature,
+            node.energyDemand.sum(),
+            node.pumpPower.maxOrNull()!!,
+            node.pressureLoss.maxOrNull()!!
+        )
+    }
+
+    fun getOverview(id: String?): OptimizationOverviewResponse {
+        val optimizer = optimizations[id] ?: throw IllegalArgumentException("No optimizer found for id $id.")
+        return OptimizationOverviewResponse(
+            optimizer.gridCosts,
+            optimizer.grid.mostPressureLossNode.pathToSource.map { it.id },
+            optimizer.grid.mostDistantNode.pathToSource.map { it.id },
+            optimizer.grid.pipes.map { OptimizedPipeTypeResponse(it.id, it.type.diameter) }
+        )
+    }
+
+    fun getExcelFile(id: String?): File {
+        val optimizer = optimizations[id] ?: throw IllegalArgumentException("No optimizer found for id $id.")
+        return createExcelFile("temp/$id.xlsx", optimizer)
     }
 }

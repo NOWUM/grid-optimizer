@@ -10,6 +10,8 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
 
     lateinit var gridCosts: Costs
 
+    var completed: Boolean = false
+        private set
 
     var numberOfTypeChecks: Int = 0
         private set
@@ -18,6 +20,7 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
         private set
 
     fun optimize(strategies: List<Strategy> = DEFAULT_STRATEGIES, resetBeforeStart: Boolean = true) {
+        completed = false
         // Reset variables
         numberOfTypeChecks = 0
         numberOfUpdates = 0
@@ -40,7 +43,7 @@ class Optimizer(val grid: Grid, val investParams: InvestmentParameter) {
                     ">>> Längster Pfad       : ${grid.mostDistantNode.pathToSource.maxPipePressureLossPerMeter().round(3)} Pa/m\n" +
                     ">>> Kritischer Pfad     : ${grid.mostPressureLossNode.pathToSource.maxPipePressureLossPerMeter().round(3)} Pa/m")
         }
-
+        completed = true
     }
 
     /**

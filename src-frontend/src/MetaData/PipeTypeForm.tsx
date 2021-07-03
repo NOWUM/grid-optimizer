@@ -1,4 +1,4 @@
-import {PipeType} from "../models";
+import {PipeType} from "../models/models";
 import {Grid, Input} from "@material-ui/core";
 import {DEFAULT_GRID_SPACING} from "../utils/defaults";
 import React, {useState} from "react";

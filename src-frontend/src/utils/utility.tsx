@@ -1,7 +1,7 @@
 import {Dispatch} from "react";
 
 import {Browser, getBrowser} from "./BrowserChecker";
-import {HotWaterGrid, NodeElements, Pipe} from "../models";
+import {HotWaterGrid, NodeElements, Pipe} from "../models/models";
 
 export const uploadDropboxInit = (renderUpload: boolean, setRenderUpload: Dispatch<boolean>) => {
     window.addEventListener("dragover", (e) => {
@@ -55,3 +55,5 @@ export const isPositiveNumber = (value: any) => {
 
 
 export const baseUrl = `${window.location.protocol.split(':')[0]}://${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}`
+
+export const moneyFormatter = (val: number) => `${val?.toFixed(2) ?? "0.00"}€`
