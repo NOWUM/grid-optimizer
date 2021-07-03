@@ -53,14 +53,14 @@ const step1 = () => {
 const step2 = () => {
     return {
         selector: '.react-flow-container',
-        content: 'Die Knotenpunkte könnt ihr an den kleinen Nubsis verbinden. Rot ist Eingang, blau ist Ausgang.',
+        content: 'Die Netzelemente können mit den kleinen Nubsis verbunden werden. Rot ist Eingang, blau ist Ausgang.',
     }
 }
 
 const step3 = () => {
     return {
         selector: '.node-menu-container',
-        content: 'Hier können neue Knotenpunkte angelegt werden.',
+        content: 'Hier können neue Netzelemente angelegt werden.',
     }
 }
 
@@ -95,6 +95,6 @@ const step7 = () => {
 const step9 = () => {
     return {
         selector: '.file-download-container',
-        content: 'Hier kannst du das Netz auch herunterladen.',
+        content: 'Hier kannst du das Netz herunterladen und zu einem späteren Zeitpunkt wieder hochladen.',
     }
 }

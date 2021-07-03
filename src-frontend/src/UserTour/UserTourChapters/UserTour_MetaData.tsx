@@ -5,7 +5,7 @@ export const MetaDataChapter = () => [
 ]
 const step1 = (): ReactourStep => {
     return {
-        content: 'In dieser Ansicht können die Metadaten hinzugefügt werden',
+        content: 'In dieser Ansicht können die Metadaten hinzugefügt werden.',
         selector: '.App',
     }
 }

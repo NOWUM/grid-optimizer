@@ -12,20 +12,20 @@ const step1 = () => {
 const step2 = () => {
     return {
         selector: '.download-report',
-        content: 'Mit diesem Knopf kann der Bericht als .xls-Datei heruntergeladen werden. ',
+        content: 'Mit diesem Knopf kann der Bericht als .xlsx-Datei heruntergeladen werden.',
     }
 }
 
 const step3 = () => {
     return {
         selector: '.costs',
-        content: 'Hier können die resultierenden Kostenparameter begutachtet werden.',
+        content: 'Hier werden die Investitions- und Betriebskosten (für ein Jahr) aufgelistet.',
     }
 }
 
 const step4 = () => {
     return {
         selector: '.optimization-graphs',
-        content: 'Die Ergebnisse pro Knoten und Rohr können hier aufgeklappt und begutachtet werden.',
+        content: 'Die Ergebnisse pro Netzelement und Rohr können hier aufgeklappt und begutachtet werden.',
     }
 }
