@@ -20,17 +20,17 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.5.0")
 
-    implementation("io.ktor:ktor-server-netty:1.5.4")
-    implementation("io.ktor:ktor-server-core:1.5.4")
-    implementation("io.ktor:ktor-server-host-common:1.5.4")
-    implementation("io.ktor:ktor-server-sessions:1.5.4")
-    implementation("io.ktor:ktor-gson:1.5.4")
-    testImplementation("io.ktor:ktor-server-tests:1.5.4")
+    implementation("io.ktor:ktor-server-netty:1.6.1")
+    implementation("io.ktor:ktor-server-core:1.6.1")
+    implementation("io.ktor:ktor-server-host-common:1.6.1")
+    implementation("io.ktor:ktor-server-sessions:1.6.1")
+    implementation("io.ktor:ktor-gson:1.6.1")
+    testImplementation("io.ktor:ktor-server-tests:1.6.1")
 
     implementation("ch.qos.logback:logback-classic:1.2.1")
 
     implementation("io.insert-koin:koin-core:3.0.1")
-    implementation("io.insert-koin:koin-ktor:3.0.1")
+    implementation("io.insert-koin:koin-ktor:3.1.2")
     testImplementation("io.insert-koin:koin-test:3.0.1")
 
 
