@@ -37,7 +37,7 @@ dependencies {
 
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
 
-    implementation("com.github.EvanRupert:ExcelKt:v0.1.1")
+    implementation("com.github.EvanRupert:ExcelKt:v0.1.2")
 
 }
 
