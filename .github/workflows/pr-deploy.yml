@@ -20,7 +20,7 @@ jobs:
           distribution: 'zulu'
           java-version: 8
       - name: Set up Node.js 14.15.1
-        uses: actions/setup-node@v2.2.0
+        uses: actions/setup-node@v2.4.0
         with:
           node-version: 14.15.1
       - name: node_modules cache
