@@ -58,6 +58,6 @@
   },
   "devDependencies": {
     "@types/plotly.js": "^1.54.10",
-    "@types/styled-components": "^5.1.10"
+    "@types/styled-components": "^5.1.14"
   }
 }
