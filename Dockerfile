@@ -1,4 +1,4 @@
-FROM openjdk:8-jre
+FROM openjdk:11-jre
 
 COPY ./bundle/server.jar /server.jar
 
